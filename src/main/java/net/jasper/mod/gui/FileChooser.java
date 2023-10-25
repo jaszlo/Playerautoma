@@ -16,10 +16,11 @@ public class FileChooser {
 
     private static final String COMMAND = "java";
     private static final String ARG = "-classpath";
-    private static final String JAR = PlayerAutoma.MOD_ID + PlayerAutoma.MOD_VERSION + ".jar";
+    private static final String JAR = PlayerAutoma.MOD_ID + "-" + PlayerAutoma.MOD_VERSION + ".jar";
     private static final String CLASS = "FileChooser";
 
     public static String getPath(FileChooser.Operation op) {
+        PlayerAutoma.LOGGER.info(JAR);
         try {
             // Construct the path and File to the .minecraft/mods folder where the Mods Jar ist located
             String modsPath = System.getenv("APPDATA") + File.separator + ".minecraft" + File.separator + "mods";

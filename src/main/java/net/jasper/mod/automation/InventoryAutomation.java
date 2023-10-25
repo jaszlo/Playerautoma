@@ -14,6 +14,7 @@ import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -36,8 +37,13 @@ public class InventoryAutomation {
                 return ActionResult.PASS;
             }
 
-            // Check if only one is left now as if this callback is called we will place that last block
+
             ItemStack currentItem = inv.getStack(inv.selectedSlot);
+            // Check if item is a placeable item in the world
+            if (currentItem.getUseAction() != UseAction.BLOCK) {
+                return ActionResult.PASS;
+            }
+            // Check if only one is left now as if this callback is called we will place that last block
             if (currentItem.getCount() > 1 || currentItem.getItem() == Items.AIR) {
                 return ActionResult.PASS;
             }

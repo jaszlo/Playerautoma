@@ -129,7 +129,7 @@ public class InputRecorder {
     }
 
     public static void stopReplay() {
-        if (isReplaying) {
+        if (!isReplaying) {
             return;
         }
         LOGGER.info("stopReplay");
@@ -158,9 +158,9 @@ public class InputRecorder {
                 e.printStackTrace();
                 LOGGER.info("Failed to create ouputstream for selected file");
             }
+            PlayerController.writeToChat("Stored Recording");
         }).start();
 
-        PlayerController.writeToChat("Stored Recording");
     }
 
 
@@ -179,9 +179,9 @@ public class InputRecorder {
                 PlayerController.writeToChat("Invalid file");
 
             }
+            PlayerController.writeToChat("Loaded Recording");
         }).start();
 
-        PlayerController.writeToChat("Loaded Recording");
     }
 
 }
