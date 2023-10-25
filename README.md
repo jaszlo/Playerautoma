@@ -14,7 +14,7 @@ in the `.minecraft/mods` Folder. You will also require the [FabricAPI](https://w
 ## Usage
 The mod Has a Menu which should be self-explanatory and can be opened using the 'O' Key.
 Other than that the Keybindings are as follows:
-##### Recordings
+#### Recordings
 - G: Start Recording
 - H: Stop Recording
 - U: Store Recording to file
