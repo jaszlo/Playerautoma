@@ -1,36 +1,33 @@
 {
 	"schemaVersion": 1,
-	"id": "template",
+	"id": "playerautoma",
 	"version": "${version}",
-	"name": "template",
-	"description": "Update Your Mod Description!",
+	"name": "JasperMod",
+	"description": "This is a Test mod developed to be insane at Cytooxien.de KakiKlicker",
 	"authors": [
-		"Me!"
+		"Jasper Lorenz"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/template/icon.png",
+	"license": "MIT",
+	"icon": "assets/playerautoma/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"client": [
-			"net.jasper.template.mod.TemplateModClient"
-		],
 		"main": [
-			"net.jasper.template.mod.TemplateMod"
+			"net.jasper.mod.PlayerAutoma"
 		],
-		"fabric-datagen": [
-			"net.jasper.template.mod.TemplateModDataGenerator"
+		"client":[
+			"net.jasper.mod.PlayerAutomaClient"
 		]
 	},
 	"mixins": [
-      "template.mixins.json"
+		"playerautoma.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.24",
-		"minecraft": "~1.20.2",
+		"fabricloader": ">=0.14.22",
+		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*"
 	},

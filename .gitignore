@@ -38,3 +38,12 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+# gradle
+*.lock
+gradle/caches/
+gradle/.tmp/
+gradle/jdks/
+gradle/daemo/
+gradle/native
+gradle/daemon/
