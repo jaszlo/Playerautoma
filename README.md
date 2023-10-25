@@ -28,7 +28,7 @@ Other than that the Keybindings are as follows:
 In this example you can see PlayerAutoma being used in order to traverse a Jump'n Run once and then use the recording
 to do it automatically.
 
-[Gif of the Situation explained above](documentation/resources/jump-n-run-demo.gif)
+![Gif of the Situation explained above](documentation/resources/jump-n-run-demo.gif)
 
 In this example you can see PlayerAutoma being used in order to build a farm-module once and then use the recording
 to do it automatically.
