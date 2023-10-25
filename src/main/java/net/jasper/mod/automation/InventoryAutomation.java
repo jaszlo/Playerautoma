@@ -2,21 +2,16 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.jasper.mod.PlayerAutomaClient;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.math.BlockPos;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 
@@ -40,7 +35,7 @@ public class InventoryAutomation {
 
             ItemStack currentItem = inv.getStack(inv.selectedSlot);
             // Check if item is a placeable item in the world
-            if (currentItem.getUseAction() != UseAction.BLOCK) {
+            if (Block.getBlockFromItem(currentItem.getItem()) == Block.getBlockFromItem(Items.AIR)) {
                 return ActionResult.PASS;
             }
             // Check if only one is left now as if this callback is called we will place that last block
