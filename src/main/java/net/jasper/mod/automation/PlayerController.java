@@ -1,6 +1,5 @@
 package net.jasper.mod.automation;
 
-import net.jasper.mod.PlayerAutomaClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;

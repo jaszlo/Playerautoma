@@ -3,7 +3,7 @@
 	"id": "playerautoma",
 	"version": "${version}",
 	"name": "JasperMod",
-	"description": "This is a Test mod developed to be insane at Cytooxien.de KakiKlicker",
+	"description": "This is a Test mod developed to be insane at Cytooxien.de KakiKlicker - however I got banned for using it.",
 	"authors": [
 		"Jasper Lorenz"
 	],
@@ -22,9 +22,6 @@
 			"net.jasper.mod.PlayerAutomaClient"
 		]
 	},
-	"mixins": [
-		"playerautoma.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.14.22",
 		"minecraft": "~1.20.1",

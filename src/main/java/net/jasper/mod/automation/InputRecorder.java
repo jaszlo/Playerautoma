@@ -2,7 +2,6 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.gui.FileChooser;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.Vec2f;
@@ -110,7 +109,6 @@ public class InputRecorder {
             isReplaying = false;PlayerController.writeToChat("Replay Done!");
         });
 
-
         if (looping) {
             PlayerAutomaClient.tasks.add("Replay again of looping", InputRecorder::startReplay);
         }
@@ -120,6 +118,7 @@ public class InputRecorder {
         if (isRecording || isReplaying || record.isEmpty) {
             return;
         }
+
         LOGGER.info("startLoop");
         PlayerController.writeToChat("Started Looped Replay");
 
@@ -135,51 +134,55 @@ public class InputRecorder {
         LOGGER.info("stopReplay");
         PlayerController.writeToChat("Stopped Replay");
 
-
         isReplaying = false;
         looping = false;
+
         PlayerAutomaClient.tasks.clear();
         PlayerAutomaClient.inventoryTasks.clear();
+
         // Toggle of all keys to stop player from doing anything
         for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
             k.setPressed(false);
         }
     }
 
-    public static void storeRecord() {
+    public static void storeRecord(String name) {
         LOGGER.info("storing recording");
         new Thread(() -> {
-            String selected = FileChooser.getPath(FileChooser.Operation.STORE);
-
             try {
+                // If file already exists create new file with "_new" before file type.
+                File selected = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/recordings/" + name);
+                String newName = name.substring(0, name.length() - 4) + "_new.rec";
+                if (selected.exists()) {
+                    selected = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/recordings/" + newName);
+                }
+
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
                 objectOutputStream.writeObject(record);
+                PlayerController.writeToChat("Stored Recording");
             } catch(IOException e) {
-                e.printStackTrace();
-                LOGGER.info("Failed to create ouputstream for selected file");
+                PlayerController.writeToChat("Failed to store recording");
+                LOGGER.info("Failed to create output stream for selected file");
+                LOGGER.info(e.getMessage());
             }
-            PlayerController.writeToChat("Stored Recording");
         }).start();
 
     }
 
 
-    public static void loadRecord() {
+    public static void loadRecord(File selected) {
         LOGGER.info("loading recording");
         new Thread(() -> {
-            String selected = FileChooser.getPath(FileChooser.Operation.LOAD);
-
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(selected));
                 record = (Recording) objectInputStream.readObject();
                 objectInputStream.close();
+                PlayerController.writeToChat("Loaded Recording");
             } catch (Exception e) {
-                e.printStackTrace();
                 LOGGER.info("Could not load record");
+                LOGGER.info(e.getMessage());
                 PlayerController.writeToChat("Invalid file");
-
             }
-            PlayerController.writeToChat("Loaded Recording");
         }).start();
 
     }

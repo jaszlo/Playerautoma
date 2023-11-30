@@ -3,6 +3,8 @@ package net.jasper.mod.util.keybinds;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.jasper.mod.automation.InputRecorder;
 import net.jasper.mod.gui.PlayerAutomaMenu;
+import net.jasper.mod.gui.RecordingSelector;
+import net.jasper.mod.gui.RecordingStorer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -49,8 +51,8 @@ public class Constants {
             InputRecorder::startReplay,
             InputRecorder::stopReplay,
             InputRecorder::startLoop,
-            InputRecorder::storeRecord,
-            InputRecorder::loadRecord,
+            RecordingStorer::open,
+            RecordingSelector::open,
 
             // Toggle GUI
             PlayerAutomaMenu::open
