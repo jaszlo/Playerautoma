@@ -6,10 +6,10 @@ Does not record chat input or looting of chests. The latter will be added in fea
 
 ## Disclaimer
 This mod is still early in development.
-If you encounter any bugs please let me know [here](https://github.com/jaszlo/Playerautoma/issues).
+If you encounter any bugs please let me know [here](https://github.com/jaszlo/Playerautoma/issues) and if you want to contribute feel free to create a [pull request](https://github.com/jaszlo/Playerautoma/pulls).
 
 ## Installation
-This mod obviously requires Minecraft [Fabric](https://fabricmc.net/). Simply put the playerautoma-vx.x.jar and the [FabricAPI](https://modrinth.com/mod/fabric-api) JAR in the `.minecraft/mods` folder.
+This mod requires Minecraft [Fabric](https://fabricmc.net/). Simply put the playerautoma-vx.x.jar and  [FabricAPI](https://modrinth.com/mod/fabric-api) JAR in `.minecraft/mods`.
 
 ## Usage
 The mod has a menu which should be self-explanatory and can be opened using the 'O' Key.
