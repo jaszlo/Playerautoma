@@ -1,28 +1,27 @@
 # Playerautoma
-Minecraft Fabric mod that allows to record player movement and inputs to replay those. 
+Minecraft Fabric mod that allows to record player movement and inputs to replay those.
 Also, re-stacks blocks when used up like Inventory tweaks. Everything also works on servers **BUT**
 will be **regarded as cheating** by most servers.
+Does not record chat input or looting of chests. The latter will be added in feature updates!
 
-Use at your own risk!
+## Disclaimer
+This mod is still early in development.
+If you encounter any bugs please let me know [here](https://github.com/jaszlo/Playerautoma/issues).
 
 ## Installation
-This mod required Minecraft Fabric. When that is set up simply put the playerautoma-vx.x.jar 
-in the `.minecraft/mods` Folder. You will also require the [FabricAPI](https://www.curseforge.com/minecraft/mc-mods/fabric-api) 
-(Alternative [Modrinth](https://modrinth.com/mod/fabric-api) link).
-
+This mod obviously requires Minecraft [Fabric](https://fabricmc.net/). Simply put the playerautoma-vx.x.jar and the [FabricAPI](https://modrinth.com/mod/fabric-api) JAR in the `.minecraft/mods` folder.
 
 ## Usage
-The mod Has a Menu which should be self-explanatory and can be opened using the 'O' Key.
-Other than that the Keybindings are as follows:
-#### Recordings
-- G: Start Recording
-- H: Stop Recording
-- U: Store Recording to file
-- I: Load Recording from file
-#### Replays
-- J: Start Replay
-- K: Cancel Replay
-- L: Start looped Replay
+The mod has a menu which should be self-explanatory and can be opened using the 'O' Key.
+
+Other than that the default keybindings are as follows.
+- **G** &emsp;  Start Recording
+- **H** &emsp; Stop Recording
+- **J**  &emsp; Start Replay
+- **K** &emsp; Cancel Replay
+- **L** &emsp; Start looped Replay
+- **U** &emsp; Store Recording
+-  &nbsp;**I**  &emsp; Load Recording
 
 ## Examples
 In this example you can see PlayerAutoma being used in order to traverse a Jump'n Run once and then use the recording
