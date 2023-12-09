@@ -2,7 +2,10 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.util.data.Recording;
+import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.Vec2f;
 import org.slf4j.Logger;
@@ -10,6 +13,7 @@ import org.slf4j.Logger;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class InputRecorder {
 
@@ -19,8 +23,11 @@ public class InputRecorder {
 
     private static boolean isRecording = false;
     private static boolean isReplaying = false;
-
     public static boolean looping = false;
+
+    public static boolean hadScreenOpen = false;
+
+    public static Optional<SlotClick> lastSlotClicked = Optional.empty();
 
     public static void registerInputRecorder() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -39,7 +46,13 @@ public class InputRecorder {
             float yaw = client.player.getYaw();
 
             // Add recorded data to record
-            record.add(currentKeyMap, new Vec2f(pitch, yaw), client.player.getInventory().selectedSlot);
+            record.add(currentKeyMap, new Vec2f(pitch, yaw), client.player.getInventory().selectedSlot, lastSlotClicked, client.currentScreen);
+
+            // Clear last slot clicked to prevent double clicks
+            lastSlotClicked = Optional.empty();
+
+            // Check if a screen was open
+            hadScreenOpen = client.currentScreen != null;
         });
     }
 
@@ -49,8 +62,6 @@ public class InputRecorder {
         }
         LOGGER.info("startRecord");
         PlayerController.writeToChat("Started Recording");
-
-
         clearRecord();
         PlayerController.centerPlayer();
         isRecording = true;
@@ -60,15 +71,12 @@ public class InputRecorder {
         if (isRecording) {
             LOGGER.info("stopRecord");
             PlayerController.writeToChat("Stopped Recording");
-
             isRecording = false;
         }
     }
 
-
     public static void clearRecord() {
         LOGGER.info("clearRecord");
-
         record.clear();
     }
 
@@ -84,13 +92,19 @@ public class InputRecorder {
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.player != null : "client.player was found to be null in InputRecorder.replay()";
 
-        int index = 0;
-        for (List<Boolean> keyMap : record.keysPressed) {
-            List<Float> lookDir = record.lookingDirections.get(index);
+        for (int i = 0; i < record.size; i++) {
+
+            // Get all data for current record tick
+            List<Boolean> keyMap = record.keysPressed.get(i);
+            List<Float> lookDir = record.lookingDirections.get(i);
             Vec2f currentLookingDirection = new Vec2f(lookDir.get(0), lookDir.get(1));
-            int selectedSlot = record.slotSelections.get(index);
-            index++;
+            int selectedSlot = record.slotSelections.get(i);
+            Optional<SlotClick> clickedSlot = record.slotClicked.get(i);
+            Screen currentScreen = record.currentScreen.get(i);
+
+            // Add task to task queue (where one task is executed per tick)
             PlayerAutomaClient.tasks.add("Apply KeyMap", () -> {
+
                 // Update looking direction
                 float pitch = currentLookingDirection.x; float yaw = currentLookingDirection.y;
                 client.player.setPitch(pitch); client.player.setYaw(yaw);
@@ -99,14 +113,27 @@ public class InputRecorder {
                 client.player.getInventory().selectedSlot = selectedSlot;
 
                 // Update keys pressed
-                int i = 0;
+                int j = 0;
                 for (KeyBinding k : client.options.allKeys) {
-                    k.setPressed(keyMap.get(i++));
+                    k.setPressed(keyMap.get(j++));
                 }
+
+                // Set current screen
+                client.setScreen(currentScreen);
+
+                // Click Slot in inventory
+                if (client.currentScreen == null && clickedSlot.isPresent()) {
+                    LOGGER.warn("Clicking slot while no screen is open");
+                }
+                clickedSlot.ifPresent(PlayerController::clickSlot);
             });
+
         }
+
+
         PlayerAutomaClient.tasks.add("Finish Replay", () -> {
-            isReplaying = false;PlayerController.writeToChat("Replay Done!");
+            isReplaying = false;
+            PlayerController.writeToChat("Replay Done!");
         });
 
         if (looping) {
@@ -184,7 +211,5 @@ public class InputRecorder {
                 PlayerController.writeToChat("Invalid file");
             }
         }).start();
-
     }
-
 }

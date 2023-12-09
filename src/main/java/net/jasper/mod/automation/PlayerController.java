@@ -1,5 +1,6 @@
 package net.jasper.mod.automation;
 
+import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -25,6 +26,13 @@ public class PlayerController {
         if (MinecraftClient.getInstance().player != null) {
             MinecraftClient.getInstance().player.sendMessage(Text.of(message));
         }
+    }
+
+    public static void clickSlot(SlotClick click) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        assert client.player != null;
+        assert client.interactionManager != null;
+        client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId, click.button, click.actionType, client.player);
     }
 
 }

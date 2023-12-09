@@ -8,6 +8,9 @@ import net.jasper.mod.automation.InputRecorder;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +19,7 @@ import java.nio.file.Path;
 
 public class PlayerAutomaClient implements ClientModInitializer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(PlayerAutoma.MOD_ID + "::client");
+    public static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::client");
 	public static final String RECORDING_FOLDER_NAME = "Recordings";
 	public static final String RECORDING_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), RECORDING_FOLDER_NAME).toString();
 
@@ -32,7 +35,10 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		if (!recordingFolder.exists()) {
 			boolean failed = !recordingFolder.mkdir();
 			// Do not initialize mod if failed to create folder (should not happen)
-			if (failed) return;
+			if (failed)  {
+				LOGGER.error("Failed to create recording folder - PlayerAutoma will not be initialized");
+				return;
+			}
 		}
 
 		// Initialize New Keybinds
