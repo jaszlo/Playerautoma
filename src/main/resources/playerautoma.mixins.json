@@ -6,6 +6,7 @@
     "defaultRequire": 0
   },
   "client": [
-    "SlotClickedCallbackInjection"
+    "CancelReplay",
+    "SlotClickedCallback"
   ]
 }

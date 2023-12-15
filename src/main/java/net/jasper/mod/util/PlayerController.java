@@ -1,4 +1,4 @@
-package net.jasper.mod.automation;
+package net.jasper.mod.util;
 
 import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
@@ -7,8 +7,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Utility class for controlling minor aspects of the player.
+ */
 public class PlayerController {
-
     public static void centerPlayer() {
         // Center Camera
         PlayerEntity player= MinecraftClient.getInstance().player;
@@ -32,7 +34,6 @@ public class PlayerController {
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.player != null;
         assert client.interactionManager != null;
-        client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId, click.button, click.actionType, client.player);
+        client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), client.player);
     }
-
 }

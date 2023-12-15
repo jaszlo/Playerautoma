@@ -4,6 +4,9 @@ import net.jasper.mod.PlayerAutomaClient;
 import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 
+/**
+ * Custom-Keybinding class that stores a name, a keybinding and a callback all in one
+ */
 public class KeyBind {
 
     private static final Logger LOGGER = PlayerAutomaClient.LOGGER;

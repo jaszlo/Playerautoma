@@ -2,114 +2,112 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.util.PlayerController;
+import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.util.math.Vec2f;
 import org.slf4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
+import static net.jasper.mod.automation.InputRecorder.State.*;
+
+/**
+ * Class records player input and allows to replay those
+ */
 public class InputRecorder {
 
     private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
 
     private static Recording record = new Recording();
 
-    private static boolean isRecording = false;
-    private static boolean isReplaying = false;
-    public static boolean looping = false;
+    public static State state = IDLE;
 
-    public static boolean hadScreenOpen = false;
-
-    public static Optional<SlotClick> lastSlotClicked = Optional.empty();
+    // Gets set in mixin SlotClickedCallback. Should only every contain one item. Else user made more than 50 clicks per second ???
+    // Is used to handle asynchronous nature of slot clicks
+    public static Queue<SlotClick> lastSlotClicked = new ConcurrentLinkedDeque<>();
 
     public static void registerInputRecorder() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Check if recording is possible
-            if (!isRecording || client.player == null) {
+            if (!state.isRecording() || client.player == null) {
                 return;
             }
-            // Get current KeyMap (Map of which keys to pressed state)
+
+            // Create current KeyMap (Map of which keys to pressed state)
             List<Boolean> currentKeyMap = new ArrayList<>();
             for (KeyBinding k : client.options.allKeys) {
                 currentKeyMap.add(k.isPressed());
             }
 
-            // Get Player looking direction
-            float pitch = client.player.getPitch();
-            float yaw = client.player.getYaw();
-
-            // Add recorded data to record
-            record.add(currentKeyMap, new Vec2f(pitch, yaw), client.player.getInventory().selectedSlot, lastSlotClicked, client.currentScreen);
-
-            // Clear last slot clicked to prevent double clicks
-            lastSlotClicked = Optional.empty();
-
-            // Check if a screen was open
-            hadScreenOpen = client.currentScreen != null;
+            // Create a new RecordEntry and add it to the record
+            Recording.RecordEntry newEntry = new Recording.RecordEntry(
+                    currentKeyMap,
+                    new LookingDirection(client.player.getYaw(), client.player.getPitch()),
+                    client.player.getInventory().selectedSlot,
+                    lastSlotClicked.poll(),
+                    client.currentScreen == null ? null : client.currentScreen.getClass()
+            );
+            record.add(newEntry);
         });
     }
 
     public static void startRecord() {
-        if (isRecording || isReplaying) {
+        if (state.isAny(RECORDING, REPLAYING)) {
             return;
         }
-        LOGGER.info("startRecord");
         PlayerController.writeToChat("Started Recording");
         clearRecord();
         PlayerController.centerPlayer();
-        isRecording = true;
+        lastSlotClicked.clear();
+        state = RECORDING;
     }
 
     public static void stopRecord() {
-        if (isRecording) {
-            LOGGER.info("stopRecord");
+        if (state.isRecording()) {
             PlayerController.writeToChat("Stopped Recording");
-            isRecording = false;
+            state = IDLE;
         }
     }
 
     public static void clearRecord() {
-        LOGGER.info("clearRecord");
         record.clear();
     }
 
     public static void startReplay() {
-        if (isRecording || isReplaying || record.isEmpty) {
+        if (state.isAny(RECORDING, REPLAYING) || record.isEmpty()) {
             return;
         }
-        isReplaying = true;
-        LOGGER.info("startReplay");
+        state = REPLAYING;
         PlayerController.writeToChat("Started Replay");
 
         PlayerController.centerPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
-        assert client.player != null : "client.player was found to be null in InputRecorder.replay()";
+        assert client.player != null;
 
-        for (int i = 0; i < record.size; i++) {
+        for (Recording.RecordEntry entry : record.entries) {
+            // Get all data for current record tick (i) to replay
+            List<Boolean> keyMap = entry.keysPressed();
+            LookingDirection currentLookingDirection = entry.lookingDirection();
+            int selectedSlot = entry.slotSelection();
+            SlotClick clickedSlot = entry.slotClicked();
+            Class<?> currentScreen = entry.currentScreen();
 
-            // Get all data for current record tick
-            List<Boolean> keyMap = record.keysPressed.get(i);
-            List<Float> lookDir = record.lookingDirections.get(i);
-            Vec2f currentLookingDirection = new Vec2f(lookDir.get(0), lookDir.get(1));
-            int selectedSlot = record.slotSelections.get(i);
-            Optional<SlotClick> clickedSlot = record.slotClicked.get(i);
-            Screen currentScreen = record.currentScreen.get(i);
-
-            // Add task to task queue (where one task is executed per tick)
-            PlayerAutomaClient.tasks.add("Apply KeyMap", () -> {
+            // Replay Ticks
+            PlayerAutomaClient.tasks.add(() -> {
 
                 // Update looking direction
-                float pitch = currentLookingDirection.x; float yaw = currentLookingDirection.y;
-                client.player.setPitch(pitch); client.player.setYaw(yaw);
+                client.player.setPitch(currentLookingDirection.pitch());
+                client.player.setYaw(currentLookingDirection.yaw());
 
-                // Update inventory slot
+                // Update selected inventory slot
                 client.player.getInventory().selectedSlot = selectedSlot;
 
                 // Update keys pressed
@@ -118,52 +116,53 @@ public class InputRecorder {
                     k.setPressed(keyMap.get(j++));
                 }
 
-                // Set current screen
-                client.setScreen(currentScreen);
 
-                // Click Slot in inventory
-                if (client.currentScreen == null && clickedSlot.isPresent()) {
-                    LOGGER.warn("Clicking slot while no screen is open");
+                // Close screen if needed
+                if (client.currentScreen != null && currentScreen == null) {
+                    client.currentScreen.close();
+                    client.setScreen(null);
                 }
-                clickedSlot.ifPresent(PlayerController::clickSlot);
-            });
 
+                // Inventory is not opened via Keybinding therefore open manually if needed
+                if (client.currentScreen == null && currentScreen == InventoryScreen.class) {
+                    client.setScreen(new InventoryScreen(client.player));
+                }
+
+                // Click Slot in inventory if possible
+                if (clickedSlot != null) PlayerController.clickSlot(clickedSlot);
+            });
         }
 
-
-        PlayerAutomaClient.tasks.add("Finish Replay", () -> {
-            isReplaying = false;
+        // Finish Replay
+        PlayerAutomaClient.tasks.add(() -> {
+            state = IDLE;
             PlayerController.writeToChat("Replay Done!");
         });
 
-        if (looping) {
-            PlayerAutomaClient.tasks.add("Replay again of looping", InputRecorder::startReplay);
+        if (state.isLooping()) {
+            // Replay Again (Looping)
+            PlayerAutomaClient.tasks.add(InputRecorder::startReplay);
         }
     }
 
     public static void startLoop() {
-        if (isRecording || isReplaying || record.isEmpty) {
+        if (state.isAny(RECORDING, REPLAYING) || record.isEmpty()) {
             return;
         }
-
-        LOGGER.info("startLoop");
         PlayerController.writeToChat("Started Looped Replay");
-
-        looping = true;
-        // isReplaying = true will be set in startReplay
+        state = LOOPING;
         startReplay();
     }
 
     public static void stopReplay() {
-        if (!isReplaying) {
+        if (!state.isReplaying()) {
             return;
         }
-        LOGGER.info("stopReplay");
         PlayerController.writeToChat("Stopped Replay");
 
-        isReplaying = false;
-        looping = false;
+        state = IDLE;
 
+        // Clear all tasks to stop replay
         PlayerAutomaClient.tasks.clear();
         PlayerAutomaClient.inventoryTasks.clear();
 
@@ -174,42 +173,93 @@ public class InputRecorder {
     }
 
     public static void storeRecord(String name) {
-        LOGGER.info("storing recording");
-        new Thread(() -> {
-            try {
-                // If file already exists create new file with "_new" before file type.
-                File selected = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/recordings/" + name);
-                String newName = name.substring(0, name.length() - 4) + "_new.rec";
-                if (selected.exists()) {
-                    selected = new File(MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/recordings/" + newName);
-                }
+        if (record.isEmpty()) {
+            PlayerController.writeToChat("Cannot store empty recording");
+            return;
+        } else if (state.isAny(RECORDING, REPLAYING)) {
+            PlayerController.writeToChat("Cannot store recording while recording or replaying");
+            return;
+        }
 
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
-                objectOutputStream.writeObject(record);
-                PlayerController.writeToChat("Stored Recording");
-            } catch(IOException e) {
-                PlayerController.writeToChat("Failed to store recording");
-                LOGGER.info("Failed to create output stream for selected file");
-                LOGGER.info(e.getMessage());
+        File selected = null;
+        ObjectOutputStream objectOutputStream = null;
+        String basePath = MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/recordings/";
+        try {
+            // If file already exists create new file with "_new" before file type.
+            selected = new File(basePath + name);
+            String newName = name.substring(0, name.length() - 4) + "_new.rec";
+            if (selected.exists()) {
+                selected = new File(basePath + newName);
             }
-        }).start();
-
+            objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
+            objectOutputStream.writeObject(record);
+            objectOutputStream.close();
+            PlayerController.writeToChat("Stored Recording");
+        } catch(IOException e) {
+            e.printStackTrace();
+            try {
+                assert objectOutputStream != null;
+                objectOutputStream.close();
+                LOGGER.info("Deletion of failed file: " + selected.delete());
+            } catch (IOException closeFailed) {
+                closeFailed.printStackTrace();
+                LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
+            }
+            PlayerController.writeToChat("Failed to store recording");
+            LOGGER.info("Failed to create output stream for selected file");
+        }
     }
 
 
     public static void loadRecord(File selected) {
-        LOGGER.info("loading recording");
-        new Thread(() -> {
+        if (state.isAny(RECORDING, REPLAYING)) {
+            PlayerController.writeToChat("Cannot load recording while recording or replaying");
+            return;
+        }
+        ObjectInputStream objectInputStream = null;
+        try {
+            objectInputStream = new ObjectInputStream(new FileInputStream(selected));
+            record = (Recording) objectInputStream.readObject();
+            objectInputStream.close();
+            PlayerController.writeToChat("Loaded Recording");
+        } catch (Exception e) {
+            e.printStackTrace();
             try {
-                ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(selected));
-                record = (Recording) objectInputStream.readObject();
+                assert objectInputStream != null;
                 objectInputStream.close();
-                PlayerController.writeToChat("Loaded Recording");
-            } catch (Exception e) {
-                LOGGER.info("Could not load record");
-                LOGGER.info(e.getMessage());
-                PlayerController.writeToChat("Invalid file");
+            } catch (IOException closeFailed) {
+                closeFailed.printStackTrace();
+                LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
             }
-        }).start();
+            PlayerController.writeToChat("Invalid file");
+        }
+    }
+
+    public enum State {
+        RECORDING,
+        REPLAYING,
+        LOOPING,
+        IDLE;
+
+        public boolean isLooping() {
+            return this == LOOPING;
+        }
+
+        public boolean isRecording() {
+            return this == RECORDING;
+        }
+
+        public boolean isReplaying() {
+            return this == REPLAYING;
+        }
+
+        public boolean isAny(State... states) {
+            for (State state : states) {
+                if (this == state) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

@@ -8,9 +8,6 @@ import net.jasper.mod.automation.InputRecorder;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +19,6 @@ public class PlayerAutomaClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::client");
 	public static final String RECORDING_FOLDER_NAME = "Recordings";
 	public static final String RECORDING_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), RECORDING_FOLDER_NAME).toString();
-
 
 	// Will execute one task per tick
 	public static final TaskQueue tasks = new TaskQueue();
@@ -44,21 +40,20 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		// Initialize New Keybinds
 		PlayerAutomaKeyBinds.initialize();
 
-		// Register Inventory Automations
+		// Register Inventory-Automations
 		InventoryAutomation.registerInventoryAutomation();
 
-		// Register Player Recorder
+		// Register Input-Recorder
 		InputRecorder.registerInputRecorder();
 
 
-
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			// Run Inventory tasks separately
+			// Run Inventory tasks separately from other tasks. Meaning they have a higher priority
 			if (!inventoryTasks.isEmpty()) {
 				inventoryTasks.poll().run();
 			}
 
-			// Run one of the assigned tasks in this tick only if inventory task finished
+			// Run one of the assigned tasks in this tick only if all inventory tasks have finished
 			if (!tasks.isEmpty() && inventoryTasks.isEmpty()) {
 				tasks.poll().run();
 			}

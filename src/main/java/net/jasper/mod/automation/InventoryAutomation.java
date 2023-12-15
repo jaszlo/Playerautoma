@@ -11,26 +11,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import org.slf4j.Logger;
 
-
-
+/**
+ * This class is responsible for re-stacking items in the inventory when replaying
+ */
 public class InventoryAutomation {
-
     private static boolean doAutomation = true;
 
-    private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
-
-    /**
-     * Will re-stack items in your mainHand automatically like InventoryTweaks
-     */
     public static void registerInventoryAutomation() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             PlayerInventory inv = player.getInventory();
             if (hand != Hand.MAIN_HAND) {
                 return ActionResult.PASS;
             }
-
 
             ItemStack currentItem = inv.getStack(inv.selectedSlot);
             // Check if item is a placeable item in the world
@@ -55,17 +48,15 @@ public class InventoryAutomation {
                     continue;
                 }
 
-                LOGGER.info("Another Stack of " + item.getName() + " in Slot " + i + " will be placed in MainHand");
                 final int from_slot = i;
-
                 if (player.getInventory().getStack(from_slot).getItem() == Items.AIR) {
                     break;
                 }
                 doAutomation = false;
 
-                // Add the Inventory changing in a task list, so it will be executed in a later tick
-                PlayerAutomaClient.inventoryTasks.add("Open Inventory & move Item", () -> {
-                    LOGGER.info("Requesting to pick Item from Inventory into mainHand and Opening Inventory to allow this to happen on Servers.");
+                // Open Inventory & move Item in a later tick
+                PlayerAutomaClient.inventoryTasks.add(() -> {
+                    // Requesting to pick Item from Inventory into mainHand and Opening Inventory to allow this to happen on Servers
                     MinecraftClient client = MinecraftClient.getInstance();
                     Screen invScreen = new InventoryScreen(player);
                     client.setScreen(invScreen);
@@ -73,15 +64,15 @@ public class InventoryAutomation {
                     client.interactionManager.pickFromInventory(from_slot);
                 });
 
-                PlayerAutomaClient.inventoryTasks.add("Close Inventory", () -> {
-                    LOGGER.info("Closing Inventory and clearing flag so this automation can run again for other Blocks!");
+                // Close Inventory in a later tick
+                PlayerAutomaClient.inventoryTasks.add(() -> {
+                    // Closing Inventory and clearing flag so this automation can run again for other Blocks
                     MinecraftClient.getInstance().setScreen(null);
                     doAutomation = true;
                 });
                 break;
 
             }
-
             return ActionResult.PASS;
         });
     }

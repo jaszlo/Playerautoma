@@ -2,18 +2,12 @@ package net.jasper.mod.util.data;
 
 import net.minecraft.screen.slot.SlotActionType;
 
-public class SlotClick {
+import java.io.Serializable;
 
-    public int slotId;
-    public int button;
-    public SlotActionType actionType;
-
-    public SlotClick(int slotId, int button, SlotActionType actionType) {
-        this.slotId = slotId;
-        this.button = button;
-        this.actionType = actionType;
-    }
-
+/**
+ * Small Data-Class to store slot clicks
+ */
+public record SlotClick(int slotId, int button, SlotActionType actionType) implements Serializable {
     @Override
     public String toString() {
         return "SlotClick{" +

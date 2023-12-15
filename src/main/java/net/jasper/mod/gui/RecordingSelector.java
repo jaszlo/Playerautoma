@@ -15,8 +15,11 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import java.io.File;
-
 // TODO: this could be a general class listing files of a directory and letting you select one given a callback function
+
+/**
+ * Screen copied from language-selection. Allows to select stored recordings.
+ */
 public class RecordingSelector extends Screen {
 
     private RecordingSelectionListWidget recordingSelectionList;
@@ -53,18 +56,28 @@ public class RecordingSelector extends Screen {
         this.recordingSelectionList = new RecordingSelectionListWidget(MinecraftClient.getInstance(), this.directoryPath);
         this.addSelectableChild(this.recordingSelectionList);
 
+        // Button placement:
+        //    [Delete] [Open Recording Folder] [Done]
+
         this.addDrawableChild(ButtonWidget.builder(
-                ScreenTexts.DONE,
-                (button) -> this.onDone()
+                Text.of("Delete"),
+                (button) -> this.onDelete()
         )
-        .dimensions(this.width / 2 - 155 + 160, this.height - 38, 150, 20)
+        .dimensions(this.width / 2 - 65 - 140, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
                 Text.of("Open Recording Folder"),
                 (button) -> Util.getOperatingSystem().open(new File(this.directoryPath).toURI())
         )
-        .dimensions(this.width / 2 - 155, this.height - 38, 150, 20)
+        .dimensions(this.width / 2 - 65, this.height - 38, 130, 20)
+        .build());
+
+        this.addDrawableChild(ButtonWidget.builder(
+                ScreenTexts.DONE,
+                (button) -> this.onDone()
+        )
+        .dimensions(this.width / 2 - 65 + 140, this.height - 38, 130, 20)
         .build());
 
         super.init();
@@ -77,6 +90,14 @@ public class RecordingSelector extends Screen {
             InputRecorder.loadRecord(recEntry.file);
         }
         MinecraftClient.getInstance().setScreen(null);
+    }
+
+    private void onDelete() {
+        RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
+        if (recEntry != null) {
+            PlayerAutomaClient.LOGGER.info("Deletion of file result: " + recEntry.file.delete());
+            this.recordingSelectionList.updateFiles();
+        }
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
@@ -122,7 +143,6 @@ public class RecordingSelector extends Screen {
                 return;
             }
             for (File file : fileList) {
-                PlayerAutomaClient.LOGGER.info("Found file: " + file.getName());
                 if (file.getName().endsWith(".rec")) {
                     RecordingEntry entry = new RecordingEntry(file.getName(), file);
                     this.addEntry(entry);

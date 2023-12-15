@@ -1,7 +1,5 @@
 package net.jasper.mod.gui;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.jasper.mod.automation.InputRecorder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -10,7 +8,9 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 
-@Environment(EnvType.CLIENT)
+/**
+ * Main-Menu if you like that allows for control of the InputRecorder via buttons.
+ */
 public class PlayerAutomaMenu extends Screen {
 
     public static PlayerAutomaMenu SINGLETON = new PlayerAutomaMenu("PlayerAutomaMenu");

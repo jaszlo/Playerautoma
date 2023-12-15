@@ -9,10 +9,13 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
+/**
+ * Class storing all KeyBinding-Constants
+ */
 public class Constants {
     protected static final int AMOUNT_KEYBINDS = 8;
 
-    private static final String keyBindCategory = "Playerautoma";
+    private static final String KEYBINDING_CATEGORY = "Playerautoma";
 
     private static final String[] names = {
             // Player Recoding Keybinds
@@ -31,17 +34,19 @@ public class Constants {
     private static final KeyBinding[] bindings = {
 
             // Player Recoding Keybinds
-            new KeyBinding(names[0], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, keyBindCategory),
-            new KeyBinding(names[1], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, keyBindCategory),
-            new KeyBinding(names[2], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_J, keyBindCategory),
-            new KeyBinding(names[3], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, keyBindCategory),
-            new KeyBinding(names[4], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_L, keyBindCategory),
-            new KeyBinding(names[5], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, keyBindCategory),
-            new KeyBinding(names[6], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, keyBindCategory),
+            new KeyBinding(names[0], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, KEYBINDING_CATEGORY),
+            new KeyBinding(names[1], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, KEYBINDING_CATEGORY),
+            new KeyBinding(names[2], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_J, KEYBINDING_CATEGORY),
+            new KeyBinding(names[3], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, KEYBINDING_CATEGORY),
+            new KeyBinding(names[4], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_L, KEYBINDING_CATEGORY),
+            new KeyBinding(names[5], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, KEYBINDING_CATEGORY),
+            new KeyBinding(names[6], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, KEYBINDING_CATEGORY),
 
             // Open Menu
-            new KeyBinding(names[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, keyBindCategory)
+            new KeyBinding(names[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY)
     };
+
+    public static final KeyBinding CANCEL_REPLAY = bindings[3];
 
     private static final Runnable[] callbackMethods = {
 
@@ -66,5 +71,4 @@ public class Constants {
             KeyBindingHelper.registerKeyBinding(bindings[i]);
         }
     }
-
 }

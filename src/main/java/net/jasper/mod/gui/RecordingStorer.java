@@ -12,6 +12,10 @@ import net.minecraft.text.Text;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
+/**
+ * 'Screen' (more of a pop-up) that allows to store a recording with a given name.
+ */
 public class RecordingStorer extends Screen {
 
 
