@@ -219,7 +219,7 @@ public class InputRecorder {
         ObjectInputStream objectInputStream = null;
         try {
             objectInputStream = new ObjectInputStream(new FileInputStream(selected));
-            // This can happend when a file is selected and then deleted via the file explorer
+            // This can happened when a file is selected and then deleted via the file explorer
             if (objectInputStream == null) throw new IOException("objectInputStream is null");
             record = (Recording) objectInputStream.readObject();
             objectInputStream.close();

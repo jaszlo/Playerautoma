@@ -8,6 +8,7 @@ import net.jasper.mod.automation.InputRecorder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.option.LanguageOptionsScreen;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.input.KeyCodes;
@@ -123,11 +124,10 @@ public class RecordingSelector extends Screen {
         this.renderBackgroundTexture(context);
     }
 
-    @Environment(EnvType.CLIENT)
     private class RecordingSelectionListWidget extends AlwaysSelectedEntryListWidget<RecordingSelectionListWidget.RecordingEntry> {
         final String directoryPath;
         public RecordingSelectionListWidget(MinecraftClient client, String directoryPath) {
-            super(client, RecordingSelector.this.width, RecordingSelector.this.height, 32, RecordingSelector.this.height - 65 + 4, 18);
+            super(client, RecordingSelector.this.width, RecordingSelector.this.height - 93, 32, 18);
             this.directoryPath = directoryPath;
             this.updateFiles();
 
@@ -158,7 +158,6 @@ public class RecordingSelector extends Screen {
             return super.getRowWidth() + 50;
         }
 
-        @Environment(EnvType.CLIENT)
         public class RecordingEntry extends AlwaysSelectedEntryListWidget.Entry<RecordingSelector.RecordingSelectionListWidget.RecordingEntry> {
             final String fileName;
             final File file;
