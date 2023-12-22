@@ -192,14 +192,14 @@ public class InputRecorder {
                 selected = new File(basePath + newName);
             }
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
+            if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             objectOutputStream.writeObject(record);
             objectOutputStream.close();
             PlayerController.writeToChat("Stored Recording");
         } catch(IOException e) {
             e.printStackTrace();
             try {
-                assert objectOutputStream != null;
-                objectOutputStream.close();
+                if (objectOutputStream != null) objectOutputStream.close();
                 LOGGER.info("Deletion of failed file: " + selected.delete());
             } catch (IOException closeFailed) {
                 closeFailed.printStackTrace();
@@ -219,14 +219,15 @@ public class InputRecorder {
         ObjectInputStream objectInputStream = null;
         try {
             objectInputStream = new ObjectInputStream(new FileInputStream(selected));
+            // This can happend when a file is selected and then deleted via the file explorer
+            if (objectInputStream == null) throw new IOException("objectInputStream is null");
             record = (Recording) objectInputStream.readObject();
             objectInputStream.close();
             PlayerController.writeToChat("Loaded Recording");
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                assert objectInputStream != null;
-                objectInputStream.close();
+                if (objectInputStream != null) objectInputStream.close();
             } catch (IOException closeFailed) {
                 closeFailed.printStackTrace();
                 LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
