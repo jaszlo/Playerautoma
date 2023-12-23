@@ -28,18 +28,6 @@ Other than that the default keybindings are as follows.
 - `U`  Store Recording
 -  `I`   Load Recording
 
-## Examples
-In this example you can see PlayerAutoma being used in order to traverse a Jump'n Run once and then use the recording
-to do it automatically.
-
-![Gif of the Situation explained above](documentation/resources/jump-n-run-demo.gif)
-
-In this example you can see PlayerAutoma being used in order to build a farm-module once and then use the recording
-to do it automatically.
-
-![Gif of the Situation explained above](documentation/resources/farm-demo.gif)
-
-
 ## Development Setup
 
 1. Project Structure > Select JDK to `JDK17` and Language Level to `SKD default`
