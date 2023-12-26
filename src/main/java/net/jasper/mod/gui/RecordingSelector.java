@@ -1,14 +1,11 @@
 package net.jasper.mod.gui;
 
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.LanguageOptionsScreen;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.input.KeyCodes;
@@ -88,7 +85,7 @@ public class RecordingSelector extends Screen {
         isOpen = false;
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
-            InputRecorder.loadRecord(recEntry.file);
+            PlayerRecorder.loadRecord(recEntry.file);
         }
         MinecraftClient.getInstance().setScreen(null);
     }

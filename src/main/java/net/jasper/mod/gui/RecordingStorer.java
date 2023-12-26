@@ -1,6 +1,6 @@
 package net.jasper.mod.gui;
 
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -62,7 +62,7 @@ public class RecordingStorer extends Screen {
               (button) -> {
                   String name = this.input.getText();
                   name += name.endsWith(".rec") ? "" : ".rec";
-                  InputRecorder.storeRecord(name);
+                  PlayerRecorder.storeRecord(name);
                   this.close();
               }).dimensions(this.width / 2 - 100, this.height / 2 + 10, 200, 20)
                 .tooltip(Tooltip.of(Text.of("Save Recording to .minecraft/recordings")))

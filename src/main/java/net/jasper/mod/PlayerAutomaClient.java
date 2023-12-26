@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 import net.jasper.mod.automation.InventoryAutomation;
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.client.MinecraftClient;
@@ -44,7 +44,7 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		InventoryAutomation.registerInventoryAutomation();
 
 		// Register Input-Recorder
-		InputRecorder.registerInputRecorder();
+		PlayerRecorder.registerInputRecorder();
 
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {

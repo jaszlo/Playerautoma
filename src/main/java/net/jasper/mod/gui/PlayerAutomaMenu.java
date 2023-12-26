@@ -1,6 +1,6 @@
 package net.jasper.mod.gui;
 
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -74,7 +74,7 @@ public class PlayerAutomaMenu extends Screen {
     protected void init() {
         Buttons.START_RECORDING = ButtonWidget.builder(Text.literal("Start Recording"), button -> {
                     SINGLETON.close();
-                    InputRecorder.startRecord();
+                    PlayerRecorder.startRecord();
                 })
                 .dimensions(width / 2 - 205, 20, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.of(Text.literal("Start Recording your movement and close the Menu")))
@@ -82,7 +82,7 @@ public class PlayerAutomaMenu extends Screen {
 
         Buttons.STOP_RECORDING = ButtonWidget.builder(Text.literal("Stop Recording"), button -> {
                     SINGLETON.close();
-                    InputRecorder.stopRecord();
+                    PlayerRecorder.stopRecord();
                 })
                 .dimensions(width / 2 + 5, 20, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.of(Text.literal("Stop Recording your movements and close the Menu")))
@@ -90,7 +90,7 @@ public class PlayerAutomaMenu extends Screen {
 
         Buttons.START_REPLAY = ButtonWidget.builder(Text.literal("Start Replay"), button -> {
                     SINGLETON.close();
-                    InputRecorder.startReplay();
+                    PlayerRecorder.startReplay();
                 })
                 .dimensions(width / 2 - 205, 45, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.of(Text.literal("Start Replaying your recorded movements and close the Menu")))
@@ -98,7 +98,7 @@ public class PlayerAutomaMenu extends Screen {
 
         Buttons.STOP_REPLAY = ButtonWidget.builder(Text.literal("Stop Replay"), button -> {
                     SINGLETON.close();
-                    InputRecorder.stopReplay();
+                    PlayerRecorder.stopReplay();
 
                 })
                 .dimensions(width / 2 + 5, 45, BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -107,7 +107,7 @@ public class PlayerAutomaMenu extends Screen {
 
         Buttons.START_LOOP = ButtonWidget.builder(Text.literal("Start Looping Replay"), button -> {
                     SINGLETON.close();
-                    InputRecorder.startLoop();
+                    PlayerRecorder.startLoop();
                 })
                 .dimensions(width / 2 - 205, 70, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.of(Text.literal("Start Looping your recorded movements and close the Menu")))
@@ -115,7 +115,7 @@ public class PlayerAutomaMenu extends Screen {
 
         Buttons.CANCEL_REPLAY = ButtonWidget.builder(Text.literal("Cancel Replay"), button -> {
                     SINGLETON.close();
-                    InputRecorder.stopReplay();
+                    PlayerRecorder.stopReplay();
                 })
                 .dimensions(width / 2 + 5, 70, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.of(Text.literal("Cancel Replaying your recorded movements and close the Menu")))

@@ -1,6 +1,6 @@
 package net.jasper.mod.mixins;
 
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ public class CancelReplay {
     @Inject(method="keyPressed", at=@At("HEAD"))
     private void injected(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (CANCEL_REPLAY.matchesKey(keyCode, scanCode)) {
-            InputRecorder.stopReplay();
+            PlayerRecorder.stopReplay();
         }
     }
 }

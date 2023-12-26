@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import static net.jasper.mod.automation.InputRecorder.State.*;
+import static net.jasper.mod.automation.PlayerRecorder.State.*;
 
 /**
  * Class records player input and allows to replay those
  */
-public class InputRecorder {
+public class PlayerRecorder {
 
     private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
 
@@ -85,8 +85,8 @@ public class InputRecorder {
         if (state.isAny(RECORDING, REPLAYING) || record.isEmpty()) {
             return;
         }
-        state = REPLAYING;
-        PlayerController.writeToChat("Started Replay");
+        state = state.isLooping() ? LOOPING : REPLAYING;
+        if (state.isReplaying()) PlayerController.writeToChat("Started Replay");
 
         PlayerController.centerPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
@@ -133,15 +133,17 @@ public class InputRecorder {
             });
         }
 
-        // Finish Replay
-        PlayerAutomaClient.tasks.add(() -> {
-            state = IDLE;
-            PlayerController.writeToChat("Replay Done!");
-        });
+        if (!state.isLooping()) {
+            // Finish Replay if not looping
+            PlayerAutomaClient.tasks.add(() -> {
+                state = IDLE;
+                PlayerController.writeToChat("Replay Done");
+            });
+        }
 
         if (state.isLooping()) {
             // Replay Again (Looping)
-            PlayerAutomaClient.tasks.add(InputRecorder::startReplay);
+            PlayerAutomaClient.tasks.add(PlayerRecorder::startReplay);
         }
     }
 
@@ -155,7 +157,8 @@ public class InputRecorder {
     }
 
     public static void stopReplay() {
-        if (!state.isReplaying()) {
+        // Only stop replay if replaying or looping
+        if (!state.isReplaying() && !state.isLooping()) {
             return;
         }
         PlayerController.writeToChat("Stopped Replay");
@@ -219,7 +222,7 @@ public class InputRecorder {
         ObjectInputStream objectInputStream = null;
         try {
             objectInputStream = new ObjectInputStream(new FileInputStream(selected));
-            // This can happened when a file is selected and then deleted via the file explorer
+            // This can happen when a file is selected and then deleted via the file explorer
             if (objectInputStream == null) throw new IOException("objectInputStream is null");
             record = (Recording) objectInputStream.readObject();
             objectInputStream.close();

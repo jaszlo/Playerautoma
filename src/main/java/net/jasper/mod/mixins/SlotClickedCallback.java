@@ -1,7 +1,7 @@
 package net.jasper.mod.mixins;
 
 
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.slot.Slot;
@@ -20,8 +20,8 @@ public abstract class SlotClickedCallback {
     @Inject(method="onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at=@At("HEAD"))
     private void injected(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         // Register slot click for InputRecorder if isRecording and not replaying
-        if (InputRecorder.state.isRecording()) {
-            InputRecorder.lastSlotClicked.add(new SlotClick(slotId, button, actionType));
+        if (PlayerRecorder.state.isRecording()) {
+            PlayerRecorder.lastSlotClicked.add(new SlotClick(slotId, button, actionType));
         }
     }
 }

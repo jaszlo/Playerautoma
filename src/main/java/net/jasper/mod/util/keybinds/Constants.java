@@ -1,7 +1,7 @@
 package net.jasper.mod.util.keybinds;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.jasper.mod.automation.InputRecorder;
+import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.PlayerAutomaMenu;
 import net.jasper.mod.gui.RecordingSelector;
 import net.jasper.mod.gui.RecordingStorer;
@@ -51,11 +51,11 @@ public class Constants {
     private static final Runnable[] callbackMethods = {
 
             // Player Recording Keybinds
-            InputRecorder::startRecord,
-            InputRecorder::stopRecord,
-            InputRecorder::startReplay,
-            InputRecorder::stopReplay,
-            InputRecorder::startLoop,
+            PlayerRecorder::startRecord,
+            PlayerRecorder::stopRecord,
+            PlayerRecorder::startReplay,
+            PlayerRecorder::stopReplay,
+            PlayerRecorder::startLoop,
             RecordingStorer::open,
             RecordingSelector::open,
 
