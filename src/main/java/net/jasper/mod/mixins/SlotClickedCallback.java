@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 /**
- * Sets the last slot clicked for the Input-Recorder to store it
+ * Sets the last slot clicked for the Player-Recorder to store it
  */
 @Mixin(HandledScreen.class)
 public abstract class SlotClickedCallback {

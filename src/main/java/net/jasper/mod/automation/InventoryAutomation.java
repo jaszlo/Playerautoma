@@ -1,7 +1,7 @@
 package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,7 +18,9 @@ import net.minecraft.util.Hand;
 public class InventoryAutomation {
     private static boolean doAutomation = true;
 
+    public static final TaskQueue inventoryTasks = new TaskQueue(TaskQueue.HIGH_PRIORITY);
     public static void registerInventoryAutomation() {
+        inventoryTasks.register("inventoryTasks");
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             PlayerInventory inv = player.getInventory();
             if (hand != Hand.MAIN_HAND) {
@@ -55,17 +57,15 @@ public class InventoryAutomation {
                 doAutomation = false;
 
                 // Open Inventory & move Item in a later tick
-                PlayerAutomaClient.inventoryTasks.add(() -> {
+                inventoryTasks.add(() -> {
                     // Requesting to pick Item from Inventory into mainHand and Opening Inventory to allow this to happen on Servers
                     MinecraftClient client = MinecraftClient.getInstance();
-                    Screen invScreen = new InventoryScreen(player);
-                    client.setScreen(invScreen);
                     assert client.interactionManager != null;
                     client.interactionManager.pickFromInventory(from_slot);
                 });
 
                 // Close Inventory in a later tick
-                PlayerAutomaClient.inventoryTasks.add(() -> {
+                inventoryTasks.add(() -> {
                     // Closing Inventory and clearing flag so this automation can run again for other Blocks
                     MinecraftClient.getInstance().setScreen(null);
                     doAutomation = true;

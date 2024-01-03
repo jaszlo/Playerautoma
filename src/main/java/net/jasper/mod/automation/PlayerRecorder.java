@@ -6,6 +6,7 @@ import net.jasper.mod.util.PlayerController;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.SlotClick;
+import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
@@ -26,15 +27,21 @@ public class PlayerRecorder {
 
     private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
 
-    private static Recording record = new Recording();
+    public static Recording record = new Recording();
 
     public static State state = IDLE;
+
+    // Will execute one task per tick
+    public static final TaskQueue tasks = new TaskQueue(TaskQueue.MEDIUM_PRIORITY);
 
     // Gets set in mixin SlotClickedCallback. Should only every contain one item. Else user made more than 50 clicks per second ???
     // Is used to handle asynchronous nature of slot clicks
     public static Queue<SlotClick> lastSlotClicked = new ConcurrentLinkedDeque<>();
 
     public static void registerInputRecorder() {
+        // Register Task-Queues
+        tasks.register("playerActions");
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // Check if recording is possible
             if (!state.isRecording() || client.player == null) {
@@ -74,6 +81,7 @@ public class PlayerRecorder {
         if (state.isRecording()) {
             PlayerController.writeToChat("Stopped Recording");
             state = IDLE;
+            LOGGER.info("new record of size: " + record.entries.size());
         }
     }
 
@@ -101,7 +109,7 @@ public class PlayerRecorder {
             Class<?> currentScreen = entry.currentScreen();
 
             // Replay Ticks
-            PlayerAutomaClient.tasks.add(() -> {
+            tasks.add(() -> {
 
                 // Update looking direction
                 client.player.setPitch(currentLookingDirection.pitch());
@@ -135,7 +143,7 @@ public class PlayerRecorder {
 
         if (!state.isLooping()) {
             // Finish Replay if not looping
-            PlayerAutomaClient.tasks.add(() -> {
+            tasks.add(() -> {
                 state = IDLE;
                 PlayerController.writeToChat("Replay Done");
             });
@@ -143,7 +151,7 @@ public class PlayerRecorder {
 
         if (state.isLooping()) {
             // Replay Again (Looping)
-            PlayerAutomaClient.tasks.add(PlayerRecorder::startReplay);
+            tasks.add(PlayerRecorder::startReplay);
         }
     }
 
@@ -166,8 +174,8 @@ public class PlayerRecorder {
         state = IDLE;
 
         // Clear all tasks to stop replay
-        PlayerAutomaClient.tasks.clear();
-        PlayerAutomaClient.inventoryTasks.clear();
+        tasks.clear();
+        InventoryAutomation.inventoryTasks.clear();
 
         // Toggle of all keys to stop player from doing anything
         for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {

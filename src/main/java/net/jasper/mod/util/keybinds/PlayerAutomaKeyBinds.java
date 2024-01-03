@@ -1,5 +1,7 @@
 package net.jasper.mod.util.keybinds;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,14 @@ import java.util.List;
 public class PlayerAutomaKeyBinds {
 
     private static final List<KeyBind> keyBinds = new ArrayList<>();
-    public static void initialize() {
+    public static void register() {
         keyBinds.addAll(List.of(Constants.defaultKeybinds));
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player == null) {
+                return;
+            }
+            handleKeyPresses();
+        });
     }
 
     public static void handleKeyPresses() {

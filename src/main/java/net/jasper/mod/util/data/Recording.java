@@ -17,7 +17,9 @@ public class Recording implements Serializable {
 
     public final List<RecordEntry> entries = new ArrayList<>();
 
-    public Recording() {}
+    public String toString() {
+       return "Recording[" + this.entries.size() + "]";
+    }
 
     public void clear() {
         entries.clear();
@@ -28,5 +30,11 @@ public class Recording implements Serializable {
     }
     public boolean isEmpty() {
         return entries.isEmpty();
+    }
+
+    public Recording copy() {
+        Recording copy = new Recording();
+        copy.entries.addAll(this.entries);
+        return copy;
     }
 }
