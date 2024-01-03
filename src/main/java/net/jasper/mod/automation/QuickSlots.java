@@ -10,6 +10,9 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 
+/**
+ * QuickSlots for storing and loading Recordings for the PlayerRecorder
+ */
 public class QuickSlots {
 
     public static Recording[] quickSlots = new Recording[10];

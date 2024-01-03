@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.nio.file.Path;
 
+/**
+ * Main Class for the Client-Side of the Mod. Registers all Keybinds and Automations
+ */
 public class PlayerAutomaClient implements ClientModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::client");

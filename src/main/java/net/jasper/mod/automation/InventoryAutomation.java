@@ -4,8 +4,6 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
