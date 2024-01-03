@@ -1,3 +1,14 @@
+# Version 0.3.2:
+* New Features:
+  * QuickSlots can be used to store recordings via CTRL + 0-9 and load via ALT + 0-9
+
+* Changes:
+  * Inventory Screen no longer opens when re-stacking items
+
+# Version 0.3.1:
+* Hot Fix:
+  * Looped Replay works again!
+
 # Version 0.3:
 * New Features:
     * Delete Button for Files
