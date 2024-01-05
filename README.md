@@ -8,13 +8,14 @@ The following actions are recorded:
 
 The mod will not add support to record chat actions like commands or writing messages as it would allow for the creation of spam bots.
 
+Checkout the [Changelog](Changelog.md) for more information on the latest changes.
+Also, checkout the [Modrinth](https://modrinth.com/mod/playerautoma) page information to support the mod development.
 ## Any trouble?
 This mod is still early in development.
 If you encounter any bugs or problems please let me know [here](https://github.com/jaszlo/Playerautoma/issues) and if you want to contribute feel free to create a [pull request](https://github.com/jaszlo/Playerautoma/pulls).
 
 ## Installation
 This mod requires Minecraft [Fabric](https://fabricmc.net/). Simply put the playerautoma-vx.x.jar and  [Fabric API](https://modrinth.com/mod/fabric-api) JAR in `.minecraft/mods`.
-
 
 ## Usage
 The mod has a menu which should be self-explanatory and can be opened using the `O` Key.

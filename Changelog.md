@@ -1,7 +1,7 @@
 # Version 0.3.3:
 * Changes:
   * Logger no longer spams the console with player actions on replay
-  * Selected Hotbar slots no longer changes when using Quickslots
+  * Selected Hotbar slot no longer changes when using Quickslots
   * Only allowing Quickslots from 1-9 resembling the Hotbar
   * More Feedback in the chat when loading from the Quickslots
   * No longer stores empty recordings to Quickslots
