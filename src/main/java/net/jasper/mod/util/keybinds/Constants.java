@@ -3,6 +3,7 @@ package net.jasper.mod.util.keybinds;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.PlayerAutomaMenu;
+import net.jasper.mod.gui.RecordingEditor;
 import net.jasper.mod.gui.RecordingSelector;
 import net.jasper.mod.gui.RecordingStorer;
 import net.minecraft.client.option.KeyBinding;
@@ -13,7 +14,7 @@ import org.lwjgl.glfw.GLFW;
  * Class storing all KeyBinding-Constants
  */
 public class Constants {
-    protected static final int AMOUNT_KEYBINDS = 8;
+    protected static final int AMOUNT_KEYBINDS = 9;
 
     private static final String KEYBINDING_CATEGORY = "Playerautoma";
 
@@ -28,7 +29,8 @@ public class Constants {
             "Load Recording",
 
             // Open Menu
-            "Open Mod Menu"
+            "Open Mod Menu",
+            "Open Recording Editor"
     };
 
     private static final KeyBinding[] bindings = {
@@ -42,8 +44,9 @@ public class Constants {
             new KeyBinding(names[5], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, KEYBINDING_CATEGORY),
             new KeyBinding(names[6], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, KEYBINDING_CATEGORY),
 
-            // Open Menu
-            new KeyBinding(names[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY)
+            // Open Menus
+            new KeyBinding(names[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY),
+            new KeyBinding(names[8], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_P, KEYBINDING_CATEGORY)
     };
 
     public static final KeyBinding CANCEL_REPLAY = bindings[3];
@@ -60,7 +63,8 @@ public class Constants {
             RecordingSelector::open,
 
             // Toggle GUI
-            PlayerAutomaMenu::open
+            PlayerAutomaMenu::open,
+            RecordingEditor::open
     };
 
     protected static KeyBind[] defaultKeybinds = new KeyBind[AMOUNT_KEYBINDS];
