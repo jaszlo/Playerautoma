@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.PlayerController;
 import net.jasper.mod.util.data.Recording;
-import net.jasper.mod.util.data.TaskQueue;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -15,16 +15,14 @@ import java.util.Arrays;
  */
 public class QuickSlots {
 
-    public static Recording[] quickSlots = new Recording[10];
+    public static Recording[] quickSlots = new Recording[9];
 
     // KeyBinding State
-    private static final int[] storeCooldowns = new int[10];
-    private static final int[] loadCooldowns = new int[10];
-    private static final boolean[] CTRLPressed = new boolean[10];
-    private static final boolean[] ALTPressed = new boolean[10];
-    private static final int COOLDOWN = 10;
-
-    private static final TaskQueue changeSelectedSlot = new TaskQueue(TaskQueue.LOW_PRIORITY);
+    private static final int[] storeCooldowns = new int[9];
+    private static final int[] loadCooldowns = new int[9];
+    private static final boolean[] CTRLPressed = new boolean[9];
+    private static final boolean[] ALTPressed = new boolean[9];
+    private static final int COOLDOWN = 5;
 
     public static void store(int slot, Recording recording) {
         quickSlots[slot] = recording;
@@ -48,7 +46,7 @@ public class QuickSlots {
                 cooldowns[i]--;
                 continue;
             }
-            pressed[i] = InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_0 + i);
+            pressed[i] = InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_1 + i);
             if (pressed[i]) {
                 // Fill all cooldowns to prevent double key press
                 Arrays.fill(cooldowns, COOLDOWN);
@@ -57,16 +55,23 @@ public class QuickSlots {
         }
     }
 
-    public static void register() {
-        changeSelectedSlot.register("changeSelectedSlot");
+    private static void consumeKeyPress(KeyBinding key, int limit) {
+        int error = 0;
+        while (key.wasPressed()) {
+            key.setPressed(false);
+            if (error++ > limit) {
+                PlayerAutomaClient.LOGGER.warn("Could not unset keybinding for QuickSlot");
+                break;
+            }
+        }
+    }
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+    public static void register() {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) {
                 return;
             }
 
-            // Store current selected slot to restore it later as it gets changed by the QuickSlot KeyBindings
-            int selectedSlotBackup = client.player.getInventory().selectedSlot;
             long handle = client.getWindow().getHandle();
 
             // Check Store QuickSlot KeyBindings
@@ -74,56 +79,50 @@ public class QuickSlots {
                 handleQuickSlotKeyPress(handle, storeCooldowns, CTRLPressed);
             }
 
-            // Store Recording to QuickSlot
-            for (int i = 0; i < CTRLPressed.length; i++) {
-                if (CTRLPressed[i]) {
-
-                    if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        PlayerController.writeToChat("Cannot store Recording while Recording or Replaying");
-                        continue;
-                    }
-
-                    store(i, PlayerRecorder.record.copy());
-                    PlayerController.writeToChat("Stored Recording to QuickSlot " + i);
-                }
-            }
-
             // Check Load QuickSlot KeyBindings
             if (ALTPressed(handle)) {
                 handleQuickSlotKeyPress(handle, loadCooldowns, ALTPressed);
             }
 
-            // Load Recording from QuickSlot
-            for (int i = 0; i < ALTPressed.length; i++) {
-                if (ALTPressed[i]) {
-                    Recording r = load(i);
+            for (int i = 0; i < CTRLPressed.length; i++) {
+                // Store Recording to QuickSlot
+                if (CTRLPressed[i]) {
+                    // Unset key to not change selectedSlot
+                    consumeKeyPress(client.options.hotbarKeys[i], 10);
+                    // Check if store operation can be done
+                    if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
+                        PlayerController.writeToChat("Cannot store Recording while Recording or Replaying");
+                        continue;
+                    } else if (PlayerRecorder.record == null || PlayerRecorder.record.isEmpty()) {
+                        PlayerController.writeToChat("No Recording to store");
+                        continue;
+                    }
 
+                    store(i, PlayerRecorder.record.copy());
+                    PlayerController.writeToChat("Stored Recording to QuickSlot " + (i + 1));
+
+                // Load Recording from QuickSlot
+                } else if (ALTPressed[i]) {
+                    // Unset key to not change selectedSlot
+                    consumeKeyPress(client.options.hotbarKeys[i], 10);
+                    Recording r = load(i);
+                    // Check if load operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
                         PlayerController.writeToChat("Cannot load Recording while Recording or Replaying");
                         continue;
-                    }
-
-                    if (r == null || r.isEmpty()) {
-                        PlayerController.writeToChat("No Recording in QuickSlot " + i);
+                    } else if (r == null || r.isEmpty()) {
+                        PlayerController.writeToChat("No Recording in QuickSlot " + (i + 1));
                         continue;
                     }
+
                     PlayerRecorder.record = r;
-                    PlayerController.writeToChat("Loaded Recording to QuickSlot " + i);
+                    PlayerController.writeToChat("Loaded Recording to QuickSlot " + (i + 1));
                 }
             }
 
             // Reset Keys pressed
             Arrays.fill(ALTPressed, false);
             Arrays.fill(CTRLPressed, false);
-
-            // Restore selected slot
-            if (client.player.getInventory().selectedSlot != selectedSlotBackup) {
-                changeSelectedSlot.add(() -> {
-                    PlayerAutomaClient.LOGGER.info("Restoring selected slot to " + selectedSlotBackup);
-                    client.player.getInventory().selectedSlot = selectedSlotBackup;
-                });
-            }
-
         });
     }
 

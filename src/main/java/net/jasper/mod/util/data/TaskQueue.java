@@ -1,7 +1,6 @@
 package net.jasper.mod.util.data;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.jasper.mod.PlayerAutomaClient;
 
 import java.util.*;
 
@@ -67,7 +66,6 @@ public class TaskQueue {
                 return;
             }
 
-            PlayerAutomaClient.LOGGER.info("executing " + name);
             this.poll().run();
             done = true;
         });

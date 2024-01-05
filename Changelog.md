@@ -1,6 +1,15 @@
+# Version 0.3.3:
+* Changes:
+  * Logger no longer spams the console with player actions on replay
+  * Selected Hotbar slots no longer changes when using Quickslots
+  * Only allowing Quickslots from 1-9 resembling the Hotbar
+  * More Feedback in the chat when loading from the Quickslots
+  * No longer stores empty recordings to Quickslots
+  * No longer loads empty recordings from Quickslots
+
 # Version 0.3.2:
 * New Features:
-  * QuickSlots can be used to store recordings via CTRL + 0-9 and load via ALT + 0-9
+  * Quickslots can be used to store recordings via CTRL + 0-9 and load via ALT + 0-9
 
 * Changes:
   * Inventory Screen no longer opens when re-stacking items
@@ -14,7 +23,7 @@
     * Delete Button for Files
     * Slot-Clicking for Chest, Inventory, Crafting benches (allows for chest and crafting automation)
 
-* Bugs Fixes:
+* Bug Fixes:
     * Empty Invalid Files were created on errors.
     * Files once opened could not be deleted due to unclosed resources
     * Inventory Screen not opening in replay
