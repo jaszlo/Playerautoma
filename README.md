@@ -1,6 +1,10 @@
 # Playerautoma
 Record and replay player actions. Also, re-stack blocks when used up like Inventory tweaks. The mod works on servers but can be regarded as cheating by some.
 
+<div align="center">
+  <video src="https://github.com/jaszlo/Playerautoma/assets/55958177/b257fb70-db16-4803-a528-d540a14a3909" width="400" />
+</div>
+
 The following actions are recorded:
  * movement
  * item interactions
