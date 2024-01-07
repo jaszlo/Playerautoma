@@ -124,7 +124,7 @@ public class RecordingSelector extends Screen {
     private class RecordingSelectionListWidget extends AlwaysSelectedEntryListWidget<RecordingSelectionListWidget.RecordingEntry> {
         final String directoryPath;
         public RecordingSelectionListWidget(MinecraftClient client, String directoryPath) {
-            super(client, RecordingSelector.this.width, RecordingSelector.this.height - 93, 32, 18);
+            super(client, RecordingSelector.this.width, RecordingSelector.this.height, 32, RecordingSelector.this.height - 65 + 4, 18);
             this.directoryPath = directoryPath;
             this.updateFiles();
 
