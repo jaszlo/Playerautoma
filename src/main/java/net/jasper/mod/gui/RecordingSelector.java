@@ -56,16 +56,15 @@ public class RecordingSelector extends Screen {
 
         // Button placement:
         //    [Delete] [Open Recording Folder] [Done]
-
         this.addDrawableChild(ButtonWidget.builder(
-                Text.of("Delete"),
+                Text.translatable("playerautoma.fileSelector.delete"),
                 (button) -> this.onDelete()
         )
         .dimensions(this.width / 2 - 65 - 140, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
-                Text.of("Open Recording Folder"),
+                Text.translatable("playerautoma.fileSelector.openFolder"),
                 (button) -> Util.getOperatingSystem().open(new File(this.directoryPath).toURI())
         )
         .dimensions(this.width / 2 - 65, this.height - 38, 130, 20)
@@ -93,7 +92,6 @@ public class RecordingSelector extends Screen {
     private void onDelete() {
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
-            PlayerAutomaClient.LOGGER.info("Deletion of file result: " + recEntry.file.delete());
             this.recordingSelectionList.updateFiles();
         }
     }

@@ -2,11 +2,14 @@ package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.automation.InventoryAutomation;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
+import net.jasper.mod.gui.HUDState;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +23,8 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::client");
 	public static final String RECORDING_FOLDER_NAME = "Recordings";
+
 	public static final String RECORDING_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), RECORDING_FOLDER_NAME).toString();
-
-
 	@Override
 	public void onInitializeClient() {
 		// Create folder for recordings if not exists
@@ -45,7 +47,11 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		// Register Player-Recorder (Recording & Replaying)
 		PlayerRecorder.registerInputRecorder();
 
-		// Register Quick slots for Player-Recorder
+		// Register HUD element for state of Player-Recorder
+		HUDState.register();
+
+		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
 		QuickSlots.register();
+
 	}
 }

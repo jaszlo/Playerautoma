@@ -2,6 +2,7 @@ package net.jasper.mod.util.keybinds;
 
 import net.jasper.mod.PlayerAutomaClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 
 /**
@@ -14,8 +15,8 @@ public class KeyBind {
     protected String name;
     protected KeyBinding bind;
     protected Runnable callback;
-    public KeyBind(String name, KeyBinding bind, Runnable callback) {
-        this.name = name;
+    public KeyBind(String translationKey, KeyBinding bind, Runnable callback) {
+        this.name = Text.translatable(translationKey).toString();
         this.bind = bind;
         this.callback = callback;
     }

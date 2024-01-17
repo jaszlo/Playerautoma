@@ -1,5 +1,7 @@
 package net.jasper.mod.util;
 
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,8 +17,14 @@ public class PlayerController {
         // Center Camera
         PlayerEntity player= MinecraftClient.getInstance().player;
         assert player != null;
-        player.setPitch(0);
-        player.setYaw(90);
+
+        // Only change looking direction if set in options
+        if (PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue()) {
+            LookingDirection.Names dirName = PlayerAutomaOptionsScreen.setDefaultDirectionOption.getValue();
+            LookingDirection dir = dirName.getYawPitch();
+            player.setPitch(dir.pitch());
+            player.setYaw(dir.yaw());
+        }
 
         // Center player on current block
         Vec3d playerPos = player.getPos();

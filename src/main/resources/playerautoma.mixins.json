@@ -7,6 +7,8 @@
   },
   "client": [
     "CancelReplay",
+    "InGameHudDimensions",
+    "OptionsAddition",
     "SlotClickedCallback"
   ]
 }

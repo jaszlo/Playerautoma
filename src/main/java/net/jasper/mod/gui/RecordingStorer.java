@@ -34,7 +34,7 @@ public class RecordingStorer extends Screen {
                 this.height / 2 - 30,
                 200,
                 20,
-                Text.of("Enter Recording Name"),
+                Text.translatable("playerautoma.fileSelector.enterName"),
                 MinecraftClient.getInstance().textRenderer
         );
 
@@ -44,10 +44,10 @@ public class RecordingStorer extends Screen {
                 this.height / 2 - 10,
                 200,
                 20,
-                Text.of("Recording Name")
+                Text.of("")
         );
         // Set Text Field Properties
-        textField.setTooltip(Tooltip.of(Text.of("Enter Recording Name. Input does not require '.rec' ending")));
+        textField.setTooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.textField")));
         textField.setEditable(true);
 
         // Format the date and time as name of recording
@@ -65,7 +65,7 @@ public class RecordingStorer extends Screen {
                   PlayerRecorder.storeRecord(name);
                   this.close();
               }).dimensions(this.width / 2 - 100, this.height / 2 + 10, 200, 20)
-                .tooltip(Tooltip.of(Text.of("Save Recording to .minecraft/recordings")))
+                .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.save")))
                 .build();
 
         this.addDrawableChild(textField);

@@ -17,14 +17,28 @@ public class TaskQueue {
 
     private final long priority;
     private final List<Runnable> tasks;
+    private boolean paused = false;
 
     public TaskQueue(long priority) {
         this.priority = priority;
         this.tasks = new ArrayList<>();
+        paused = false;
     }
 
     public boolean isEmpty() {
         return this.tasks.isEmpty();
+    }
+
+    public void pause() {
+        this.paused = true;
+    }
+
+    public void resume() {
+        this.paused = false;
+    }
+
+    public boolean isPaused() {
+        return this.paused;
     }
 
     public void add(Runnable r) {
@@ -43,7 +57,7 @@ public class TaskQueue {
 
     private static boolean isHighestPriority(long priority) {
         // If other queues are empty or have lower priority return true
-        return QUEUES.values().stream().allMatch(queue -> queue.priority <= priority || queue.isEmpty());
+        return QUEUES.values().stream().allMatch(queue -> queue.priority <= priority || queue.isEmpty() || queue.isPaused());
     }
     public void register(String name) {
         QUEUES.put(name, this);
@@ -63,6 +77,10 @@ public class TaskQueue {
 
             // Only run the task if it has the highest priority or if no other queue is busy
             if (!isHighestPriority(this.priority) || this.isEmpty()) {
+                return;
+            }
+
+            if (this.paused) {
                 return;
             }
 

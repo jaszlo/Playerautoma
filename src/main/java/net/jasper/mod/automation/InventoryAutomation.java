@@ -1,6 +1,7 @@
 package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -20,6 +21,12 @@ public class InventoryAutomation {
     public static void registerInventoryAutomation() {
         inventoryTasks.register("inventoryTasks");
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            // If is disabled in settings do nothing
+            if (!PlayerAutomaOptionsScreen.restackBlocksOption.getValue()) {
+                return ActionResult.PASS;
+            }
+
+
             PlayerInventory inv = player.getInventory();
             if (hand != Hand.MAIN_HAND) {
                 return ActionResult.PASS;

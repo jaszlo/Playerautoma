@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.jasper.mod.util.keybinds.Constants.CANCEL_REPLAY;
+import static net.jasper.mod.util.keybinds.Constants.STOP_REPLAY;
 
 /**
  * Checks if the cancel replay keybinding is pressed when for screen key pressed
@@ -16,7 +16,7 @@ import static net.jasper.mod.util.keybinds.Constants.CANCEL_REPLAY;
 public class CancelReplay {
     @Inject(method="keyPressed", at=@At("HEAD"))
     private void injected(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (CANCEL_REPLAY.matchesKey(keyCode, scanCode)) {
+        if (STOP_REPLAY.matchesKey(keyCode, scanCode)) {
             PlayerRecorder.stopReplay();
         }
     }
