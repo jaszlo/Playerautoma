@@ -11,7 +11,7 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
         return "LookingDirection{" + " yaw =" + yaw +  ", pitch = " + pitch + " }";
     }
 
-    public enum Names {
+    public enum Name {
         NORTH,
         SOUTH,
         EAST,
@@ -28,6 +28,22 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
                 case FLOOR -> new LookingDirection(0, 90);
                 case SKY -> new LookingDirection(0, -90);
             };
+        }
+
+        @Override
+        public String toString() {
+            return switch (this) {
+                case NORTH -> "North";
+                case SOUTH -> "South";
+                case EAST -> "East";
+                case WEST -> "West";
+                case FLOOR -> "Floor";
+                case SKY -> "Sky";
+            };
+        }
+
+        public static Name fromString(String s) {
+            return Name.valueOf(s.toUpperCase());
         }
     }
 }

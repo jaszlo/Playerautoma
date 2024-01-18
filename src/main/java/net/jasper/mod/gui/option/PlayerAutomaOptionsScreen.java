@@ -4,9 +4,8 @@ import net.jasper.mod.util.data.LookingDirection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
@@ -15,10 +14,6 @@ import net.minecraft.text.Text;
 
 
 public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
-
-    public static PlayerAutomaOptionsScreen create() {
-        return new PlayerAutomaOptionsScreen("PlayerAutoma Options", new OptionsScreen(new TitleScreen(true), MinecraftClient.getInstance().options));
-    }
 
     public static OptionButton<Boolean> showHudOption = new OptionButton<>(
             true,
@@ -36,24 +31,43 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         Boolean::parseBoolean
     );
 
-    public static OptionButton<LookingDirection.Names> setDefaultDirectionOption = new OptionButton<>(
-        LookingDirection.Names.NORTH,
-        LookingDirection.Names.values(),
+    public static OptionButton<LookingDirection.Name> setDefaultDirectionOption = new OptionButton<>(
+        LookingDirection.Name.NORTH,
+        LookingDirection.Name.values(),
         "playerautoma.option.setDefaultDirection",
-        Enum::name,
-        LookingDirection.Names::valueOf
+        LookingDirection.Name::toString,
+        LookingDirection.Name::fromString
+    );
+
+    public static OptionButton<Boolean> useRelativeLookingDirectionOption = new OptionButton<>(
+            false,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.useRelativeLookingDirection",
+            (bool) -> (bool ? Text.translatable("playerautoma.option.relativeLookingDirection") : Text.translatable("playerautoma.option.absoluteLookingDirection")).getString(),
+            Boolean::parseBoolean
     );
 
 
     public static OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
-        "playerautoma.options.restackItems",
+        "playerautoma.option.restackItems",
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF).getString(),
         Boolean::parseBoolean
     );
 
-    protected PlayerAutomaOptionsScreen(String title, Screen parent) {
+
+    public static OptionButton<Boolean> recordInventoryActivitiesOption = new OptionButton<>(
+        true,
+        OptionButton.BOOLEAN_VALUES,
+        "playerautoma.option.recordInventoryActivities",
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF).getString(),
+        Boolean::parseBoolean
+    );
+
+
+
+    public PlayerAutomaOptionsScreen(String title, Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of(title));
     }
 
@@ -65,35 +79,32 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
         GridWidget.Adder adder = gridWidget.createAdder(2);
 
-        ButtonWidget showHudButton = ButtonWidget.builder(
-            Text.translatable(showHudOption.key).append(": ").append(showHudOption.encoder.encode(showHudOption.getValue())),
-            (b) -> showHudOption.next()).build();
-        showHudOption.setButton(showHudButton);
-        adder.add(showHudButton);
-
-        ButtonWidget setDefaultDirectionButton = ButtonWidget.builder(
-            Text.translatable(setDefaultDirectionOption.key).append(": ").append(setDefaultDirectionOption.encoder.encode(setDefaultDirectionOption.getValue())),
-            (b) -> setDefaultDirectionOption.next()).build();
-        setDefaultDirectionOption.setButton(setDefaultDirectionButton);
-        setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
-        adder.add(setDefaultDirectionButton);
-
+        ButtonWidget showHudButton = showHudOption.buttonOf();
+        ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();
+        ButtonWidget useRelativeLookingDirectionButton = useRelativeLookingDirectionOption.buttonOf();
+        useRelativeLookingDirectionOption.setButton(useRelativeLookingDirectionButton);
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
                 Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.encoder.encode(useDefaultDirectionOption.getValue())),
                 (b) -> {
                     useDefaultDirectionOption.next();
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
+                    useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
                 }).build();
+        // Set initial active state
+        setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
+        useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
         useDefaultDirectionOption.setButton(useDefaultDirectionButton);
+
+        ButtonWidget restackBlocksButton = restackBlocksOption.buttonOf();
+        ButtonWidget recordInventoryActivitiesButton = recordInventoryActivitiesOption.buttonOf();
+        recordInventoryActivitiesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordInventoryActivities")));
+
+        adder.add(showHudButton);
         adder.add(useDefaultDirectionButton);
-
-
-        ButtonWidget restackBlocksButton = ButtonWidget.builder(
-                Text.translatable(restackBlocksOption.key).append(": ").append(restackBlocksOption.encoder.encode(restackBlocksOption.getValue())),
-                (b) -> restackBlocksOption.next()).build();
-        restackBlocksOption.setButton(restackBlocksButton);
+        adder.add(setDefaultDirectionButton);
+        adder.add(useRelativeLookingDirectionButton);
         adder.add(restackBlocksButton);
-
+        adder.add(recordInventoryActivitiesButton);
         adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent)).width(200).build(), 2, adder.copyPositioner().marginTop(6));
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);

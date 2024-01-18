@@ -141,7 +141,26 @@ public class OptionButton<Value> {
             store();
             return;
         }
+        // Catch invalid values in config (if edited manually) and set/write defaultValue
+        try {
+            this.currentValue = decoder.decode(readValue);
+        } catch (Exception e) {
+            LOGGER.warn("Forbidden value '" + readValue + "' found in playerautoma_options.txt for '" + this.key + "'");
+            this.currentValue = defaultValue;
+            store();
+        }
+    }
 
-        this.currentValue = decoder.decode(readValue);
+    /**
+     * Creates the default button widget for this option button and returns it. Also registers the button for this option.
+     * Will always call this.next for button onClick.
+     * @return ButtonWidget of this option
+     */
+    public ButtonWidget buttonOf() {
+        ButtonWidget button =  ButtonWidget.builder(
+                Text.translatable(this.key).append(": ").append(this.encoder.encode(this.getValue())),
+                (b) -> this.next()).build();
+        this.setButton(button);
+        return button;
     }
 }

@@ -1,10 +1,12 @@
 package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.EmptyWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.client.util.InputUtil;
@@ -39,11 +41,6 @@ public class ModMenu extends Screen {
             PlayerRecorder.startReplay(false);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.startReplay"))).build();
 
-    public static ButtonWidget STOP_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.menu.stopReplay"), button -> {
-            SINGLETON.close();
-            PlayerRecorder.stopReplay();
-        }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.stopReplay"))).build();
-
     public static ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.menu.startLoop"), button -> {
             SINGLETON.close();
             PlayerRecorder.startLoop();
@@ -54,11 +51,15 @@ public class ModMenu extends Screen {
             RecordingStorer.open();
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.storeRecording"))).build();
 
-    public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.keys.loadRecording"), button -> {
+    public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.loadRecording"), button -> {
         SINGLETON.close();
         RecordingSelector.open();
     }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.loadRecording"))).build();
 
+    public static ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"), button -> {
+        SINGLETON.close();
+        MinecraftClient.getInstance().setScreen(new PlayerAutomaOptionsScreen("PlayerautomaOptions", SINGLETON));
+    }).width(200).build();
 
     public static void open() {
         if (!isOpen && !handled) {
@@ -103,12 +104,15 @@ public class ModMenu extends Screen {
 
         adder.add(START_RECORDING);
         adder.add(STOP_RECORDING);
+        adder.add(EmptyWidget.ofHeight(16), 2);
         adder.add(START_REPLAY);
-        adder.add(STOP_REPLAY);
         adder.add(START_LOOP);
+        adder.add(EmptyWidget.ofHeight(16), 2);
         adder.add(STORE_RECORDING);
         adder.add(LOAD_RECORDING);
-        adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).width(200).build(), 2, adder.copyPositioner().marginTop(6));
+        adder.add(EmptyWidget.ofHeight(16), 2);
+        adder.add(OPTION_MENU, 2);
+        adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).width(200).build(), 2);
 
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);

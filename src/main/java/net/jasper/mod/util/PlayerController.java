@@ -20,7 +20,7 @@ public class PlayerController {
 
         // Only change looking direction if set in options
         if (PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue()) {
-            LookingDirection.Names dirName = PlayerAutomaOptionsScreen.setDefaultDirectionOption.getValue();
+            LookingDirection.Name dirName = PlayerAutomaOptionsScreen.setDefaultDirectionOption.getValue();
             LookingDirection dir = dirName.getYawPitch();
             player.setPitch(dir.pitch());
             player.setYaw(dir.yaw());

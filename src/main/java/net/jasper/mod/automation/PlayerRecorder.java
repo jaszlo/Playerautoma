@@ -2,6 +2,7 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.PlayerController;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
@@ -106,6 +107,15 @@ public class PlayerRecorder {
         assert client.player != null;
         assert client.interactionManager != null;
 
+        // Check relative/absolute replay and no defaultDirection
+        boolean isRelative = !PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue()
+                                && PlayerAutomaOptionsScreen.useRelativeLookingDirectionOption.getValue();
+
+        // Get first RecordEntry Looking direction to calculate difference
+        LookingDirection l = record.entries.get(0).lookingDirection();
+        float pitchDiff = isRelative ? l.pitch() - client.player.getPitch() : 0;
+        float yawDiff = isRelative ? l.yaw() - client.player.getYaw() : 0;
+
         for (Recording.RecordEntry entry : record.entries) {
             // Get all data for current record tick (i) to replay
             List<Boolean> keyMap = entry.keysPressed();
@@ -118,8 +128,8 @@ public class PlayerRecorder {
             tasks.add(() -> {
 
                 // Update looking direction
-                client.player.setPitch(currentLookingDirection.pitch());
-                client.player.setYaw(currentLookingDirection.yaw());
+                client.player.setPitch(currentLookingDirection.pitch() - pitchDiff);
+                client.player.setYaw(currentLookingDirection.yaw() - yawDiff);
 
                 // Update selected inventory slot
                 client.player.getInventory().selectedSlot = selectedSlot;
@@ -158,7 +168,7 @@ public class PlayerRecorder {
                 }
 
                 // Click Slot in inventory if possible
-                if (clickedSlot != null) PlayerController.clickSlot(clickedSlot);
+                if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) PlayerController.clickSlot(clickedSlot);
             });
         }
 
@@ -166,6 +176,9 @@ public class PlayerRecorder {
             // Finish Replay if not looping
             tasks.add(() -> {
                 state = IDLE;
+                for (KeyBinding k : client.options.allKeys) {
+                    k.setPressed(false);
+                }
                 PlayerController.writeToChat("Replay Done");
             });
         }
