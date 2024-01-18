@@ -16,19 +16,21 @@ import net.minecraft.text.Text;
 public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
     public static OptionButton<Boolean> showHudOption = new OptionButton<>(
-            true,
-            OptionButton.BOOLEAN_VALUES,
-            "playerautoma.option.showHud",
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF).getString(),
-            Boolean::parseBoolean
+        true,
+        OptionButton.BOOLEAN_VALUES,
+        "playerautoma.option.showHud",
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
     public static OptionButton<Boolean> useDefaultDirectionOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.useDefaultDirection",
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF).getString(),
-        Boolean::parseBoolean
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
     public static OptionButton<LookingDirection.Name> setDefaultDirectionOption = new OptionButton<>(
@@ -36,15 +38,17 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         LookingDirection.Name.values(),
         "playerautoma.option.setDefaultDirection",
         LookingDirection.Name::toString,
-        LookingDirection.Name::fromString
+        LookingDirection.Name::fromString,
+        LookingDirection.Name::toText
     );
 
     public static OptionButton<Boolean> useRelativeLookingDirectionOption = new OptionButton<>(
-            false,
-            OptionButton.BOOLEAN_VALUES,
-            "playerautoma.option.useRelativeLookingDirection",
-            (bool) -> (bool ? Text.translatable("playerautoma.option.relativeLookingDirection") : Text.translatable("playerautoma.option.absoluteLookingDirection")).getString(),
-            Boolean::parseBoolean
+        false,
+        OptionButton.BOOLEAN_VALUES,
+        "playerautoma.option.useRelativeLookingDirection",
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? Text.translatable("playerautoma.option.relativeLookingDirection") : Text.translatable("playerautoma.option.absoluteLookingDirection"))
     );
 
 
@@ -52,8 +56,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.restackItems",
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF).getString(),
-        Boolean::parseBoolean
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
 
@@ -61,8 +66,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.recordInventoryActivities",
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF).getString(),
-        Boolean::parseBoolean
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
 
@@ -84,7 +90,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget useRelativeLookingDirectionButton = useRelativeLookingDirectionOption.buttonOf();
         useRelativeLookingDirectionOption.setButton(useRelativeLookingDirectionButton);
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
-                Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.encoder.encode(useDefaultDirectionOption.getValue())),
+                Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.textProvider.provide(useDefaultDirectionOption.getValue())),
                 (b) -> {
                     useDefaultDirectionOption.next();
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();

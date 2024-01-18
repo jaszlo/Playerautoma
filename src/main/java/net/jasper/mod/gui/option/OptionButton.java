@@ -27,6 +27,7 @@ public class OptionButton<Value> {
     private final Value defaultValue;
     public final ValueDecoder<Value> decoder;
     public final ValueEncoder<Value> encoder;
+    public final TextProvider<Value> textProvider;
 
     private int valueIndex = -1;
 
@@ -38,11 +39,16 @@ public class OptionButton<Value> {
         Value decode(String s);
     }
 
+    public interface TextProvider<Value> {
+        Text provide(Value v);
+    }
+
+
     public Value getValue() {
         return this.currentValue;
     }
 
-    public OptionButton(Value defaultValue, Value[] values, String key, ValueEncoder<Value> encoder, ValueDecoder<Value> decoder) {
+    public OptionButton(Value defaultValue, Value[] values, String key, ValueEncoder<Value> encoder, ValueDecoder<Value> decoder, TextProvider<Value> textProvider) {
         this.button = null;
         this.defaultValue = defaultValue;
         this.currentValue = defaultValue;
@@ -50,6 +56,7 @@ public class OptionButton<Value> {
         this.key = key;
         this.encoder = encoder;
         this.decoder = decoder;
+        this.textProvider = textProvider;
 
         load();
 
@@ -74,7 +81,7 @@ public class OptionButton<Value> {
     public void next() {
         this.valueIndex = (this.valueIndex + 1) % this.values.length;
         this.currentValue = this.values[valueIndex];
-        this.button.setMessage(Text.translatable(this.key).append(": ").append(this.encoder.encode(this.currentValue)));
+        this.button.setMessage(Text.translatable(this.key).append(": ").append(this.textProvider.provide(this.currentValue)));
         this.store();
     }
 
@@ -158,8 +165,8 @@ public class OptionButton<Value> {
      */
     public ButtonWidget buttonOf() {
         ButtonWidget button =  ButtonWidget.builder(
-                Text.translatable(this.key).append(": ").append(this.encoder.encode(this.getValue())),
-                (b) -> this.next()).build();
+            Text.translatable(this.key).append(": ").append(this.textProvider.provide(this.getValue())),
+            (b) -> this.next()).build();
         this.setButton(button);
         return button;
     }

@@ -1,5 +1,7 @@
 package net.jasper.mod.util.data;
 
+import net.minecraft.text.Text;
+
 import java.io.Serializable;
 
 /**
@@ -44,6 +46,17 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
 
         public static Name fromString(String s) {
             return Name.valueOf(s.toUpperCase());
+        }
+
+        public static Text toText(Name n) {
+            return switch (n) {
+                case NORTH -> Text.translatable("playerautoma.option.defaultDirection.north");
+                case SOUTH -> Text.translatable("playerautoma.option.defaultDirection.south");
+                case EAST -> Text.translatable("playerautoma.option.defaultDirection.east");
+                case WEST -> Text.translatable("playerautoma.option.defaultDirection.west");
+                case FLOOR -> Text.translatable("playerautoma.option.defaultDirection.floor");
+                case SKY -> Text.translatable("playerautoma.option.defaultDirection.sky");
+            };
         }
     }
 }
