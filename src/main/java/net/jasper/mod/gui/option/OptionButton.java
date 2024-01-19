@@ -140,15 +140,15 @@ public class OptionButton<Value> {
                 String[] parts = line.split(":");
                 if (parts.length == 2 && parts[0].trim().equals(key)) {
                     readValue = parts[1].trim();
+                    break;
                 }
             }
         } catch (IOException e) {
             assert false : "Could not read playerautoma options";
         }
 
-        // Value was not in option file therefore set value and store it
+        // Value was not in option file therefore store default value
         if (readValue == null) {
-            this.currentValue = defaultValue;
             store();
             return;
         }
