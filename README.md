@@ -25,6 +25,7 @@ Other than that the default keybindings are as follows.
 - `G`  Start Recording
 - `H`  Stop Recording
 - `J`   Start Replay
+- `B` Pause Replay
 - `K`  Cancel Replay
 - `L`  Start looped Replay
 - `U`  Store Recording
