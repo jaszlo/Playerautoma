@@ -2,14 +2,12 @@ package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.automation.InventoryAutomation;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
 import net.jasper.mod.gui.HUDState;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

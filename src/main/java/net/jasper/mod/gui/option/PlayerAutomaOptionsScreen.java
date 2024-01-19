@@ -13,6 +13,9 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 
+/**
+ * Playerautoma option screen to configure settings
+ */
 public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
     public static OptionButton<Boolean> showHudOption = new OptionButton<>(
@@ -88,6 +91,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget showHudButton = showHudOption.buttonOf();
         ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();
         ButtonWidget useRelativeLookingDirectionButton = useRelativeLookingDirectionOption.buttonOf();
+        useRelativeLookingDirectionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useRelativeLookingDirection")));
         useRelativeLookingDirectionOption.setButton(useRelativeLookingDirectionButton);
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
                 Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.textProvider.provide(useDefaultDirectionOption.getValue())),

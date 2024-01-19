@@ -11,6 +11,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that holds and takes care of playerautoma options
+ * @param <Value> The Type of the value that the option has
+ */
 public class OptionButton<Value> {
 
     private static final String OPTION_FILE_NAME = "playerautoma_options.txt";

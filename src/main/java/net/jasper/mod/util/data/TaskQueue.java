@@ -17,7 +17,7 @@ public class TaskQueue {
 
     private final long priority;
     private final List<Runnable> tasks;
-    private boolean paused = false;
+    private boolean paused;
 
     public TaskQueue(long priority) {
         this.priority = priority;

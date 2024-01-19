@@ -8,6 +8,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 
+/**
+ * Little HUD for Playerautoma to display current state of player recorder
+ */
 public class HUDState {
     public static void register() {
         HudRenderCallback.EVENT.register((context, tickDelta) -> {

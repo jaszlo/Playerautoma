@@ -6,9 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(InGameHud.class)
 public interface InGameHudDimensions {
-    @Accessor("scaledWidth")
-    int getScaledWidth();
-
     @Accessor("scaledHeight")
     int getScaledHeight();
 }
