@@ -47,3 +47,4 @@ gradle/jdks/
 gradle/daemo/
 gradle/native
 gradle/daemon/
+gradle/wrapper/dists
