@@ -1,3 +1,23 @@
+# Version 0.3.4:
+* New Features:
+  * Ability to pause and resume replays
+  * Options Menu
+    * Option to set/enable/disable default looking direction
+    * Toggle Hud
+    * Toggle inventory automation 
+    * Toggle Relative/Absolute Looking direction when replaying
+    * Toggle Recording of Inventory Activity
+  * HUD Indicator which state player recorder is in
+  * Language Support
+    * German
+    * Spanish
+    * AI translation for hindi and russian 
+* Bug Fixes:
+  * Breaking a block in creative while replaying now works
+  * Attacking entities while replaying now works
+    * If while replaying the attack button is pressed and there is an entity in range, it will be attacked
+* Changes:
+  * Stop Replay Button removed from menu
 # Version 0.3.3:
 * Changes:
   * Logger no longer spams the console with player actions on replay
