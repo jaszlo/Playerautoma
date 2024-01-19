@@ -1,4 +1,4 @@
-# Version 0.3.4:
+# Version 0.4.0:
 * New Features:
   * Ability to pause and resume replays
   * Options Menu
