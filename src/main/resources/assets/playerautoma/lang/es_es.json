@@ -53,5 +53,24 @@
   "playerautoma.option.absoluteLookingDirection": "Absoluta",
   "playerautoma.option.recordInventoryActivities": "Registrar Actividades del Inventario",
   "playerautoma.option.tooltip.recordInventoryActivities": "Solo registra actividades del inventario, como movimiento de objetos, cuando está activo.",
-  "playerautoma.option.tooltip.useRelativeLookingDirection": "Relativa: Comienza desde tu dirección de mirada actual\n\nAbsoluta: Comienza desde la dirección de mirada de la grabación"
+  "playerautoma.option.tooltip.useRelativeLookingDirection": "Relativa: Comienza desde tu dirección de mirada actual\n\nAbsoluta: Comienza desde la dirección de mirada de la grabación",
+
+  "playerautoma.messages.fileDeletionError": "Error al eliminar el archivo",
+  "playerautoma.messages.startRecording": "Inicio de la grabación",
+  "playerautoma.messages.stopRecording": "Detención de la grabación",
+  "playerautoma.messages.startReplay": "Inicio de la reproducción",
+  "playerautoma.messages.startLoopedReplay": "Inicio de la reproducción en bucle",
+  "playerautoma.messages.replayDone": "Reproducción completada",
+  "playerautoma.messages.stopReplay": "Detención de la reproducción",
+  "playerautoma.messages.pauseReplay": "Pausa en la reproducción",
+  "playerautoma.messages.resumeReplay": "Reanudación de la reproducción",
+  "playerautoma.messages.storedRecording": "Grabación almacenada",
+  "playerautoma.messages.loadedRecording": "Grabación cargada",
+  "playerautoma.messages.cannotStoreEmpty": "No se puede almacenar una grabación vacía",
+  "playerautoma.messages.cannotStoreDueToState": "No se puede almacenar la grabación mientras se está grabando o reproduciendo",
+  "playerautoma.messages.storeFailed": "Error al almacenar la grabación",
+  "playerautoma.message.loadFailed": "Error al cargar la grabación",
+  "playerautoma.messages.deleteFailed": "Error al eliminar la grabación",
+  "playerautoma.messages.cannotLoadDueToState": "No se puede cargar la grabación mientras se está grabando o reproduciendo"
+
 }
