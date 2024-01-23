@@ -58,7 +58,7 @@ public class HUDState {
                 case CENTER_LEFT -> new int[]{ 2, dim.getScaledHeight() / 2 };
                 case CENTER_RIGHT -> new int[]{ dim.getScaledWidth() - 50, dim.getScaledHeight() / 2};
                 case BOTTOM_LEFT -> new int[]{ 2, dim.getScaledHeight() - 10 };
-                case BOTTOM_RIGHT -> new int[]{ dim.getScaledWidth() - 50, dim.getScaledWidth() - 10};
+                case BOTTOM_RIGHT -> new int[]{ dim.getScaledWidth() - 50, dim.getScaledHeight() - 10};
             };
         }
 
