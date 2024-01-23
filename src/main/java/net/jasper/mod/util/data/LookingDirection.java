@@ -35,12 +35,12 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
         @Override
         public String toString() {
             return switch (this) {
-                case NORTH -> "North";
-                case SOUTH -> "South";
-                case EAST -> "East";
-                case WEST -> "West";
-                case FLOOR -> "Floor";
-                case SKY -> "Sky";
+                case NORTH -> "north";
+                case SOUTH -> "south";
+                case EAST -> "east";
+                case WEST -> "west";
+                case FLOOR -> "floor";
+                case SKY -> "sky";
             };
         }
 
