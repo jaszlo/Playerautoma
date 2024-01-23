@@ -94,8 +94,14 @@ public class PlayerRecorder {
     }
 
     public static void startReplay(boolean looped) {
-        if (!state.isAny(IDLE, PAUSED) || record.isEmpty()) {
+        if (record.isEmpty()) {
             return;
+        }
+        if (!state.isAny(IDLE, PAUSED)) {
+            // if state is replaying and has no tasks its looped therefore just continue and if not return
+            if (!(state.isReplaying() && tasks.isEmpty())) {
+                return;
+            }
         }
         // If starting while paused tasks needs to be cleared so clear it always
         tasks.clear();
