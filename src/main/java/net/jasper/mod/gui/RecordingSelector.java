@@ -93,8 +93,8 @@ public class RecordingSelector extends Screen {
     private void onDelete() {
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
-            boolean result = recEntry.file.delete();
-            if (!result) {
+            boolean deleteSuccess = recEntry.file.delete();
+            if (!deleteSuccess) {
                 PlayerAutomaClient.LOGGER.warn("Could not delete recording file " + recEntry.fileName);
                 this.close();
                 PlayerController.writeToChat(Text.translatable("playerautoma.messages.deleteFailed"));
