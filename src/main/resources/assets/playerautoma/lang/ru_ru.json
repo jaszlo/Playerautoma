@@ -53,5 +53,23 @@
   "playerautoma.option.absoluteLookingDirection": "Абсолютное",
   "playerautoma.option.recordInventoryActivities": "Записывать действия с инвентарем",
   "playerautoma.option.tooltip.recordInventoryActivities": "Записывать только действия с инвентарем, такие как перемещение предметов, когда включено.",
-  "playerautoma.option.tooltip.useRelativeLookingDirection": "Относительное: Начинать с вашего текущего направления взгляда\n\nАбсолютное: Начинать с направления взгляда записи"
+  "playerautoma.option.tooltip.useRelativeLookingDirection": "Относительное: Начинать с вашего текущего направления взгляда\n\nАбсолютное: Начинать с направления взгляда записи",
+
+  "playerautoma.messages.fileDeletionError": "Не удалось удалить файл",
+  "playerautoma.messages.startRecording": "Начата запись",
+  "playerautoma.messages.stopRecording": "Запись остановлена",
+  "playerautoma.messages.startReplay": "Начато воспроизведение",
+  "playerautoma.messages.startLoopedReplay": "Начато циклическое воспроизведение",
+  "playerautoma.messages.replayDone": "Воспроизведение завершено",
+  "playerautoma.messages.stopReplay": "Воспроизведение остановлено",
+  "playerautoma.messages.pauseReplay": "Пауза в воспроизведении",
+  "playerautoma.messages.resumeReplay": "Воспроизведение возобновлено",
+  "playerautoma.messages.storedRecording": "Запись сохранена",
+  "playerautoma.messages.loadedRecording": "Запись загружена",
+  "playerautoma.messages.cannotStoreEmpty": "Нельзя сохранить пустую запись",
+  "playerautoma.messages.cannotStoreDueToState": "Нельзя сохранить запись во время записи или воспроизведения",
+  "playerautoma.messages.storeFailed": "Не удалось сохранить запись",
+  "playerautoma.message.loadFailed": "Не удалось загрузить запись",
+  "playerautoma.messages.deleteFailed": "Не удалось удалить запись",
+  "playerautoma.messages.cannotLoadDueToState": "Нельзя загрузить запись во время записи или воспроизведения"
 }

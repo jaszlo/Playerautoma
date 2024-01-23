@@ -53,5 +53,24 @@
   "playerautoma.option.absoluteLookingDirection": "Absolut",
   "playerautoma.option.recordInventoryActivities": "Inventaraktionen aufzeichnen",
   "playerautoma.option.tooltip.recordInventoryActivities": "Zeichnet nur Inventaraktionen wie das Bewegen von Gegenständen auf, wenn es aktiviert ist.",
-  "playerautoma.option.tooltip.useRelativeLookingDirection": "Relativ: Starte von deiner aktuellen Blickrichtung\n\nAbsolut: Starte von der Blickrichtung der Aufnahme"
+  "playerautoma.option.tooltip.useRelativeLookingDirection": "Relativ: Starte von deiner aktuellen Blickrichtung\n\nAbsolut: Starte von der Blickrichtung der Aufnahme",
+
+  "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",
+  "playerautoma.messages.startRecording": "Aufnahme gestartet",
+  "playerautoma.messages.stopRecording": "Aufnahme gestoppt",
+  "playerautoma.messages.startReplay": "Wiedergabe gestartet",
+  "playerautoma.messages.startLoopedReplay": "Wiederholte Wiedergabe gestartet",
+  "playerautoma.messages.replayDone": "Wiedergabe abgeschlossen",
+  "playerautoma.messages.stopReplay": "Wiedergabe gestoppt",
+  "playerautoma.messages.pauseReplay": "Wiedergabe pausiert",
+  "playerautoma.messages.resumeReplay": "Wiedergabe fortgesetzt",
+  "playerautoma.messages.storedRecording": "Aufnahme gespeichert",
+  "playerautoma.messages.loadedRecording": "Aufnahme geladen",
+  "playerautoma.messages.cannotStoreEmpty": "Kann leere Aufnahme nicht speichern",
+  "playerautoma.messages.cannotStoreDueToState": "Aufnahme kann nicht gespeichert werden, während sie aufgenommen oder wiedergegeben wird",
+  "playerautoma.messages.storeFailed": "Speichern der Aufnahme fehlgeschlagen",
+  "playerautoma.message.loadFailed": "Fehler beim Laden der Aufnahme",
+  "playerautoma.messages.deleteFailed": "Löschen der Aufnahme fehlgeschlagen",
+  "playerautoma.messages.cannotLoadDueToState": "Aufnahme kann nicht geladen werden, während sie aufgenommen oder wiedergegeben wird"
+
 }
