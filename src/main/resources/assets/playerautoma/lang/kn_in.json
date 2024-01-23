@@ -53,5 +53,25 @@
   "playerautoma.option.absoluteLookingDirection": "पूर्ण",
   "playerautoma.option.recordInventoryActivities": "इन्वेंटरी क्रियाएँ रिकॉर्ड करें",
   "playerautoma.option.tooltip.recordInventoryActivities": "केवल इन्वेंटरी क्रियाएँ रिकॉर्ड करता है, जैसे कि आइटम की चलने की समय जब यह चालू है।",
-  "playerautoma.option.tooltip.useRelativeLookingDirection": "सांगत: आपकी वर्तमान दिशा से शुरू करें\n\nपूर्ण: रिकॉर्डिंग के दृष्टिकोण से शुरू करें"
+  "playerautoma.option.tooltip.useRelativeLookingDirection": "सांगत: आपकी वर्तमान दिशा से शुरू करें\n\nपूर्ण: रिकॉर्डिंग के दृष्टिकोण से शुरू करें",
+
+  "playerautoma.messages.fileDeletionError": "फ़ाइल हटाने में विफल",
+  "playerautoma.messages.startRecording": "रेकॉर्डिंग शुरू हुई",
+  "playerautoma.messages.stopRecording": "रेकॉर्डिंग बंद हुई",
+  "playerautoma.messages.startReplay": "पुनः प्रचारण शुरू हुआ",
+  "playerautoma.messages.startLoopedReplay": "पुनः प्रचारण लूप शुरू हुआ",
+  "playerautoma.messages.replayDone": "पुनः प्रचारण समाप्त हुआ",
+  "playerautoma.messages.stopReplay": "पुनः प्रचारण बंद हुआ",
+  "playerautoma.messages.pauseReplay": "पुनः प्रचारण को रोका गया",
+  "playerautoma.messages.resumeReplay": "पुनः प्रचारण को पुनरारंभ किया गया",
+  "playerautoma.messages.storedRecording": "रेकॉर्डिंग सहेजी गई",
+  "playerautoma.messages.loadedRecording": "रेकॉर्डिंग लोड हुई",
+  "playerautoma.messages.cannotStoreEmpty": "खाली रेकॉर्डिंग सहेजी नहीं जा सकती",
+  "playerautoma.messages.cannotStoreDueToState": "रेकॉर्डिंग या पुनः प्रचारण के दौरान रेकॉर्डिंग सहेजी नहीं जा सकती",
+  "playerautoma.messages.storeFailed": "रेकॉर्डिंग सहेजने में विफल",
+  "playerautoma.message.loadFailed": "रेकॉर्डिंग लोड करने में विफल",
+  "playerautoma.messages.deleteFailed": "रेकॉर्डिंग हटाने में विफल",
+  "playerautoma.messages.cannotLoadDueToState": "रेकॉर्डिंग लोड की जा नहीं सकती, जब रेकॉर्डिंग या पुनः प्रचारण हो रहा है"
+
+
 }

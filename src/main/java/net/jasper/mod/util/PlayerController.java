@@ -38,6 +38,10 @@ public class PlayerController {
         }
     }
 
+    public static void writeToChat(Text message) {
+        writeToChat(message.getString());
+    }
+
     public static void clickSlot(SlotClick click) {
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.player != null;

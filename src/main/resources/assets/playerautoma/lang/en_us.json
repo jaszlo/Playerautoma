@@ -53,5 +53,26 @@
   "playerautoma.option.absoluteLookingDirection": "Absolute",
   "playerautoma.option.recordInventoryActivities": "Record Inventory Clicks",
   "playerautoma.option.tooltip.recordInventoryActivities": "Only records inventory activities such as item movement when On.",
-  "playerautoma.option.tooltip.useRelativeLookingDirection": "Relative: Start from your current Looking Direction\n\nAbsolut: Start from the Looking Direction of the Recording"
+  "playerautoma.option.tooltip.useRelativeLookingDirection": "Relative: Start from your current Looking Direction\n\nAbsolut: Start from the Looking Direction of the Recording",
+
+  "playerautoma.messages.fileDeletionError": "Failed to delete file",
+  "playerautoma.messages.startRecording": "Started Recording",
+  "playerautoma.messages.stopRecording": "Stopped Recording",
+  "playerautoma.messages.startReplay": "Started Replaying",
+  "playerautoma.messages.startLoopedReplay": "Started Looping",
+  "playerautoma.messages.replayDone": "Replay Done",
+  "playerautoma.messages.stopReplay": "Stopped Recording",
+  "playerautoma.messages.pauseReplay": "Paused Replay",
+  "playerautoma.messages.resumeReplay": "Resumed Replay",
+  "playerautoma.messages.storedRecording": "Stored Recording",
+  "playerautoma.messages.loadedRecording": "Loaded Recording",
+  "playerautoma.messages.cannotStoreEmpty": "Cannot store empty Recording",
+  "playerautoma.messages.cannotStoreDueToState": "Cannot store recording while recording or replaying",
+  "playerautoma.messages.storeFailed": "Failed to store recording",
+  "playerautoma.message.loadFailed": "Failed to load recording",
+  "playerautoma.messages.deleteFailed": "Failed to delete recording",
+  "playerautoma.messages.cannotLoadDueToState": "Cannot load recording while recording or replaying"
+
+
+
 }
