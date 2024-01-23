@@ -1,5 +1,6 @@
 package net.jasper.mod.gui.option;
 
+import net.jasper.mod.gui.HUDState;
 import net.jasper.mod.util.data.LookingDirection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -74,6 +75,23 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
+    public static OptionButton<Boolean> writeStateToChatOption = new OptionButton<>(
+        true,
+        OptionButton.BOOLEAN_VALUES,
+        "playerautoma.option.writeStateToChat",
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<HUDState.Position> setHudPositionOption = new OptionButton<>(
+        HUDState.Position.BOTTOM_LEFT,
+        HUDState.Position.values(),
+        "playerautoma.option.setHudPosition",
+        HUDState.Position::toString,
+        HUDState.Position::fromString,
+        HUDState.Position::toText
+    );
 
 
     public PlayerAutomaOptionsScreen(String title, Screen parent) {
@@ -88,9 +106,21 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
         GridWidget.Adder adder = gridWidget.createAdder(2);
 
-        ButtonWidget showHudButton = showHudOption.buttonOf();
+        ButtonWidget setHudPositionButton = setHudPositionOption.buttonOf();
+        setHudPositionOption.setButton(setHudPositionButton);
+
+        ButtonWidget showHudButton = ButtonWidget.builder(
+                Text.translatable(showHudOption.key).append(": ").append(showHudOption.textProvider.provide(showHudOption.getValue())),
+                (b) -> {
+                    showHudOption.next();
+                    setHudPositionButton.active = showHudOption.getValue();
+                }).build();
+        setHudPositionButton.active = showHudOption.getValue();
+        showHudOption.setButton(showHudButton);
+
         ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();
         ButtonWidget useRelativeLookingDirectionButton = useRelativeLookingDirectionOption.buttonOf();
+
         useRelativeLookingDirectionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useRelativeLookingDirection")));
         useRelativeLookingDirectionOption.setButton(useRelativeLookingDirectionButton);
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
@@ -100,6 +130,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
                     useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
                 }).build();
+
         // Set initial active state
         setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
         useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
@@ -109,7 +140,14 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget recordInventoryActivitiesButton = recordInventoryActivitiesOption.buttonOf();
         recordInventoryActivitiesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordInventoryActivities")));
 
+        ButtonWidget writeStateToChatButton = writeStateToChatOption.buttonOf();
+        writeStateToChatOption.setButton(writeStateToChatButton);
+
+
         adder.add(showHudButton);
+        adder.add(setHudPositionButton);
+
+        adder.add(writeStateToChatButton);
         adder.add(useDefaultDirectionButton);
         adder.add(setDefaultDirectionButton);
         adder.add(useRelativeLookingDirectionButton);

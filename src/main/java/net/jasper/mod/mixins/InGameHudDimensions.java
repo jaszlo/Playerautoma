@@ -8,4 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface InGameHudDimensions {
     @Accessor("scaledHeight")
     int getScaledHeight();
+
+    @Accessor("scaledWidth")
+    int getScaledWidth();
 }

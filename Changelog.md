@@ -1,4 +1,13 @@
-# Version 0.3.4:
+# Version 0.4.1:
+* Bug Fixes:
+  * Looped Replay works again
+  * Delete Button works
+* New Features:
+  * Additional Options
+    * Toggle chat output
+    * Change HUD Position 
+
+# Version 0.4.0:
 * New Features:
   * Ability to pause and resume replays
   * Options Menu

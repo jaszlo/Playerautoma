@@ -75,7 +75,7 @@ public class PlayerRecorder {
         if (!state.isAny(IDLE, PAUSED)) {
             return;
         }
-        PlayerController.writeToChat("Started Recording");
+        PlayerController.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
         PlayerController.centerPlayer();
         lastSlotClicked.clear();
@@ -84,7 +84,7 @@ public class PlayerRecorder {
 
     public static void stopRecord() {
         if (state.isRecording()) {
-            PlayerController.writeToChat("Stopped Recording");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.stopRecording"));
             state = IDLE;
         }
     }
@@ -94,13 +94,19 @@ public class PlayerRecorder {
     }
 
     public static void startReplay(boolean looped) {
-        if (!state.isAny(IDLE, PAUSED) || record.isEmpty()) {
+        if (record.isEmpty()) {
             return;
+        }
+        if (!state.isAny(IDLE, PAUSED)) {
+            // if state is replaying and has no tasks its looped therefore just continue and if not return
+            if (!(state.isReplaying() && tasks.isEmpty())) {
+                return;
+            }
         }
         // If starting while paused tasks needs to be cleared so clear it always
         tasks.clear();
         state = REPLAYING;
-        if (!looped) PlayerController.writeToChat("Started Replay");
+        if (!looped) PlayerController.writeToChat(Text.translatable("playerautoma.messages.startReplay"));
 
         PlayerController.centerPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
@@ -179,7 +185,7 @@ public class PlayerRecorder {
                 for (KeyBinding k : client.options.allKeys) {
                     k.setPressed(false);
                 }
-                PlayerController.writeToChat("Replay Done");
+                PlayerController.writeToChat(Text.translatable("playerautoma.messages.replayDone"));
             });
         }
 
@@ -193,7 +199,7 @@ public class PlayerRecorder {
         if (!state.isAny(IDLE, PAUSED) || record.isEmpty()) {
             return;
         }
-        PlayerController.writeToChat("Started Looped Replay");
+        PlayerController.writeToChat(Text.translatable("playerautoma.messages.startLoopedReplay"));
         startReplay(true);
     }
 
@@ -205,11 +211,11 @@ public class PlayerRecorder {
         if (state.isPaused()) {
             tasks.resume();
             state = REPLAYING;
-            PlayerController.writeToChat("Resumed Replay");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.resumeReplay"));
         } else if (state.isReplaying()) {
             tasks.pause();
             state = PAUSED;
-            PlayerController.writeToChat("Paused Replay");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
             // Toggle of all keys to stop player from doing anything
             for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
                 k.setPressed(false);
@@ -222,7 +228,7 @@ public class PlayerRecorder {
         if (!state.isAny(REPLAYING, PAUSED)) {
             return;
         }
-        PlayerController.writeToChat("Stopped Replay");
+        PlayerController.writeToChat(Text.translatable("playerautoma.messages.stopReplay"));
         state = IDLE;
         // Clear all tasks to stop replay
         tasks.clear();
@@ -236,10 +242,10 @@ public class PlayerRecorder {
 
     public static void storeRecord(String name) {
         if (record.isEmpty()) {
-            PlayerController.writeToChat("Cannot store empty recording");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.cannotStoreEmpty"));
             return;
         } else if (state.isAny(RECORDING, REPLAYING)) {
-            PlayerController.writeToChat("Cannot store recording while recording or replaying");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.cannotStoreDueToState"));
             return;
         }
 
@@ -257,7 +263,7 @@ public class PlayerRecorder {
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             objectOutputStream.writeObject(record);
             objectOutputStream.close();
-            PlayerController.writeToChat("Stored Recording");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.storedRecording"));
         } catch(IOException e) {
             e.printStackTrace();
             try {
@@ -267,7 +273,7 @@ public class PlayerRecorder {
                 closeFailed.printStackTrace();
                 LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
             }
-            PlayerController.writeToChat("Failed to store recording");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.storeFailed"));
             LOGGER.info("Failed to create output stream for selected file");
         }
     }
@@ -275,7 +281,7 @@ public class PlayerRecorder {
 
     public static void loadRecord(File selected) {
         if (state.isAny(RECORDING, REPLAYING)) {
-            PlayerController.writeToChat("Cannot load recording while recording or replaying");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
             return;
         }
         ObjectInputStream objectInputStream = null;
@@ -285,7 +291,7 @@ public class PlayerRecorder {
             if (objectInputStream == null) throw new IOException("objectInputStream is null");
             record = (Recording) objectInputStream.readObject();
             objectInputStream.close();
-            PlayerController.writeToChat("Loaded Recording");
+            PlayerController.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -294,7 +300,7 @@ public class PlayerRecorder {
                 closeFailed.printStackTrace();
                 LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
             }
-            PlayerController.writeToChat("Invalid file");
+            PlayerController.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
         }
     }
 
