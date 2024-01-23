@@ -33,7 +33,8 @@ public class PlayerController {
     }
 
     public static void writeToChat(String message) {
-        if (MinecraftClient.getInstance().player != null) {
+        // Only if in-game and enabled options
+        if (MinecraftClient.getInstance().player != null && PlayerAutomaOptionsScreen.writeStateToChatOption.getValue()) {
             MinecraftClient.getInstance().player.sendMessage(Text.of(message));
         }
     }
