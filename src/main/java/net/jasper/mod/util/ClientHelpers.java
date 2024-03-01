@@ -10,9 +10,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * Utility class for controlling minor aspects of the player.
+ * Utility class for controlling minor aspects of the player and client
  */
-public class PlayerController {
+public class ClientHelpers {
+
+
+    public static int getGuiScale() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        int scale = client.options.getGuiScale().getValue();
+        // Scale was set to 'AUTO' which is represented by 0. Calculate actual scale
+        scale = scale == 0 ? client.getWindow().getWidth() / client.getWindow().getScaledWidth() : scale;
+        return scale;
+    }
+
     public static void centerPlayer() {
         // Center Camera
         PlayerEntity player= MinecraftClient.getInstance().player;
