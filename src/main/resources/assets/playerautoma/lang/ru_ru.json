@@ -61,8 +61,11 @@
   "playerautoma.option.hudPosition.centerRight": "По центру справа",
   "playerautoma.option.hudPosition.bottomLeft": "Внизу слева",
   "playerautoma.option.hudPosition.bottomRight": "Внизу справа",
+  "playerautoma.option.hudShow.nothing": "Ничего",
+  "playerautoma.option.hudShow.text": "Текст",
+  "playerautoma.option.hudShow.icon": "Иконка",
   "playerautoma.option.setHudPosition": "Позиция HUD",
-
+  "playerautoma.option.openKeyBindings": "Настройки клавиш...",
   "playerautoma.messages.fileDeletionError": "Не удалось удалить файл",
   "playerautoma.messages.startRecording": "Начата запись",
   "playerautoma.messages.stopRecording": "Запись остановлена",

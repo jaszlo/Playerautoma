@@ -19,7 +19,8 @@ import java.nio.file.Path;
  */
 public class PlayerAutomaClient implements ClientModInitializer {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::client");
+	public static final String MOD_ID = "playerautoma";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID + "::client");
 	public static final String RECORDING_FOLDER_NAME = "Recordings";
 
 	public static final String RECORDING_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), RECORDING_FOLDER_NAME).toString();

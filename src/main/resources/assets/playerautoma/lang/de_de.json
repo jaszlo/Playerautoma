@@ -61,8 +61,11 @@
   "playerautoma.option.hudPosition.centerRight": "Rechts Mitte",
   "playerautoma.option.hudPosition.bottomLeft": "Unten Links",
   "playerautoma.option.hudPosition.bottomRight": "Unten Rechts",
+  "playerautoma.option.hudShow.nothing": "Nichts",
+  "playerautoma.option.hudShow.text": "Text",
+  "playerautoma.option.hudShow.icon": "Symbol",
   "playerautoma.option.setHudPosition": "HUD-Position",
-
+  "playerautoma.option.openKeyBindings": "Tastenbelegung...",
   "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",
   "playerautoma.messages.startRecording": "Aufnahme gestartet",
   "playerautoma.messages.stopRecording": "Aufnahme gestoppt",

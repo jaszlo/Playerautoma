@@ -6,8 +6,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
+import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.EmptyWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.screen.ScreenTexts;
@@ -17,15 +19,15 @@ import net.minecraft.text.Text;
 /**
  * Playerautoma option screen to configure settings
  */
-public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
+public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
-    public static OptionButton<Boolean> showHudOption = new OptionButton<>(
-        true,
-        OptionButton.BOOLEAN_VALUES,
+    public static OptionButton<HUDState.ShowHUDOption> showHudOption = new OptionButton<>(
+        HUDState.ShowHUDOption.TEXT_AND_ICON,
+        HUDState.ShowHUDOption.values(),
         "playerautoma.option.showHud",
-        Object::toString,
-        Boolean::parseBoolean,
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        HUDState.ShowHUDOption::toString,
+        HUDState.ShowHUDOption::fromString,
+        HUDState.ShowHUDOption::toText
     );
 
     public static OptionButton<Boolean> useDefaultDirectionOption = new OptionButton<>(
@@ -113,9 +115,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                 Text.translatable(showHudOption.key).append(": ").append(showHudOption.textProvider.provide(showHudOption.getValue())),
                 (b) -> {
                     showHudOption.next();
-                    setHudPositionButton.active = showHudOption.getValue();
+                    setHudPositionButton.active = showHudOption.getValue() != HUDState.ShowHUDOption.NOTHING;
                 }).build();
-        setHudPositionButton.active = showHudOption.getValue();
+        setHudPositionButton.active = showHudOption.getValue() != HUDState.ShowHUDOption.NOTHING;
         showHudOption.setButton(showHudButton);
 
         ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();
@@ -143,16 +145,24 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget writeStateToChatButton = writeStateToChatOption.buttonOf();
         writeStateToChatOption.setButton(writeStateToChatButton);
 
+        ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
+                Text.translatable("playerautoma.option.openKeyBindings"),
+                (button) -> {
+                    MinecraftClient client = MinecraftClient.getInstance();
+                    client.setScreen(new KeybindsScreen(this, client.options));
+                }
+        ).build();
 
         adder.add(showHudButton);
         adder.add(setHudPositionButton);
-
         adder.add(writeStateToChatButton);
         adder.add(useDefaultDirectionButton);
         adder.add(setDefaultDirectionButton);
         adder.add(useRelativeLookingDirectionButton);
         adder.add(restackBlocksButton);
         adder.add(recordInventoryActivitiesButton);
+        adder.add(openKeyBindOptionsButton, 2);
+        adder.add(EmptyWidget.ofHeight(16), 2);
         adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent)).width(200).build(), 2, adder.copyPositioner().marginTop(6));
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
