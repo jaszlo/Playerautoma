@@ -61,8 +61,11 @@
   "playerautoma.option.hudPosition.centerRight": "Derecha al Centro",
   "playerautoma.option.hudPosition.bottomLeft": "Abajo a la Izquierda",
   "playerautoma.option.hudPosition.bottomRight": "Abajo a la Derecha",
+  "playerautoma.option.hudShow.nothing": "Nada",
+  "playerautoma.option.hudShow.text": "Texto",
+  "playerautoma.option.hudShow.icon": "Icono",
   "playerautoma.option.setHudPosition": "Posición del HUD",
-
+  "playerautoma.option.openKeyBindings": "Configuración de teclas...",
   "playerautoma.messages.fileDeletionError": "Error al eliminar el archivo",
   "playerautoma.messages.startRecording": "Inicio de la grabación",
   "playerautoma.messages.stopRecording": "Detención de la grabación",

@@ -3,7 +3,7 @@ package net.jasper.mod.automation;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
-import net.jasper.mod.util.PlayerController;
+import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.SlotClick;
@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -48,8 +49,13 @@ public class PlayerRecorder {
         // Register Task-Queues
         tasks.register("playerActions");
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            // Check if recording is possible
-            if (!state.isRecording() || client.player == null) {
+            if (client.player == null) {
+                // Player not in-game. Therefore, reset recorder by stopping any activity
+                stopRecord();
+                stopReplay();
+            }
+
+            if (!state.isRecording()) {
                 return;
             }
 
@@ -75,16 +81,16 @@ public class PlayerRecorder {
         if (!state.isAny(IDLE, PAUSED)) {
             return;
         }
-        PlayerController.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
+        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
-        PlayerController.centerPlayer();
+        ClientHelpers.centerPlayer();
         lastSlotClicked.clear();
         state = RECORDING;
     }
 
     public static void stopRecord() {
         if (state.isRecording()) {
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.stopRecording"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.stopRecording"));
             state = IDLE;
         }
     }
@@ -97,18 +103,19 @@ public class PlayerRecorder {
         if (record.isEmpty()) {
             return;
         }
-        if (!state.isAny(IDLE, PAUSED)) {
+        if (state.isAny(RECORDING, REPLAYING)) {
             // if state is replaying and has no tasks its looped therefore just continue and if not return
             if (!(state.isReplaying() && tasks.isEmpty())) {
                 return;
             }
         }
-        // If starting while paused tasks needs to be cleared so clear it always
+        // If starting while paused tasks needs to be cleared and resumed
         tasks.clear();
+        tasks.resume();
         state = REPLAYING;
-        if (!looped) PlayerController.writeToChat(Text.translatable("playerautoma.messages.startReplay"));
+        if (!looped) ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startReplay"));
 
-        PlayerController.centerPlayer();
+        ClientHelpers.centerPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.player != null;
         assert client.interactionManager != null;
@@ -174,7 +181,7 @@ public class PlayerRecorder {
                 }
 
                 // Click Slot in inventory if possible
-                if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) PlayerController.clickSlot(clickedSlot);
+                if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) ClientHelpers.clickSlot(clickedSlot);
             });
         }
 
@@ -185,7 +192,7 @@ public class PlayerRecorder {
                 for (KeyBinding k : client.options.allKeys) {
                     k.setPressed(false);
                 }
-                PlayerController.writeToChat(Text.translatable("playerautoma.messages.replayDone"));
+                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.replayDone"));
             });
         }
 
@@ -196,10 +203,10 @@ public class PlayerRecorder {
     }
 
     public static void startLoop() {
-        if (!state.isAny(IDLE, PAUSED) || record.isEmpty()) {
+        if (state.isAny(RECORDING, REPLAYING) || record.isEmpty()) {
             return;
         }
-        PlayerController.writeToChat(Text.translatable("playerautoma.messages.startLoopedReplay"));
+        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startLoopedReplay"));
         startReplay(true);
     }
 
@@ -211,11 +218,11 @@ public class PlayerRecorder {
         if (state.isPaused()) {
             tasks.resume();
             state = REPLAYING;
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.resumeReplay"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.resumeReplay"));
         } else if (state.isReplaying()) {
             tasks.pause();
             state = PAUSED;
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
             // Toggle of all keys to stop player from doing anything
             for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
                 k.setPressed(false);
@@ -228,7 +235,7 @@ public class PlayerRecorder {
         if (!state.isAny(REPLAYING, PAUSED)) {
             return;
         }
-        PlayerController.writeToChat(Text.translatable("playerautoma.messages.stopReplay"));
+        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.stopReplay"));
         state = IDLE;
         // Clear all tasks to stop replay
         tasks.clear();
@@ -242,10 +249,10 @@ public class PlayerRecorder {
 
     public static void storeRecord(String name) {
         if (record.isEmpty()) {
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.cannotStoreEmpty"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreEmpty"));
             return;
         } else if (state.isAny(RECORDING, REPLAYING)) {
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.cannotStoreDueToState"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreDueToState"));
             return;
         }
 
@@ -263,7 +270,7 @@ public class PlayerRecorder {
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             objectOutputStream.writeObject(record);
             objectOutputStream.close();
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.storedRecording"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storedRecording"));
         } catch(IOException e) {
             e.printStackTrace();
             try {
@@ -273,7 +280,7 @@ public class PlayerRecorder {
                 closeFailed.printStackTrace();
                 LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
             }
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.storeFailed"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storeFailed"));
             LOGGER.info("Failed to create output stream for selected file");
         }
     }
@@ -281,7 +288,7 @@ public class PlayerRecorder {
 
     public static void loadRecord(File selected) {
         if (state.isAny(RECORDING, REPLAYING)) {
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
             return;
         }
         ObjectInputStream objectInputStream = null;
@@ -291,7 +298,7 @@ public class PlayerRecorder {
             if (objectInputStream == null) throw new IOException("objectInputStream is null");
             record = (Recording) objectInputStream.readObject();
             objectInputStream.close();
-            PlayerController.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -300,7 +307,7 @@ public class PlayerRecorder {
                 closeFailed.printStackTrace();
                 LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
             }
-            PlayerController.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
         }
     }
 
@@ -310,12 +317,27 @@ public class PlayerRecorder {
         IDLE,
         PAUSED;
 
+        private static final Identifier REPLAYING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/replaying.png");
+        private static final Identifier RECORDING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/recording.png");
+        private static final Identifier PAUSING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/pausing.png");
+        private static final Identifier IDLE_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/idle.png");
+
+
         public int getColor() {
             return switch (this) {
-                case RECORDING -> 0x73020e; // Red
+                case RECORDING -> 0xff0000; // Red
                 case REPLAYING -> 0x0f7302; // Green
-                case PAUSED -> 0x3734eb;    // Blue
+                case PAUSED -> 0x000669;    // Blue
                 default -> 0xFFFFFF;        // White
+            };
+        }
+
+        public Identifier getIcon() {
+            return switch (PlayerRecorder.state) {
+                case IDLE -> IDLE_ICON;
+                case PAUSED -> PAUSING_ICON;
+                case RECORDING -> RECORDING_ICON;
+                case REPLAYING -> REPLAYING_ICON;
             };
         }
 

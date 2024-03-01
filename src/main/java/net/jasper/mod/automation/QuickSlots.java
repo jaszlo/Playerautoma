@@ -2,7 +2,7 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.util.PlayerController;
+import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.Recording;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -15,13 +15,15 @@ import java.util.Arrays;
  */
 public class QuickSlots {
 
-    public static Recording[] quickSlots = new Recording[9];
+    private static final int QUICKSLOTS_N = 9;
+
+    public static Recording[] quickSlots = new Recording[QUICKSLOTS_N];
 
     // KeyBinding State
-    private static final int[] storeCooldowns = new int[9];
-    private static final int[] loadCooldowns = new int[9];
-    private static final boolean[] CTRLPressed = new boolean[9];
-    private static final boolean[] ALTPressed = new boolean[9];
+    private static final int[] storeCooldowns = new int[QUICKSLOTS_N];
+    private static final int[] loadCooldowns = new int[QUICKSLOTS_N];
+    private static final boolean[] CTRLPressed = new boolean[QUICKSLOTS_N];
+    private static final boolean[] ALTPressed = new boolean[QUICKSLOTS_N];
     private static final int COOLDOWN = 5;
 
     public static void store(int slot, Recording recording) {
@@ -55,6 +57,7 @@ public class QuickSlots {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void consumeKeyPress(KeyBinding key, int limit) {
         int error = 0;
         while (key.wasPressed()) {
@@ -91,15 +94,15 @@ public class QuickSlots {
                     consumeKeyPress(client.options.hotbarKeys[i], 10);
                     // Check if store operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        PlayerController.writeToChat("Cannot store Recording while Recording or Replaying");
+                        ClientHelpers.writeToChat("Cannot store Recording while Recording or Replaying");
                         continue;
                     } else if (PlayerRecorder.record == null || PlayerRecorder.record.isEmpty()) {
-                        PlayerController.writeToChat("No Recording to store");
+                        ClientHelpers.writeToChat("No Recording to store");
                         continue;
                     }
 
                     store(i, PlayerRecorder.record.copy());
-                    PlayerController.writeToChat("Stored Recording to QuickSlot " + (i + 1));
+                    ClientHelpers.writeToChat("Stored Recording to QuickSlot " + (i + 1));
 
                 // Load Recording from QuickSlot
                 } else if (ALTPressed[i]) {
@@ -108,15 +111,15 @@ public class QuickSlots {
                     Recording r = load(i);
                     // Check if load operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        PlayerController.writeToChat("Cannot load Recording while Recording or Replaying");
+                        ClientHelpers.writeToChat("Cannot load Recording while Recording or Replaying");
                         continue;
                     } else if (r == null || r.isEmpty()) {
-                        PlayerController.writeToChat("No Recording in QuickSlot " + (i + 1));
+                        ClientHelpers.writeToChat("No Recording in QuickSlot " + (i + 1));
                         continue;
                     }
 
                     PlayerRecorder.record = r;
-                    PlayerController.writeToChat("Loaded Recording to QuickSlot " + (i + 1));
+                    ClientHelpers.writeToChat("Loaded Recording to QuickSlot " + (i + 1));
                 }
             }
 
