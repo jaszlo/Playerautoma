@@ -2,12 +2,10 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.gui.RecordingStorer;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
-import net.jasper.mod.util.data.LookingDirection;
-import net.jasper.mod.util.data.Recording;
-import net.jasper.mod.util.data.SlotClick;
-import net.jasper.mod.util.data.TaskQueue;
+import net.jasper.mod.util.data.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
@@ -268,9 +266,20 @@ public class PlayerRecorder {
             }
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
-            objectOutputStream.writeObject(record);
+            // Store as .json/.rec according to option
+            if (RecordingStorer.useJSON.getValue()) {
+                String json = JsonHelper.serialize(record);
+                FileWriter fileWriter = new FileWriter(selected);
+                BufferedWriter writer = new BufferedWriter(fileWriter);
+                writer.write(json);
+                writer.close();
+                fileWriter.close();
+            } else {
+                objectOutputStream.writeObject(record);
+            }
             objectOutputStream.close();
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storedRecording"));
+
         } catch(IOException e) {
             e.printStackTrace();
             try {
@@ -291,11 +300,31 @@ public class PlayerRecorder {
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
             return;
         }
+
+        // Load as .json/.rec according to option
+        if (RecordingStorer.useJSON.getValue()) {
+            try {
+                FileReader fileReader = new FileReader(selected);
+                BufferedReader reader = new BufferedReader(fileReader);
+                StringBuilder readFile = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    readFile.append(line);
+                }
+                record = JsonHelper.deserialize(readFile.toString());
+                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
+            } catch(IOException e) {
+                ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
+            }
+            return;
+        }
+
         ObjectInputStream objectInputStream = null;
         try {
             objectInputStream = new ObjectInputStream(new FileInputStream(selected));
             // This can happen when a file is selected and then deleted via the file explorer
             if (objectInputStream == null) throw new IOException("objectInputStream is null");
+
             record = (Recording) objectInputStream.readObject();
             objectInputStream.close();
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
