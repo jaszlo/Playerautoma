@@ -145,7 +145,7 @@ public class RecordingSelector extends Screen {
                 return;
             }
             for (File file : fileList) {
-                if (file.getName().endsWith(".rec")) {
+                if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
                     RecordingEntry entry = new RecordingEntry(file.getName(), file);
                     this.addEntry(entry);
                 }
