@@ -1,6 +1,9 @@
-package net.jasper.mod.util.data;
+package net.jasper.mod.util;
 
 import com.google.gson.*;
+import net.jasper.mod.util.data.LookingDirection;
+import net.jasper.mod.util.data.Recording;
+import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.screen.slot.SlotActionType;
