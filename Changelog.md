@@ -1,3 +1,15 @@
+# Version 0.4.2:
+* Bug Fixes:
+  * Recorder now resets when leaving the game
+  * Starting Replay from Pause no longer freezes Recorder
+* New Features:
+  * Json support for serialized Recordings
+  * Icon to display state of Recorder (with options)
+    * Show text
+    * Show Icon
+    * Show both
+    * Show nothing
+
 # Version 0.4.1:
 * Bug Fixes:
   * Looped Replay works again
