@@ -2,16 +2,16 @@
 	"schemaVersion": 1,
 	"id": "playerautoma",
 	"version": "${version}",
-	"name": "JasperMod",
-	"description": "This is a Test mod developed to be insane at Cytooxien.de KakiKlicker - however I got banned for using it.",
+	"name": "Playerautoma",
+	"description": "Record player actions and replay those. Storing of recording is possible in multiple ways",
 	"authors": [
-		"Jasper Lorenz"
+		"Jaszlo"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "MIT",
+	"license": "CC0",
 	"icon": "assets/playerautoma/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -24,7 +24,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.14.22",
-		"minecraft": "~1.20.1",
+		"minecraft": "~1.20",
 		"java": ">=17",
 		"fabric-api": "*"
 	},
