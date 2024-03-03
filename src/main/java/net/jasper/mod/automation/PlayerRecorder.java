@@ -313,7 +313,7 @@ public class PlayerRecorder {
                 }
                 record = JsonHelper.deserialize(readFile.toString());
                 ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
-            } catch(IOException e) {
+            } catch(Exception e) {
                 ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
             }
             return;
