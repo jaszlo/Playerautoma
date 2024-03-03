@@ -26,7 +26,6 @@
   "playerautoma.fileSelector.enterName": "Ingresar Nombre de la Grabación",
   "playerautoma.fileSelector.tooltip.textField": "Ingresar el nombre de la grabación. No es necesario agregar '.rec' al final",
   "playerautoma.fileSelector.tooltip.save": "Guardar la grabación en .minecraft/Recordings",
-
   "playerautoma.keys.startRecording": "Iniciar Grabación",
   "playerautoma.keys.stopRecording": "Detener Grabación",
   "playerautoma.keys.startReplay": "Iniciar Reproducción",
@@ -36,7 +35,6 @@
   "playerautoma.keys.loadRecording": "Cargar Grabación...",
   "playerautoma.keys.pauseReplay": "Pausar Reproducción",
   "playerautoma.keys.openMenu": "Abrir Menú",
-
   "playerautoma.options": "Opciones de PlayerAutoma...",
   "playerautoma.option.showHud": "Mostrar HUD",
   "playerautoma.option.useDefaultDirection": "Usar Dirección Predeterminada",
@@ -66,6 +64,8 @@
   "playerautoma.option.hudShow.icon": "Icono",
   "playerautoma.option.setHudPosition": "Posición del HUD",
   "playerautoma.option.openKeyBindings": "Configuración de teclas...",
+  "playerautoma.option.exportAs": "Exportar como",
+  "playerautoma.options.tooltip.exportAs": ".json: Legible pero más lento y más grande\n\n.rec: No legible pero rápido y pequeño",
   "playerautoma.messages.fileDeletionError": "Error al eliminar el archivo",
   "playerautoma.messages.startRecording": "Inicio de la grabación",
   "playerautoma.messages.stopRecording": "Detención de la grabación",
