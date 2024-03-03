@@ -26,7 +26,6 @@
   "playerautoma.fileSelector.enterName": "Gib den Aufnahmenamen ein",
   "playerautoma.fileSelector.tooltip.textField": "Gib den Aufnahmenamen ein. Die Eingabe erfordert kein '.rec'-Ende",
   "playerautoma.fileSelector.tooltip.save": "Speichere die Aufnahme im .minecraft/Recordings-Ordner",
-
   "playerautoma.keys.startRecording": "Aufnahme starten",
   "playerautoma.keys.stopRecording": "Aufnahme stoppen",
   "playerautoma.keys.startReplay": "Wiedergabe starten",
@@ -36,7 +35,6 @@
   "playerautoma.keys.loadRecording": "Aufnahme laden",
   "playerautoma.keys.pauseReplay": "Wiedergabe pausieren",
   "playerautoma.keys.openMenu": "Menü öffnen",
-
   "playerautoma.options": "PlayerAutoma Optionen... ",
   "playerautoma.option.showHud": "HUD anzeigen",
   "playerautoma.option.useDefaultDirection": "Standardrichtung nutzen",
@@ -61,8 +59,13 @@
   "playerautoma.option.hudPosition.centerRight": "Rechts Mitte",
   "playerautoma.option.hudPosition.bottomLeft": "Unten Links",
   "playerautoma.option.hudPosition.bottomRight": "Unten Rechts",
+  "playerautoma.option.hudShow.nothing": "Nichts",
+  "playerautoma.option.hudShow.text": "Text",
+  "playerautoma.option.hudShow.icon": "Symbol",
   "playerautoma.option.setHudPosition": "HUD-Position",
-
+  "playerautoma.option.openKeyBindings": "Tastenbelegung...",
+  "playerautoma.option.exportAs": "Exportiere als",
+  "playerautoma.options.tooltip.exportAs": ".json: Lesbar, aber langsamer und größer\n\n.rec: Nicht lesbar, aber schnell und klein",
   "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",
   "playerautoma.messages.startRecording": "Aufnahme gestartet",
   "playerautoma.messages.stopRecording": "Aufnahme gestoppt",

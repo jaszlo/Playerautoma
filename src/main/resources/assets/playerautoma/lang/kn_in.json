@@ -26,7 +26,6 @@
   "playerautoma.fileSelector.enterName": "रेकॉर्डिंग का नाम दर्ज करें",
   "playerautoma.fileSelector.tooltip.textField": "रेकॉर्डिंग का नाम दर्ज करें. इनपुट को '.rec' समाप्ति की आवश्यकता नहीं है",
   "playerautoma.fileSelector.tooltip.save": ".minecraft/Recordings में रेकॉर्डिंग सहेजें",
-
   "playerautoma.keys.startRecording": "रेकॉर्डिंग शुरू करें",
   "playerautoma.keys.stopRecording":"रेकॉर्डिंग बंद करें",
   "playerautoma.keys.startReplay": "पुनः चलाना शुरू करें",
@@ -36,7 +35,8 @@
   "playerautoma.keys.loadRecording": "रेकॉर्डिंग लोड करें",
   "playerautoma.keys.pauseReplay":"पुनः चलाना रोकें",
   "playerautoma.keys.openMenu": "मेन्यू खोलें",
-
+  "playerautoma.option.exportAs": "निर्यात करें जैसा",
+  "playerautoma.options.tooltip.exportAs": ".json: पढ़ने में समझदार लेकिन धीमा और बड़ा\n\n.rec: पढ़ने में असमर्थ लेकिन तेज और छोटा",
   "playerautoma.options": "प्लेयरऑटोमा विकल्प...",
   "playerautoma.option.showHud": "HUD दिखाएं",
   "playerautoma.option.useDefaultDirection": "डिफ़ॉल्ट दिशा का उपयोग करें",
@@ -61,8 +61,11 @@
   "playerautoma.option.hudPosition.centerRight": "दाएं मध्य",
   "playerautoma.option.hudPosition.bottomLeft": "नीचे बाएं",
   "playerautoma.option.hudPosition.bottomRight": "नीचे दाएं",
+  "playerautoma.option.hudShow.nothing": "कुछ नहीं",
+  "playerautoma.option.hudShow.text": "टेक्स्ट",
+  "playerautoma.option.hudShow.icon": "आइकन",
   "playerautoma.option.setHudPosition": "HUD स्थिति",
-
+  "playerautoma.option.openKeyBindings": "कुंजी बाइंडिंग्स...",
   "playerautoma.messages.fileDeletionError": "फ़ाइल हटाने में विफल",
   "playerautoma.messages.startRecording": "रेकॉर्डिंग शुरू हुई",
   "playerautoma.messages.stopRecording": "रेकॉर्डिंग बंद हुई",
@@ -80,6 +83,4 @@
   "playerautoma.message.loadFailed": "रेकॉर्डिंग लोड करने में विफल",
   "playerautoma.messages.deleteFailed": "रेकॉर्डिंग हटाने में विफल",
   "playerautoma.messages.cannotLoadDueToState": "रेकॉर्डिंग लोड की जा नहीं सकती, जब रेकॉर्डिंग या पुनः प्रचारण हो रहा है"
-
-
 }

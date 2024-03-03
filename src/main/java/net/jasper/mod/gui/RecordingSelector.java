@@ -3,7 +3,7 @@ package net.jasper.mod.gui;
 
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.util.PlayerController;
+import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -97,7 +97,7 @@ public class RecordingSelector extends Screen {
             if (!deleteSuccess) {
                 PlayerAutomaClient.LOGGER.warn("Could not delete recording file " + recEntry.fileName);
                 this.close();
-                PlayerController.writeToChat(Text.translatable("playerautoma.messages.deleteFailed"));
+                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailed"));
             }
             this.recordingSelectionList.updateFiles();
         }
@@ -146,7 +146,7 @@ public class RecordingSelector extends Screen {
                 return;
             }
             for (File file : fileList) {
-                if (file.getName().endsWith(".rec")) {
+                if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
                     RecordingEntry entry = new RecordingEntry(file.getName(), file);
                     this.addEntry(entry);
                 }

@@ -26,7 +26,6 @@
   "playerautoma.fileSelector.enterName": "Введите имя записи",
   "playerautoma.fileSelector.tooltip.textField": "Введите имя записи. Не требуется добавление '.rec' в конце",
   "playerautoma.fileSelector.tooltip.save": "Сохранить запись в .minecraft/Recordings",
-
   "playerautoma.keys.startRecording": "Начать запись",
   "playerautoma.keys.stopRecording":"Остановить запись",
   "playerautoma.keys.startReplay": "Начать воспроизведение",
@@ -36,7 +35,6 @@
   "playerautoma.keys.loadRecording": "Загрузить запись",
   "playerautoma.keys.pauseReplay":"Приостановить воспроизведение",
   "playerautoma.keys.openMenu": "Открыть меню",
-
   "playerautoma.options": "Настройки PlayerAutoma...",
   "playerautoma.option.showHud": "Показывать HUD",
   "playerautoma.option.useDefaultDirection": "Использовать стандартное направление",
@@ -61,8 +59,13 @@
   "playerautoma.option.hudPosition.centerRight": "По центру справа",
   "playerautoma.option.hudPosition.bottomLeft": "Внизу слева",
   "playerautoma.option.hudPosition.bottomRight": "Внизу справа",
+  "playerautoma.option.hudShow.nothing": "Ничего",
+  "playerautoma.option.hudShow.text": "Текст",
+  "playerautoma.option.hudShow.icon": "Иконка",
   "playerautoma.option.setHudPosition": "Позиция HUD",
-
+  "playerautoma.option.openKeyBindings": "Настройки клавиш...",
+  "playerautoma.option.exportAs": "Экспортировать как",
+  "playerautoma.options.tooltip.exportAs": ".json: Читаемо, но медленно и крупно\n\n.rec: Нечитаемо, но быстро и мало",
   "playerautoma.messages.fileDeletionError": "Не удалось удалить файл",
   "playerautoma.messages.startRecording": "Начата запись",
   "playerautoma.messages.stopRecording": "Запись остановлена",
