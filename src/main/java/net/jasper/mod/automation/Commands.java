@@ -11,7 +11,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 
 public class Commands {
     public static void register() {
-        // Register /record <store|load|clear>
+        // Register /record <start|stop|clear>
         //          /record quickslot <load|store> <slot>
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
             dispatcher.register(literal("record")
