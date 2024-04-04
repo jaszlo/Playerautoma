@@ -5,7 +5,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.jasper.mod.automation.InventoryAutomation;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
-import net.jasper.mod.commands.RecordCommands;
+import net.jasper.mod.automation.Commands;
 import net.jasper.mod.gui.HUDState;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
@@ -54,7 +54,7 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		QuickSlots.register();
 
 		// Register Commands to control the Player-Recorder
-		RecordCommands.register();
+		Commands.register();
 
 	}
 }

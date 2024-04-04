@@ -6,6 +6,7 @@ import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.Recording;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
@@ -94,15 +95,15 @@ public class QuickSlots {
                     consumeKeyPress(client.options.hotbarKeys[i], 10);
                     // Check if store operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        ClientHelpers.writeToChat("Cannot store Recording while Recording or Replaying");
+                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreDueToState"));
                         continue;
                     } else if (PlayerRecorder.record == null || PlayerRecorder.record.isEmpty()) {
-                        ClientHelpers.writeToChat("No Recording to store");
+                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreEmpty"));
                         continue;
                     }
 
                     store(i, PlayerRecorder.record.copy());
-                    ClientHelpers.writeToChat("Stored Recording to QuickSlot " + (i + 1));
+                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storeQuickslot").append(Text.of("" + (i  + 1))));
 
                 // Load Recording from QuickSlot
                 } else if (ALTPressed[i]) {
@@ -111,15 +112,15 @@ public class QuickSlots {
                     Recording r = load(i);
                     // Check if load operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        ClientHelpers.writeToChat("Cannot load Recording while Recording or Replaying");
+                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
                         continue;
                     } else if (r == null || r.isEmpty()) {
-                        ClientHelpers.writeToChat("No Recording in QuickSlot " + (i + 1));
+                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadQuickslotMissing").append(Text.of("" + (i + 1))));
                         continue;
                     }
 
                     PlayerRecorder.record = r;
-                    ClientHelpers.writeToChat("Loaded Recording to QuickSlot " + (i + 1));
+                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadQuickslot").append(Text.of("" + (i + 1))));
                 }
             }
 

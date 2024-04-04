@@ -82,5 +82,8 @@
   "playerautoma.messages.storeFailed": "Не удалось сохранить запись",
   "playerautoma.message.loadFailed": "Не удалось загрузить запись",
   "playerautoma.messages.deleteFailed": "Не удалось удалить запись",
-  "playerautoma.messages.cannotLoadDueToState": "Нельзя загрузить запись во время записи или воспроизведения"
+  "playerautoma.messages.cannotLoadDueToState": "Нельзя загрузить запись во время записи или воспроизведения",
+  "playerautoma.messages.storeQuickslot": "Запись сохранена в Quickslot",
+  "playerautoma.messages.loadQuickslot": "Запись загружена в Quickslot",
+  "playerautoma.messages.loadQuickslotMissing": "Нет записи в Quickslot"
 }

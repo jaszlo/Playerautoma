@@ -82,6 +82,9 @@
   "playerautoma.messages.storeFailed": "Speichern der Aufnahme fehlgeschlagen",
   "playerautoma.message.loadFailed": "Fehler beim Laden der Aufnahme",
   "playerautoma.messages.deleteFailed": "Löschen der Aufnahme fehlgeschlagen",
-  "playerautoma.messages.cannotLoadDueToState": "Aufnahme kann nicht geladen werden, während sie aufgenommen oder wiedergegeben wird"
+  "playerautoma.messages.cannotLoadDueToState": "Aufnahme kann nicht geladen werden, während sie aufgenommen oder wiedergegeben wird",
+  "playerautoma.messages.storeQuickslot": "Aufnahme im Quickslot gespeichert",
+  "playerautoma.messages.loadQuickslot": "Aufnahme im Quickslot geladen",
+  "playerautoma.messages.loadQuickslotMissing": "Keine Aufnahme im Quickslot"
 
 }
