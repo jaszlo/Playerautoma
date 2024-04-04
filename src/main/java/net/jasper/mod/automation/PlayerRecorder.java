@@ -5,6 +5,7 @@ import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.RecordingStorer;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
+import net.jasper.mod.util.JsonHelper;
 import net.jasper.mod.util.data.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;

@@ -31,6 +31,15 @@ Other than that the default keybindings are as follows.
 - `U`  Store Recording
 -  `I`   Load Recording
 
+### Commands
+From v0.4.3 and onwards commands are available and allow you to control the mod using them. 
+The commands should be self-explanatory and are as follows. See [this](documentation/commands.md) for detailed documentation.
+```
+/record <start|stop|clear>
+/record quickslot <store|load> <slot>
+/replay <start|stop|loop|togglepause>
+```
+
 ## Development Setup
 
 1. Project Structure > Select JDK to `JDK17` and Language Level to `SKD default`

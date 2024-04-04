@@ -1,3 +1,12 @@
+# Version 0.4.3:
+* Bug Fixes:
+  * Quickslot messages are now translatable text and no longer hard coded english strings
+  * Invalid recording.json no longer crashes game
+* New Features:
+  * Adds commands to control the mod
+    * /record <start|stop|clear>
+    * /record quickslot <store|load> \<slot>
+    * /replay <start|stop|loop|togglepause>
 # Version 0.4.2:
 * Bug Fixes:
   * Recorder now resets when leaving the game

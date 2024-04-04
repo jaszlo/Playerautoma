@@ -85,8 +85,9 @@
   "playerautoma.messages.storeFailed": "Failed to store recording",
   "playerautoma.message.loadFailed": "Failed to load recording",
   "playerautoma.messages.deleteFailed": "Failed to delete recording",
-  "playerautoma.messages.cannotLoadDueToState": "Cannot load recording while recording or replaying"
-
-
+  "playerautoma.messages.cannotLoadDueToState": "Cannot load recording while recording or replaying",
+  "playerautoma.messages.storeQuickslot": "Stored Recording to QuickSlot ",
+  "playerautoma.messages.loadQuickslot": "Loaded Recording to QuickSlot ",
+  "playerautoma.messages.loadQuickslotMissing": "No Recording in QuickSlot "
 
 }
