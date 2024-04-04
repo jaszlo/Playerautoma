@@ -82,6 +82,9 @@
   "playerautoma.messages.storeFailed": "Error al almacenar la grabación",
   "playerautoma.message.loadFailed": "Error al cargar la grabación",
   "playerautoma.messages.deleteFailed": "Error al eliminar la grabación",
-  "playerautoma.messages.cannotLoadDueToState": "No se puede cargar la grabación mientras se está grabando o reproduciendo"
+  "playerautoma.messages.cannotLoadDueToState": "No se puede cargar la grabación mientras se está grabando o reproduciendo",
+  "playerautoma.messages.storeQuickslot": "Grabación guardada en el Quickslot",
+  "playerautoma.messages.loadQuickslot": "Grabación cargada en el Quickslot",
+  "playerautoma.messages.loadQuickslotMissing": "No hay grabación en el Quickslot"
 
 }
