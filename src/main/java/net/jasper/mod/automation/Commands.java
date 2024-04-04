@@ -1,17 +1,15 @@
-package net.jasper.mod.commands;
+package net.jasper.mod.automation;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.automation.QuickSlots;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
 import static net.minecraft.server.command.CommandManager.literal;
 import static net.minecraft.server.command.CommandManager.argument;
-public class RecordCommands {
 
+public class Commands {
     public static void register() {
         // Register /record <store|load|clear>
         //          /record quickslot <load|store> <slot>
