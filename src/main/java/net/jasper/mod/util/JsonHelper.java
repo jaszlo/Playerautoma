@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to help de/serialize recordings from .json files.
+ */
 public class JsonHelper {
 
     // Field names

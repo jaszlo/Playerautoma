@@ -1,6 +1,7 @@
 package net.jasper.mod.util.keybinds;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.ModMenu;
 import net.jasper.mod.gui.RecordingSelector;
@@ -25,7 +26,8 @@ public class Constants {
             "playerautoma.keys.storeRecording",
             "playerautoma.keys.loadRecording",
             "playerautoma.keys.pauseReplay",
-            "playerautoma.keys.openMenu"
+            "playerautoma.keys.openMenu",
+            "toBackground"
     };
 
     protected static final int AMOUNT_KEYBINDS = translations.length;
@@ -39,7 +41,8 @@ public class Constants {
             new KeyBinding(translations[5], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_U, KEYBINDING_CATEGORY),
             new KeyBinding(translations[6], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, KEYBINDING_CATEGORY),
             new KeyBinding(translations[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, KEYBINDING_CATEGORY),
-            new KeyBinding(translations[8], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY)
+            new KeyBinding(translations[8], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY),
+            new KeyBinding(translations[9], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_0, KEYBINDING_CATEGORY)
     };
 
     public static final KeyBinding STOP_REPLAY = bindings[3];
@@ -53,7 +56,8 @@ public class Constants {
             RecordingStorer::open,
             RecordingSelector::open,
             PlayerRecorder::togglePauseReplay,
-            ModMenu::open
+            ModMenu::open,
+            MenuPrevention::toggleBackgroundPrevention
     };
 
     protected static KeyBind[] defaultKeybinds = new KeyBind[AMOUNT_KEYBINDS];

@@ -8,6 +8,8 @@
   "client": [
     "CancelReplay",
     "InGameHudDimensions",
+    "menuprevention.PreventUpdateMouse",
+    "menuprevention.PreventSetScreen",
     "SlotClickedCallback"
   ]
 }

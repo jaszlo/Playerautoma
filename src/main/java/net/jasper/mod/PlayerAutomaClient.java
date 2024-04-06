@@ -2,11 +2,8 @@ package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
 
-import net.jasper.mod.automation.InventoryAutomation;
-import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.automation.QuickSlots;
-import net.jasper.mod.automation.Commands;
-import net.jasper.mod.gui.HUDState;
+import net.jasper.mod.automation.*;
+import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
@@ -48,13 +45,16 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		PlayerRecorder.registerInputRecorder();
 
 		// Register HUD element for state of Player-Recorder
-		HUDState.register();
+		PlayerAutomaHUD.register();
 
 		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
 		QuickSlots.register();
 
 		// Register Commands to control the Player-Recorder
 		Commands.register();
+
+		// Register MenuPrevention. That allows to run Recording with minecraft in the background.
+		MenuPrevention.register();
 
 	}
 }

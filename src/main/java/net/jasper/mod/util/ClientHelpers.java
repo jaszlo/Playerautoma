@@ -1,11 +1,15 @@
 package net.jasper.mod.util;
 
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 

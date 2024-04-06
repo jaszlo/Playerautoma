@@ -1,3 +1,12 @@
+# Version 0.4.4:
+* Bug Fixes:
+  * Stopping Replay no longer says "Stopped recording"
+* New Features:
+  * Menu prevention allows to put minecraft in the background while replaying
+  * Option to automatically to enable menu prevention when starting a record
+* Removed Features:
+  * Removes support for hindi and russian
+
 # Version 0.4.3:
 * Bug Fixes:
   * Quickslot messages are now translatable text and no longer hard coded english strings
@@ -7,6 +16,7 @@
     * /record <start|stop|clear>
     * /record quickslot <store|load> \<slot>
     * /replay <start|stop|loop|togglepause>
+
 # Version 0.4.2:
 * Bug Fixes:
   * Recorder now resets when leaving the game
