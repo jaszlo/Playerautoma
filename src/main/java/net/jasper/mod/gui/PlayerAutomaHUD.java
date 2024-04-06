@@ -1,6 +1,7 @@
 package net.jasper.mod.gui;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.InGameHudDimensions;
@@ -10,10 +11,12 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.text.Text;
 
+import static net.jasper.mod.util.HUDTextures.BLOCK_MENU_ICON;
+
 /**
  * Little HUD for Playerautoma to display current state of player recorder
  */
-public class HUDState {
+public class PlayerAutomaHUD {
 
     public enum ShowHUDOption {
         NOTHING,
@@ -31,11 +34,11 @@ public class HUDState {
             };
         }
 
-        public static HUDState.ShowHUDOption fromString(String s) {
-            return HUDState.ShowHUDOption.valueOf(s.toUpperCase());
+        public static PlayerAutomaHUD.ShowHUDOption fromString(String s) {
+            return PlayerAutomaHUD.ShowHUDOption.valueOf(s.toUpperCase());
         }
 
-        public static Text toText(HUDState.ShowHUDOption opt) {
+        public static Text toText(PlayerAutomaHUD.ShowHUDOption opt) {
             return switch(opt) {
                 case NOTHING -> Text.translatable("playerautoma.option.hudShow.nothing");
                 case TEXT -> Text.translatable("playerautoma.option.hudShow.text");
@@ -64,11 +67,11 @@ public class HUDState {
             };
         }
 
-        public static HUDState.Position fromString(String s) {
-            return HUDState.Position.valueOf(s.toUpperCase());
+        public static PlayerAutomaHUD.Position fromString(String s) {
+            return PlayerAutomaHUD.Position.valueOf(s.toUpperCase());
         }
 
-        public static Text toText(HUDState.Position opt) {
+        public static Text toText(PlayerAutomaHUD.Position opt) {
             return switch (opt) {
                 case TOP_LEFT -> Text.translatable("playerautoma.option.hudPosition.topLeft");
                 case TOP_RIGHT -> Text.translatable("playerautoma.option.hudPosition.topRight");
@@ -87,7 +90,7 @@ public class HUDState {
             // Get the longest text offset of the state if text is displayed
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int textOffset = 0;
-            HUDState.ShowHUDOption opt = PlayerAutomaOptionsScreen.showHudOption.getValue();
+            PlayerAutomaHUD.ShowHUDOption opt = PlayerAutomaOptionsScreen.showHudOption.getValue();
             if (opt == ShowHUDOption.TEXT || opt == ShowHUDOption.TEXT_AND_ICON) {
                 for (PlayerRecorder.State s : PlayerRecorder.State.values()) {
                     textOffset = Math.max(textOffset, textRenderer.getWidth(s.getText()));
@@ -105,11 +108,26 @@ public class HUDState {
         }
     }
 
+
+
     public static void register() {
         HudRenderCallback.EVENT.register((context, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
+            // Rendering the texture to show that menu opening is blocked anda the mouse can be used freely
+            // This is always on and should never be effected by showHUDOption
+            if (MenuPrevention.preventToBackground) {
+                context.getMatrices().push();
+                // Texture is 24x24. Scale it with guiScale
+                int scaledSizeBlockMenu = 24 * ClientHelpers.getGuiScale();
+                int xBlockMenu = client.getWindow().getScaledWidth() / 2 - scaledSizeBlockMenu / 2;
+                int yBlockMenu = client.getWindow().getScaledHeight() / 2 - scaledSizeBlockMenu / 2;
+                context.drawTexture(BLOCK_MENU_ICON, xBlockMenu, yBlockMenu, 0, 0, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu);
+                context.getMatrices().pop();
+            }
+
+
             ShowHUDOption showOffHud = PlayerAutomaOptionsScreen.showHudOption.getValue();
-            if (showOffHud == ShowHUDOption.NOTHING  || client.currentScreen != null) {
+            if (showOffHud == ShowHUDOption.NOTHING) {
                 return;
             }
             // Get/Calc guiScale
