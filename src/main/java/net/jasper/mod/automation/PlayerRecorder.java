@@ -25,6 +25,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
+import static net.jasper.mod.util.HUDTextures.*;
 
 /**
  * Class records player input and allows to replay those
@@ -108,6 +109,12 @@ public class PlayerRecorder {
                 return;
             }
         }
+
+        // If menu prevention is activated enable it by default if not already enabled
+        if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && !MenuPrevention.preventToBackground) {
+            MenuPrevention.toggleBackgroundPrevention();
+        }
+
         // If starting while paused tasks needs to be cleared and resumed
         tasks.clear();
         tasks.resume();
@@ -244,6 +251,12 @@ public class PlayerRecorder {
         for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
             k.setPressed(false);
         }
+
+        // If default menu prevention is enabled it needs to be disabled here if enabled
+        if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && MenuPrevention.preventToBackground) {
+            MenuPrevention.toggleBackgroundPrevention();
+        }
+
     }
 
     public static void storeRecord(String name) {
@@ -346,11 +359,6 @@ public class PlayerRecorder {
         REPLAYING,
         IDLE,
         PAUSED;
-
-        private static final Identifier REPLAYING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/replaying.png");
-        private static final Identifier RECORDING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/recording.png");
-        private static final Identifier PAUSING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/pausing.png");
-        private static final Identifier IDLE_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/idle.png");
 
 
         public int getColor() {
