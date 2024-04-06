@@ -26,6 +26,7 @@
   "playerautoma.fileSelector.enterName": "Gib den Aufnahmenamen ein",
   "playerautoma.fileSelector.tooltip.textField": "Gib den Aufnahmenamen ein. Die Eingabe erfordert kein '.rec'-Ende",
   "playerautoma.fileSelector.tooltip.save": "Speichere die Aufnahme im .minecraft/Recordings-Ordner",
+
   "playerautoma.keys.startRecording": "Aufnahme starten",
   "playerautoma.keys.stopRecording": "Aufnahme stoppen",
   "playerautoma.keys.startReplay": "Wiedergabe starten",
@@ -35,6 +36,7 @@
   "playerautoma.keys.loadRecording": "Aufnahme laden",
   "playerautoma.keys.pauseReplay": "Wiedergabe pausieren",
   "playerautoma.keys.openMenu": "Menü öffnen",
+
   "playerautoma.options": "PlayerAutoma Optionen... ",
   "playerautoma.option.showHud": "HUD anzeigen",
   "playerautoma.option.useDefaultDirection": "Standardrichtung nutzen",
@@ -65,7 +67,11 @@
   "playerautoma.option.setHudPosition": "HUD-Position",
   "playerautoma.option.openKeyBindings": "Tastenbelegung...",
   "playerautoma.option.exportAs": "Exportiere als",
+  "playerautoma.option.alwaysPreventMenu": "Menüverhinderung",
+  "playerautoma.option.tooltip.alwaysPreventMenu": "Aktiviert Menüverhinderung bei Wiedergabe automatisch, um eine freie Steuerung von Maus und Tastatur außerhalb von Minecraft zu ermöglichen.",
   "playerautoma.options.tooltip.exportAs": ".json: Lesbar, aber langsamer und größer\n\n.rec: Nicht lesbar, aber schnell und klein",
+
+  "playerautoma.messages.menuPreventionToggle": "Die Menüverhinderung wurde umgeschaltet auf ",
   "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",
   "playerautoma.messages.startRecording": "Aufnahme gestartet",
   "playerautoma.messages.stopRecording": "Aufnahme gestoppt",
