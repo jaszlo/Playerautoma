@@ -24,6 +24,7 @@
   "playerautoma.fileSelector.enterName": "Ingresar Nombre de la Grabación",
   "playerautoma.fileSelector.tooltip.textField": "Ingresar el nombre de la grabación. No es necesario agregar '.rec' al final",
   "playerautoma.fileSelector.tooltip.save": "Guardar la grabación en .minecraft/Recordings",
+  "playerautoma.fileSelector.tooltip.refresh": "Actualizar lista de archivos",
 
   "playerautoma.keys.startRecording": "Iniciar Grabación",
   "playerautoma.keys.stopRecording": "Detener Grabación",

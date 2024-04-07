@@ -8,6 +8,8 @@
   * Option to automatically to enable menu prevention when starting a record
   * Commands now run on client side
   * New commands to store/load records to disk
+    * Name suggestion for load command for existing files
+  * Refresh Button for recording selector screen
 * Removed Features:
   * Removes support for hindi and russian
 

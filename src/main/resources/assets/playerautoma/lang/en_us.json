@@ -26,6 +26,8 @@
   "playerautoma.fileSelector.enterName": "Enter Recording Name",
   "playerautoma.fileSelector.tooltip.textField": "Enter Recording Name. Input does not require '.rec' ending",
   "playerautoma.fileSelector.tooltip.save": "Save Recording to .minecraft/Recordings",
+  "playerautoma.fileSelector.tooltip.refresh": "Refresh file list",
+
 
   "playerautoma.keys.startRecording": "Start Recording",
   "playerautoma.keys.stopRecording":"Stop Recording",

@@ -8,8 +8,11 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.jasper.mod.gui.RecordingStorer;
 import net.minecraft.text.Text;
 
+import java.io.File;
+
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
+import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
 
 public class Commands {
     public static void register() {
@@ -60,6 +63,26 @@ public class Commands {
                 )
                 .then(literal("load")
                     .then(argument("name", StringArgumentType.string())
+                        .suggests((context, builder) -> {
+                            String current = "";
+                            try {
+                                current = StringArgumentType.getString(context, "name");
+                            } catch (IllegalArgumentException e) {
+                                // Empty argument therefore keep startsWith as ""
+                            }
+
+                            File[] fileList = new File(RECORDING_PATH).listFiles();
+                            if (fileList == null) {
+                                return builder.buildFuture();
+                            }
+
+                            for (File file : fileList) {
+                                if (file.getName().startsWith(current) && (file.getName().endsWith(".rec") || file.getName().endsWith(".json"))) {
+                                    builder.suggest(file.getName());
+                                }
+                            }
+                            return builder.buildFuture();
+                        })
                         .executes(context -> {
                             String name = StringArgumentType.getString(context, "name");
                             PlayerRecorder.loadRecord(name);
