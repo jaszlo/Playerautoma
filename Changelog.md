@@ -1,9 +1,13 @@
 # Version 0.4.4:
 * Bug Fixes:
   * Stopping Replay no longer says "Stopped recording"
+  * Selection store as no longer determines how to load recording files
+  * No longer overwrites existing file when _new already in name
 * New Features:
   * Menu prevention allows to put minecraft in the background while replaying
   * Option to automatically to enable menu prevention when starting a record
+  * Commands now run on client side
+  * New commands to store/load records to disk
 * Removed Features:
   * Removes support for hindi and russian
 
