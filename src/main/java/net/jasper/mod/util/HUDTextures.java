@@ -12,4 +12,6 @@ public class HUDTextures {
     public static final Identifier RECORDING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/recording.png");
     public static final Identifier PAUSING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/pausing.png");
     public static final Identifier IDLE_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/idle.png");
+    public static final Identifier REFRESH_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/refresh.png");
+
 }
