@@ -1,20 +1,23 @@
 package net.jasper.mod.automation;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.ServerCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.jasper.mod.gui.RecordingStorer;
 import net.minecraft.text.Text;
 
-import static net.minecraft.server.command.CommandManager.literal;
-import static net.minecraft.server.command.CommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 
 public class Commands {
     public static void register() {
         // Register /record <start|stop|clear>
         //          /record quickslot <load|store> <slot>
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-            dispatcher.register(literal("record")
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
+            dispatcher.register(
+            literal("record")
                 .then(literal("start")
                     .executes(context -> {
                         PlayerRecorder.startRecord();
@@ -45,44 +48,87 @@ public class Commands {
                         )
                     )
                 )
-            )
-        );
-
-        // Register /replay <start|stop|loop|togglepause>
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-                dispatcher.register(literal("replay")
-                    .then(literal("start")
-                        .executes(context -> {
-                            PlayerRecorder.startReplay(false);
-                            return 1;
-                        })
+                .then(literal("store")
+                    .then(argument("name", StringArgumentType.string())
+                        .then(literal("json")
+                            .executes(context -> handleStoreFileCommand(context, "json"))
+                        )
+                        .then(literal("rec")
+                            .executes(context -> handleStoreFileCommand(context, "rec"))
+                        )
                     )
-                    .then(literal("stop")
+                )
+                .then(literal("load")
+                    .then(argument("name", StringArgumentType.string())
                         .executes(context -> {
-                            PlayerRecorder.stopReplay();
-                            return 1;
-                        })
-                    )
-                    .then(literal("togglepause")
-                        .executes(context -> {
-                            PlayerRecorder.togglePauseReplay();
-                            return 1;
-                        })
-                    ).then(literal("loop")
-                        .executes(context -> {
-                            PlayerRecorder.startReplay(true);
+                            String name = StringArgumentType.getString(context, "name");
+                            PlayerRecorder.loadRecord(name);
                             return 1;
                         })
                     )
                 )
+            )
+        );
+
+        // Register /replay <start|stop|loop|togglepause>
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
+            dispatcher.register(literal("replay")
+                .then(literal("start")
+                    .executes(context -> {
+                        PlayerRecorder.startReplay(false);
+                        return 1;
+                    })
+                )
+                .then(literal("stop")
+                    .executes(context -> {
+                        PlayerRecorder.stopReplay();
+                        return 1;
+                    })
+                )
+                .then(literal("togglepause")
+                    .executes(context -> {
+                        PlayerRecorder.togglePauseReplay();
+                        return 1;
+                    })
+                ).then(literal("loop")
+                    .executes(context -> {
+                        PlayerRecorder.startReplay(true);
+                        return 1;
+                    })
+                )
+            )
         );
     }
 
+    private static int handleStoreFileCommand(CommandContext<FabricClientCommandSource> context, String fileType) {
+        String fileName = StringArgumentType.getString(context, "name");
+
+        boolean callNext = RecordingStorer.useJSON.getValue() && fileType.equals("rec") || !RecordingStorer.useJSON.getValue() && fileType.equals("json");
+
+        // Initialize button element to allow calling next
+        RecordingStorer.open();
+        RecordingStorer.SINGLETON.close();
+
+        // Set file type to selected
+        if (callNext) {
+            RecordingStorer.useJSON.next();
+        }
+        PlayerRecorder.storeRecord(fileName + "." + fileType);
+
+        // Restore original filetype
+        if (callNext) {
+            RecordingStorer.useJSON.next();
+        }
+
+        return 1;
+    }
+
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static int handleQuickSlotCommand(CommandContext<ServerCommandSource> context, boolean isLoad) {
+    private static int handleQuickSlotCommand(CommandContext<FabricClientCommandSource> context, boolean isLoad) {
         final int slot = IntegerArgumentType.getInteger(context, "slot");
         if (slot < 0 || 9 < slot) {
-            context.getSource().sendFeedback(() -> Text.literal("Slot Index out of range"), false);
+            context.getSource().sendFeedback(Text.literal("Slot Index out of range"));
             return 0;
         }
         if (isLoad) {
