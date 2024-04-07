@@ -26,6 +26,7 @@
   "playerautoma.fileSelector.enterName": "Gib den Aufnahmenamen ein",
   "playerautoma.fileSelector.tooltip.textField": "Gib den Aufnahmenamen ein. Die Eingabe erfordert kein '.rec'-Ende",
   "playerautoma.fileSelector.tooltip.save": "Speichere die Aufnahme im .minecraft/Recordings-Ordner",
+  "playerautoma.fileSelector.tooltip.refresh": "Lade Dateiliste neu",
 
   "playerautoma.keys.startRecording": "Aufnahme starten",
   "playerautoma.keys.stopRecording": "Aufnahme stoppen",
