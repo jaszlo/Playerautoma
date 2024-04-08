@@ -6,6 +6,7 @@ import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.ModMenu;
 import net.jasper.mod.gui.RecordingSelector;
 import net.jasper.mod.gui.RecordingStorer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;

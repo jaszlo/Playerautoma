@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.RecordingStorer;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.mixins.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
 import net.jasper.mod.util.data.*;
@@ -50,7 +51,7 @@ public class PlayerRecorder {
     public static void registerInputRecorder() {
         // Register Task-Queues
         tasks.register("playerActions");
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) {
                 // Player not in-game. Therefore, reset recorder by stopping any activity
                 stopRecord();
@@ -69,11 +70,11 @@ public class PlayerRecorder {
 
             // Create a new RecordEntry and add it to the record
             Recording.RecordEntry newEntry = new Recording.RecordEntry(
-                    currentKeyMap,
-                    new LookingDirection(client.player.getYaw(), client.player.getPitch()),
-                    client.player.getInventory().selectedSlot,
-                    lastSlotClicked.poll(),
-                    client.currentScreen == null ? null : client.currentScreen.getClass()
+                currentKeyMap,
+                new LookingDirection(client.player.getYaw(), client.player.getPitch()),
+                client.player.getInventory().selectedSlot,
+                lastSlotClicked.poll(),
+                client.currentScreen == null ? null : client.currentScreen.getClass()
             );
             record.add(newEntry);
         });
@@ -158,7 +159,13 @@ public class PlayerRecorder {
                 // Update keys pressed
                 int j = 0;
                 for (KeyBinding k : client.options.allKeys) {
-                    k.setPressed(keyMap.get(j++));
+                    // Set pressed and increment timesPressed via onKeyPress if necessary
+                    boolean pressed = keyMap.get(j++);
+                    k.setPressed(pressed);
+                    if (pressed) {
+                        KeyBindingAccessor accessor = (KeyBindingAccessor) k;
+                        KeyBinding.onKeyPressed(accessor.getBoundKey());
+                    }
                 }
 
                 // Always attack in replay if something is in the way
@@ -190,6 +197,7 @@ public class PlayerRecorder {
 
                 // Click Slot in inventory if possible
                 if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) ClientHelpers.clickSlot(clickedSlot);
+
             });
         }
 
@@ -197,9 +205,7 @@ public class PlayerRecorder {
             // Finish Replay if not looping
             tasks.add(() -> {
                 state = IDLE;
-                for (KeyBinding k : client.options.allKeys) {
-                    k.setPressed(false);
-                }
+                KeyBinding.unpressAll();
                 ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.replayDone"));
             });
         }
@@ -232,9 +238,7 @@ public class PlayerRecorder {
             state = PAUSED;
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
             // Toggle of all keys to stop player from doing anything
-            for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
-                k.setPressed(false);
-            }
+            KeyBinding.unpressAll();
         }
     }
 
@@ -250,9 +254,7 @@ public class PlayerRecorder {
         InventoryAutomation.inventoryTasks.clear();
 
         // Toggle of all keys to stop player from doing anything
-        for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
-            k.setPressed(false);
-        }
+        KeyBinding.unpressAll();
 
         // If default menu prevention is enabled it needs to be disabled here if enabled
         if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && MenuPrevention.preventToBackground) {
