@@ -3,6 +3,7 @@
   * Stopping Replay no longer says "Stopped recording"
   * Selection store as no longer determines how to load recording files
   * No longer overwrites existing file when _new already in name
+  * Special Keys (e.g. dropping, swapping hands etc.) now work fine in replay
 * New Features:
   * Menu prevention allows to put minecraft in the background while replaying
   * Option to automatically to enable menu prevention when starting a record
