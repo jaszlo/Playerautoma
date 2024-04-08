@@ -105,6 +105,14 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
             (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
+    public static OptionButton<Boolean> resetKeyBindingsOnRecordingOption = new OptionButton<>(
+        false,
+        OptionButton.BOOLEAN_VALUES,
+        "playerautoma.option.resetKeyBindingsOnRecording",
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
 
     public PlayerAutomaOptionsScreen(String title, Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of(title));
@@ -155,9 +163,11 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget writeStateToChatButton = writeStateToChatOption.buttonOf();
         writeStateToChatOption.setButton(writeStateToChatButton);
 
-
         ButtonWidget alwaysPreventMenuButton = alwaysPreventMenuOption.buttonOf();
         alwaysPreventMenuButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.alwaysPreventMenu")));
+
+        ButtonWidget resetKeyBindingsOnRecordingButton = resetKeyBindingsOnRecordingOption.buttonOf();
+        resetKeyBindingsOnRecordingButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.resetKeyBindingsOnRecording")));
 
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
@@ -177,6 +187,8 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(restackBlocksButton);
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
+        adder.add(resetKeyBindingsOnRecordingButton);
+
         adder.add(openKeyBindOptionsButton, 2);
         adder.add(EmptyWidget.ofHeight(16), 2);
         adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent)).width(200).build(), 2, adder.copyPositioner().marginTop(6));
