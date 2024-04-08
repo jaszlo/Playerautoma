@@ -69,6 +69,9 @@
   "playerautoma.option.tooltip.alwaysPreventMenu": "Cuando se repite por defecto, activa la prevención de menú permitiendo el control libre del mouse y el teclado.",
   "playerautoma.option.exportAs": "Exportar como",
   "playerautoma.options.tooltip.exportAs": ".json: Legible pero más lento y más grande\n\n.rec: No legible pero rápido y pequeño",
+  "playerautoma.option.resetKeyBindingsOnRecording": "Restablecer teclas",
+  "playerautoma.option.tooltip.resetKeyBindingsOnRecording": "Cuando está activo, restablece las asignaciones de teclas cuando se inicia la grabación",
+
 
   "playerautoma.messages.menuPreventionToggle": "La prevención de menú ha sido activada ",
   "playerautoma.messages.fileDeletionError": "Error al eliminar el archivo",
