@@ -1,8 +1,11 @@
 package net.jasper.mod.util.data;
 
+import net.minecraft.client.option.KeyBinding;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Main-Class for storing all data required for a recording
@@ -10,6 +13,7 @@ import java.util.List;
 public class Recording implements Serializable {
     public record RecordEntry(
             List<Boolean> keysPressed,
+            Map<String, Integer> timesPressed,
             LookingDirection lookingDirection,
             int slotSelection,
             SlotClick slotClicked,

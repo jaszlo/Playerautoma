@@ -21,9 +21,7 @@ import org.slf4j.Logger;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
@@ -64,13 +62,16 @@ public class PlayerRecorder {
 
             // Create current KeyMap (Map of which keys to pressed state)
             List<Boolean> currentKeyMap = new ArrayList<>();
+            Map<String, Integer> timesPressed = new HashMap<>();
             for (KeyBinding k : client.options.allKeys) {
                 currentKeyMap.add(k.isPressed());
+                timesPressed.put(k.getTranslationKey(), ((KeyBindingAccessor) k).getTimesPressed());
             }
 
             // Create a new RecordEntry and add it to the record
             Recording.RecordEntry newEntry = new Recording.RecordEntry(
                 currentKeyMap,
+                timesPressed,
                 new LookingDirection(client.player.getYaw(), client.player.getPitch()),
                 client.player.getInventory().selectedSlot,
                 lastSlotClicked.poll(),
@@ -86,6 +87,11 @@ public class PlayerRecorder {
         }
         ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
+
+        if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
+            KeyBinding.unpressAll();
+        }
+
         ClientHelpers.centerPlayer();
         lastSlotClicked.clear();
         state = RECORDING;
@@ -163,8 +169,7 @@ public class PlayerRecorder {
                     boolean pressed = keyMap.get(j++);
                     k.setPressed(pressed);
                     if (pressed) {
-                        KeyBindingAccessor accessor = (KeyBindingAccessor) k;
-                        KeyBinding.onKeyPressed(accessor.getBoundKey());
+                        ((KeyBindingAccessor) k).setTimesPressed(entry.timesPressed().get(k.getTranslationKey()));
                     }
                 }
 
@@ -253,7 +258,7 @@ public class PlayerRecorder {
         tasks.clear();
         InventoryAutomation.inventoryTasks.clear();
 
-        // Toggle of all keys to stop player from doing anything
+        // Toggle of all keys to stop player from doing anything after finishing replay
         KeyBinding.unpressAll();
 
         // If default menu prevention is enabled it needs to be disabled here if enabled
