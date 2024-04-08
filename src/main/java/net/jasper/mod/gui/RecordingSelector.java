@@ -68,7 +68,7 @@ public class RecordingSelector extends Screen {
                     (button) -> this.onRefresh()
             )
             .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.refresh")))
-            .dimensions(this.width / 2 - 65 - 165, this.height - 38, 20, 20)
+            .dimensions(this.width / 2 - 65 - 170, this.height - 38, 20, 20)
             .build();
         this.addDrawableChild(refreshButton);
 
