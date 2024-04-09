@@ -14,6 +14,7 @@ public class Recording implements Serializable {
     public record RecordEntry(
             List<Boolean> keysPressed,
             Map<String, Integer> timesPressed,
+            List<String> modifiers,
             LookingDirection lookingDirection,
             int slotSelection,
             SlotClick slotClicked,
