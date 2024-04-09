@@ -51,6 +51,7 @@ public class Constants {
     };
 
     public static final KeyBinding STOP_REPLAY = bindings[3];
+    public static final KeyBinding PREVENT_MENU = bindings[9];
 
     private static final Runnable[] callbackMethods = {
             PlayerRecorder::startRecord,

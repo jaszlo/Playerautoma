@@ -11,7 +11,9 @@
     "KeyBindingAccessor",
     "ModifierInjection",
     "SlotClickedCallback",
+    "menuprevention.PreventOnKey",
     "menuprevention.PreventSetScreen",
-    "menuprevention.PreventUpdateMouse"
+    "menuprevention.PreventUpdateMouse",
+    "menuprevention.ScreenInjection"
   ]
 }
