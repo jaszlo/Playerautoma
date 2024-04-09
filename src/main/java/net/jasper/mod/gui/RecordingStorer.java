@@ -85,10 +85,9 @@ public class RecordingStorer extends Screen {
 
         ButtonWidget useJSONButton = ButtonWidget.builder(
                 Text.translatable(useJSON.key).append(": ").append(useJSON.textProvider.provide(useJSON.getValue())),
-                (b) -> {
-                    useJSON.next();
-                }).tooltip(Tooltip.of(Text.translatable("playerautoma.options.tooltip.exportAs"))
-                ).dimensions(this.width / 2 + 50, this.height / 2 + 10, 50, 20).build();
+                (b) -> useJSON.next())
+                .tooltip(Tooltip.of(Text.translatable("playerautoma.options.tooltip.exportAs")))
+                .dimensions(this.width / 2 + 50, this.height / 2 + 10, 50, 20).build();
         useJSON.setButton(useJSONButton);
 
 
