@@ -22,6 +22,7 @@ public class JsonHelper {
     private static final String LENGTH = "length";
     private static final String KEYS_PRESSED = "keysPressed";
     private static final String TIMES_PRESSED = "timesPressed";
+    private static final String MODIFIERS = "modifiers";
     private static final String PITCH = "pitch";
     private static final String YAW = "yaw";
     private static final String LOOKING_DIRECTION = "lookingDirection";
@@ -79,6 +80,13 @@ public class JsonHelper {
                     timesPressed.addProperty(translationKey, count);
                 }
                 jsonEntry.add(TIMES_PRESSED, timesPressed);
+
+                // Modifiers
+                JsonArray modifiers = new JsonArray();
+                for (String modifier : entry.modifiers()) {
+                    modifiers.add(modifier);
+                }
+                jsonEntry.add(MODIFIERS, modifiers);
 
                 // Looking Direction
                 JsonObject lookingDirection = new JsonObject();
@@ -149,6 +157,12 @@ public class JsonHelper {
             }
 
 
+            JsonArray jsonModifiers = jsonEntry.get(MODIFIERS).getAsJsonArray();
+            List<String> modifiers = new ArrayList<>();
+            for (JsonElement modifier : jsonModifiers) {
+                modifiers.add(modifier.getAsString());
+            }
+
             JsonObject jsonLookingDirection = jsonEntry.get(LOOKING_DIRECTION).getAsJsonObject();
             LookingDirection lookingDirection = new LookingDirection(
                     jsonLookingDirection.get(YAW).getAsFloat(),
@@ -181,6 +195,7 @@ public class JsonHelper {
             Recording.RecordEntry entry = new Recording.RecordEntry(
                 keysPressed,
                 timesPressed,
+                modifiers,
                 lookingDirection,
                 selectedSlot,
                 slotclick,

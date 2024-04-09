@@ -8,7 +8,9 @@ import net.jasper.mod.mixins.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
 import net.jasper.mod.util.data.*;
+import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
@@ -46,6 +48,9 @@ public class PlayerRecorder {
     // Is used to handle asynchronous nature of slot clicks
     public static Queue<SlotClick> lastSlotClicked = new ConcurrentLinkedDeque<>();
 
+    // Modifier State for current tick in replay
+    public static final Queue<String> pressedModifiers = new ConcurrentLinkedDeque<>();
+
     public static void registerInputRecorder() {
         // Register Task-Queues
         tasks.register("playerActions");
@@ -60,7 +65,7 @@ public class PlayerRecorder {
                 return;
             }
 
-            // Create current KeyMap (Map of which keys to pressed state)
+            // Create current KeyMap (Map of which keys to pressed state) and a map of the amount of times they have been pressed
             List<Boolean> currentKeyMap = new ArrayList<>();
             Map<String, Integer> timesPressed = new HashMap<>();
             for (KeyBinding k : client.options.allKeys) {
@@ -68,10 +73,17 @@ public class PlayerRecorder {
                 timesPressed.put(k.getTranslationKey(), ((KeyBindingAccessor) k).getTimesPressed());
             }
 
+            // Create List to track which modifiers have been pressed
+            List<String> modifiers = new ArrayList<>();
+            if (Screen.hasControlDown()) modifiers.add(Constants.CTRL);
+            if (Screen.hasShiftDown()) modifiers.add(Constants.SHIFT);
+            if (Screen.hasAltDown()) modifiers.add(Constants.ALT);
+
             // Create a new RecordEntry and add it to the record
             Recording.RecordEntry newEntry = new Recording.RecordEntry(
                 currentKeyMap,
                 timesPressed,
+                modifiers,
                 new LookingDirection(client.player.getYaw(), client.player.getPitch()),
                 client.player.getInventory().selectedSlot,
                 lastSlotClicked.poll(),
@@ -172,6 +184,10 @@ public class PlayerRecorder {
                         ((KeyBindingAccessor) k).setTimesPressed(entry.timesPressed().get(k.getTranslationKey()));
                     }
                 }
+
+                // Toggle modifiers accordingly
+                pressedModifiers.clear();
+                pressedModifiers.addAll(entry.modifiers());
 
                 // Always attack in replay if something is in the way
                 if (client.options.attackKey.isPressed()) {

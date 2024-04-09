@@ -16,6 +16,10 @@ import org.lwjgl.glfw.GLFW;
  */
 public class Constants {
 
+    public static final String CTRL = "ctrl";
+    public static final String SHIFT = "shift";
+    public static final String ALT = "alt";
+
     private static final String KEYBINDING_CATEGORY = "PlayerAutoma";
 
     private static final String[] translations = {
