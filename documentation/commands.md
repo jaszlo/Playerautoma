@@ -10,6 +10,11 @@
 
 - `/record quickslots <store|load> <slot>`  Store/Load to/from quickslot (1-9)
 
+- `/record store <name> json` Store current record as a .json under \<name>
+
+- `/record store <name> rec` Store current record as a .rec under \<name>
+
+- `/record load <name>` Load record from disk with given \<name>
 
 ### /replay
 
