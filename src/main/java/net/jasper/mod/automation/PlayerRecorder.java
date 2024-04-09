@@ -66,11 +66,12 @@ public class PlayerRecorder {
             }
 
             // Create current KeyMap (Map of which keys to pressed state) and a map of the amount of times they have been pressed
-            List<Boolean> currentKeyMap = new ArrayList<>();
+            List<String> pressedKeys = new ArrayList<>();
             Map<String, Integer> timesPressed = new HashMap<>();
             for (KeyBinding k : client.options.allKeys) {
-                currentKeyMap.add(k.isPressed());
-                timesPressed.put(k.getTranslationKey(), ((KeyBindingAccessor) k).getTimesPressed());
+                if (k.isPressed()) pressedKeys.add(k.getTranslationKey());
+                int count = ((KeyBindingAccessor) k).getTimesPressed();
+                if (count > 0) timesPressed.put(k.getTranslationKey(), count);
             }
 
             // Create List to track which modifiers have been pressed
@@ -81,7 +82,7 @@ public class PlayerRecorder {
 
             // Create a new RecordEntry and add it to the record
             Recording.RecordEntry newEntry = new Recording.RecordEntry(
-                currentKeyMap,
+                pressedKeys,
                 timesPressed,
                 modifiers,
                 new LookingDirection(client.player.getYaw(), client.player.getPitch()),
@@ -158,7 +159,8 @@ public class PlayerRecorder {
 
         for (Recording.RecordEntry entry : record.entries) {
             // Get all data for current record tick (i) to replay
-            List<Boolean> keyMap = entry.keysPressed();
+            List<String> keysPressed = entry.keysPressed();
+            Map<String, Integer> timesPressed = entry.timesPressed();
             LookingDirection currentLookingDirection = entry.lookingDirection();
             int selectedSlot = entry.slotSelection();
             SlotClick clickedSlot = entry.slotClicked();
@@ -175,14 +177,16 @@ public class PlayerRecorder {
                 client.player.getInventory().selectedSlot = selectedSlot;
 
                 // Update keys pressed
-                int j = 0;
-                for (KeyBinding k : client.options.allKeys) {
-                    // Set pressed and increment timesPressed via onKeyPress if necessary
-                    boolean pressed = keyMap.get(j++);
-                    k.setPressed(pressed);
-                    if (pressed) {
-                        ((KeyBindingAccessor) k).setTimesPressed(entry.timesPressed().get(k.getTranslationKey()));
-                    }
+                KeyBinding.unpressAll();
+                Map<String, KeyBinding> keysByID = KeyBindingAccessor.getKeysByID();
+                assert keysByID != null : "Failed to apply Mixin for 'KEYS_TO_BINDINGS' Accessor";
+                for (String translationKey : keysPressed) {
+                    KeyBinding k = keysByID.get(translationKey);
+                    k.setPressed(true);
+                }
+                // Update keys pressed count
+                for (String translationKey : timesPressed.keySet()) {
+                    ((KeyBindingAccessor) keysByID.get(translationKey)).setTimesPressed(timesPressed.get(translationKey));
                 }
 
                 // Toggle modifiers accordingly

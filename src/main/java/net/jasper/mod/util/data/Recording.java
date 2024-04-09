@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class Recording implements Serializable {
     public record RecordEntry(
-            List<Boolean> keysPressed,
+            List<String> keysPressed,
             Map<String, Integer> timesPressed,
             List<String> modifiers,
             LookingDirection lookingDirection,
