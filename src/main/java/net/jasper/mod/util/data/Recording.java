@@ -1,7 +1,5 @@
 package net.jasper.mod.util.data;
 
-import net.minecraft.client.option.KeyBinding;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

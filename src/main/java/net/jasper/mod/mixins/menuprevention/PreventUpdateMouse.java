@@ -1,7 +1,6 @@
 package net.jasper.mod.mixins.menuprevention;
 
 import net.jasper.mod.automation.MenuPrevention;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

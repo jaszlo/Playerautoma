@@ -11,8 +11,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.text.Text;
 
-import static net.jasper.mod.util.HUDTextures.BLOCK_MENU_ICON;
-
 /**
  * Little HUD for Playerautoma to display current state of player recorder
  */
