@@ -108,23 +108,12 @@ public class PlayerAutomaHUD {
         }
     }
 
-
-
     public static void register() {
         HudRenderCallback.EVENT.register((context, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
-            // Rendering the texture to show that menu opening is blocked anda the mouse can be used freely
-            // This is always on and should never be effected by showHUDOption
-            if (MenuPrevention.preventToBackground) {
-                context.getMatrices().push();
-                // Texture is 24x24. Scale it with guiScale
-                int scaledSizeBlockMenu = 24 * ClientHelpers.getGuiScale();
-                int xBlockMenu = client.getWindow().getScaledWidth() / 2 - scaledSizeBlockMenu / 2;
-                int yBlockMenu = client.getWindow().getScaledHeight() / 2 - scaledSizeBlockMenu / 2;
-                context.drawTexture(BLOCK_MENU_ICON, xBlockMenu, yBlockMenu, 0, 0, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu);
-                context.getMatrices().pop();
-            }
 
+            // Renders only if active
+            MenuPrevention.renderIcon(context);
 
             ShowHUDOption showOffHud = PlayerAutomaOptionsScreen.showHudOption.getValue();
             if (showOffHud == ShowHUDOption.NOTHING) {
