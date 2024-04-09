@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/playerautoma",
-		"sources": "https://github.com/jaszlo/Playerautoma/"
+		"sources": "https://github.com/jaszlo/Playerautoma/",
+		"issues": "https://github.com/jaszlo/Playerautoma/issues"
 	},
 	"license": "CC0",
 	"icon": "assets/playerautoma/icon.png",
