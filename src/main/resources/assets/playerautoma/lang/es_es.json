@@ -3,7 +3,6 @@
   "playerautoma.state.recording": "Grabando",
   "playerautoma.state.replaying": "Reproduciendo",
   "playerautoma.state.paused": "Pausado",
-
   "playerautoma.menu.startRecording": "Iniciar Grabación",
   "playerautoma.menu.stopRecording": "Detener Grabación",
   "playerautoma.menu.startReplay": "Iniciar Reproducción",
@@ -11,7 +10,6 @@
   "playerautoma.menu.startLoop": "Iniciar Reproducción en Bucle",
   "playerautoma.menu.storeRecording": "Guardar Grabación...",
   "playerautoma.menu.loadRecording": "Cargar Grabación...",
-
   "playerautoma.menu.tooltip.startRecording": "Iniciar la grabación de tus movimientos y cerrar el menú",
   "playerautoma.menu.tooltip.stopRecording": "Detener la grabación de tus movimientos y cerrar el menú",
   "playerautoma.menu.tooltip.startReplay": "Iniciar la reproducción y cerrar el menú",
@@ -26,6 +24,8 @@
   "playerautoma.fileSelector.enterName": "Ingresar Nombre de la Grabación",
   "playerautoma.fileSelector.tooltip.textField": "Ingresar el nombre de la grabación. No es necesario agregar '.rec' al final",
   "playerautoma.fileSelector.tooltip.save": "Guardar la grabación en .minecraft/Recordings",
+  "playerautoma.fileSelector.tooltip.refresh": "Actualizar lista de archivos",
+
   "playerautoma.keys.startRecording": "Iniciar Grabación",
   "playerautoma.keys.stopRecording": "Detener Grabación",
   "playerautoma.keys.startReplay": "Iniciar Reproducción",
@@ -35,6 +35,7 @@
   "playerautoma.keys.loadRecording": "Cargar Grabación...",
   "playerautoma.keys.pauseReplay": "Pausar Reproducción",
   "playerautoma.keys.openMenu": "Abrir Menú",
+
   "playerautoma.options": "Opciones de PlayerAutoma...",
   "playerautoma.option.showHud": "Mostrar HUD",
   "playerautoma.option.useDefaultDirection": "Usar Dirección Predeterminada",
@@ -64,8 +65,15 @@
   "playerautoma.option.hudShow.icon": "Icono",
   "playerautoma.option.setHudPosition": "Posición del HUD",
   "playerautoma.option.openKeyBindings": "Configuración de teclas...",
+  "playerautoma.option.alwaysPreventMenu": "Prevención de menú",
+  "playerautoma.option.tooltip.alwaysPreventMenu": "Cuando se repite por defecto, activa la prevención de menú permitiendo el control libre del mouse y el teclado.",
   "playerautoma.option.exportAs": "Exportar como",
   "playerautoma.options.tooltip.exportAs": ".json: Legible pero más lento y más grande\n\n.rec: No legible pero rápido y pequeño",
+  "playerautoma.option.resetKeyBindingsOnRecording": "Restablecer teclas",
+  "playerautoma.option.tooltip.resetKeyBindingsOnRecording": "Cuando está activo, restablece las asignaciones de teclas cuando se inicia la grabación",
+
+
+  "playerautoma.messages.menuPreventionToggle": "La prevención de menú ha sido activada ",
   "playerautoma.messages.fileDeletionError": "Error al eliminar el archivo",
   "playerautoma.messages.startRecording": "Inicio de la grabación",
   "playerautoma.messages.stopRecording": "Detención de la grabación",
@@ -86,5 +94,4 @@
   "playerautoma.messages.storeQuickslot": "Grabación guardada en el Quickslot",
   "playerautoma.messages.loadQuickslot": "Grabación cargada en el Quickslot",
   "playerautoma.messages.loadQuickslotMissing": "No hay grabación en el Quickslot"
-
 }

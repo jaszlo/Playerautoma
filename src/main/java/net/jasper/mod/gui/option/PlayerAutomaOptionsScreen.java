@@ -1,6 +1,6 @@
 package net.jasper.mod.gui.option;
 
-import net.jasper.mod.gui.HUDState;
+import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.util.data.LookingDirection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -21,13 +21,13 @@ import net.minecraft.text.Text;
  */
 public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
-    public static OptionButton<HUDState.ShowHUDOption> showHudOption = new OptionButton<>(
-        HUDState.ShowHUDOption.TEXT_AND_ICON,
-        HUDState.ShowHUDOption.values(),
+    public static OptionButton<PlayerAutomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
+        PlayerAutomaHUD.ShowHUDOption.TEXT_AND_ICON,
+        PlayerAutomaHUD.ShowHUDOption.values(),
         "playerautoma.option.showHud",
-        HUDState.ShowHUDOption::toString,
-        HUDState.ShowHUDOption::fromString,
-        HUDState.ShowHUDOption::toText
+        PlayerAutomaHUD.ShowHUDOption::toString,
+        PlayerAutomaHUD.ShowHUDOption::fromString,
+        PlayerAutomaHUD.ShowHUDOption::toText
     );
 
     public static OptionButton<Boolean> useDefaultDirectionOption = new OptionButton<>(
@@ -86,15 +86,33 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<HUDState.Position> setHudPositionOption = new OptionButton<>(
-        HUDState.Position.BOTTOM_LEFT,
-        HUDState.Position.values(),
+    public static OptionButton<PlayerAutomaHUD.Position> setHudPositionOption = new OptionButton<>(
+        PlayerAutomaHUD.Position.BOTTOM_LEFT,
+        PlayerAutomaHUD.Position.values(),
         "playerautoma.option.setHudPosition",
-        HUDState.Position::toString,
-        HUDState.Position::fromString,
-        HUDState.Position::toText
+        PlayerAutomaHUD.Position::toString,
+        PlayerAutomaHUD.Position::fromString,
+        PlayerAutomaHUD.Position::toText
     );
 
+
+    public static OptionButton<Boolean> alwaysPreventMenuOption = new OptionButton<>(
+            false,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.alwaysPreventMenu",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> resetKeyBindingsOnRecordingOption = new OptionButton<>(
+        false,
+        OptionButton.BOOLEAN_VALUES,
+        "playerautoma.option.resetKeyBindingsOnRecording",
+        Object::toString,
+        Boolean::parseBoolean,
+        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
 
     public PlayerAutomaOptionsScreen(String title, Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of(title));
@@ -115,9 +133,9 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
                 Text.translatable(showHudOption.key).append(": ").append(showHudOption.textProvider.provide(showHudOption.getValue())),
                 (b) -> {
                     showHudOption.next();
-                    setHudPositionButton.active = showHudOption.getValue() != HUDState.ShowHUDOption.NOTHING;
+                    setHudPositionButton.active = showHudOption.getValue() != PlayerAutomaHUD.ShowHUDOption.NOTHING;
                 }).build();
-        setHudPositionButton.active = showHudOption.getValue() != HUDState.ShowHUDOption.NOTHING;
+        setHudPositionButton.active = showHudOption.getValue() != PlayerAutomaHUD.ShowHUDOption.NOTHING;
         showHudOption.setButton(showHudButton);
 
         ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();
@@ -145,6 +163,13 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget writeStateToChatButton = writeStateToChatOption.buttonOf();
         writeStateToChatOption.setButton(writeStateToChatButton);
 
+        ButtonWidget alwaysPreventMenuButton = alwaysPreventMenuOption.buttonOf();
+        alwaysPreventMenuButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.alwaysPreventMenu")));
+
+        ButtonWidget resetKeyBindingsOnRecordingButton = resetKeyBindingsOnRecordingOption.buttonOf();
+        resetKeyBindingsOnRecordingButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.resetKeyBindingsOnRecording")));
+
+
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
                 (button) -> {
@@ -161,6 +186,9 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(useRelativeLookingDirectionButton);
         adder.add(restackBlocksButton);
         adder.add(recordInventoryActivitiesButton);
+        adder.add(alwaysPreventMenuButton);
+        adder.add(resetKeyBindingsOnRecordingButton);
+
         adder.add(openKeyBindOptionsButton, 2);
         adder.add(EmptyWidget.ofHeight(16), 2);
         adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent)).width(200).build(), 2, adder.copyPositioner().marginTop(6));

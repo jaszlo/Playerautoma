@@ -13,11 +13,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to help de/serialize recordings from .json files.
+ */
 public class JsonHelper {
 
     // Field names
     private static final String LENGTH = "length";
     private static final String KEYS_PRESSED = "keysPressed";
+    private static final String TIMES_PRESSED = "timesPressed";
+    private static final String MODIFIERS = "modifiers";
     private static final String PITCH = "pitch";
     private static final String YAW = "yaw";
     private static final String LOOKING_DIRECTION = "lookingDirection";
@@ -40,7 +45,6 @@ public class JsonHelper {
 
 
     public static String serialize(Recording r) {
-        MinecraftClient client = MinecraftClient.getInstance();
         JsonObject result = new JsonObject();
         result.addProperty(LENGTH, r.entries.size());
 
@@ -50,18 +54,32 @@ public class JsonHelper {
             JsonObject jsonEntry = new JsonObject();
             // Fill the entry with the actual values
             {
-                // Keys
+                // Keys pressed
                 JsonArray keysPressed = new JsonArray();
-                int i = 0;
-                for (boolean pressed : entry.keysPressed()) {
-                    //Only store keys that are pressed. Also store their index as it will be implicitly known that
-                    if (!pressed) {
-                        i++;
-                        continue;
-                    }
-                    keysPressed.add(client.options.allKeys[i++].getTranslationKey());
+                for (String pressed : entry.keysPressed()) {
+                    keysPressed.add(pressed);
                 }
                 jsonEntry.add(KEYS_PRESSED, keysPressed);
+
+                // Keys pressed count
+                JsonObject timesPressed = new JsonObject();
+                Map<String, Integer> timesPressedMap = entry.timesPressed();
+                for (String translationKey : timesPressedMap.keySet()) {
+                    // Only store keys that are pressed. If not timesPressed is implicitly 0
+                    int count = timesPressedMap.get(translationKey);
+                    if (count == 0) {
+                        continue;
+                    }
+                    timesPressed.addProperty(translationKey, count);
+                }
+                jsonEntry.add(TIMES_PRESSED, timesPressed);
+
+                // Modifiers
+                JsonArray modifiers = new JsonArray();
+                for (String modifier : entry.modifiers()) {
+                    modifiers.add(modifier);
+                }
+                jsonEntry.add(MODIFIERS, modifiers);
 
                 // Looking Direction
                 JsonObject lookingDirection = new JsonObject();
@@ -108,20 +126,28 @@ public class JsonHelper {
         for (JsonElement jsonEntryElement : parsed.get(ENTRIES).getAsJsonArray()) {
             JsonObject jsonEntry = jsonEntryElement.getAsJsonObject();
 
-            List<Boolean> keysPressed = new ArrayList<>();
-
-            // Initialize all key presses as false
-            for (int i = 0; i < client.options.allKeys.length; i++) {
-                keysPressed.add(false);
+            List<String> keysPressed = new ArrayList<>();
+            Map<String, Integer> timesPressed = new HashMap<>();
+            // Initialize all key presses as false and 0 times pressed
+            for (KeyBinding k : client.options.allKeys) {
+                timesPressed.put(k.getTranslationKey(), 0);
             }
+            // Read keys pressed
             for (JsonElement jsonPressed : jsonEntry.get(KEYS_PRESSED).getAsJsonArray()) {
-                String keyName = jsonPressed.getAsString();
-                // Not all key presses are stored. Only the ones that were pressed
-                // For those stored set to pressed
-                int i = keyNameToIndex.getOrDefault(keyName, -1);
-                if (i >= 0) {
-                    keysPressed.set(i, true);
-                }
+                keysPressed.add(jsonPressed.getAsString());
+            }
+
+            JsonObject jsonTimesPressed = jsonEntry.get(TIMES_PRESSED).getAsJsonObject();
+            for (String translationKey : jsonTimesPressed.keySet()) {
+                // Get "KeySet" i.e. just the on key that is the
+                timesPressed.put(translationKey, jsonTimesPressed.get(translationKey).getAsInt());
+            }
+
+
+            JsonArray jsonModifiers = jsonEntry.get(MODIFIERS).getAsJsonArray();
+            List<String> modifiers = new ArrayList<>();
+            for (JsonElement modifier : jsonModifiers) {
+                modifiers.add(modifier.getAsString());
             }
 
             JsonObject jsonLookingDirection = jsonEntry.get(LOOKING_DIRECTION).getAsJsonObject();
@@ -155,6 +181,8 @@ public class JsonHelper {
 
             Recording.RecordEntry entry = new Recording.RecordEntry(
                 keysPressed,
+                timesPressed,
+                modifiers,
                 lookingDirection,
                 selectedSlot,
                 slotclick,

@@ -1,3 +1,27 @@
+# Version 0.4.4:
+* Bug Fixes:
+  * Stopping Replay no longer says "Stopped recording"
+  * Selection store as no longer determines how to load recording files
+  * No longer overwrites existing file when _new already in name
+  * Special Keys (e.g. dropping, swapping hands etc.) now work fine in replay
+    * Still some minor error when holding button pressed
+    * e.g. dropping one item short when holding 'q' to drop a stack
+  * Modifiers such as CTRL + 'q' to drop a stack now work by tracking them for recording
+* New Features:
+  * Menu prevention allows to put minecraft in the background while replaying
+  * Option to automatically enable menu prevention when starting a record
+  * Option to reset all KeyBindings at start of recording for more consistency
+  * New commands to store/load records to disk
+    * Name suggestion for load command for existing files
+  * Refresh Button for recording selector screen
+* Removed Features:
+  * Removes support for hindi and russian
+* Changes
+  * Commands now run only client side
+  * Removes dot at the end of tooltips
+  * Recording from previous versions are **NOT compatible**
+  * Optimize .json/.rec files to reduce size
+
 # Version 0.4.3:
 * Bug Fixes:
   * Quickslot messages are now translatable text and no longer hard coded english strings
@@ -7,6 +31,7 @@
     * /record <start|stop|clear>
     * /record quickslot <store|load> \<slot>
     * /replay <start|stop|loop|togglepause>
+
 # Version 0.4.2:
 * Bug Fixes:
   * Recorder now resets when leaving the game

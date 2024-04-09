@@ -7,13 +7,17 @@ import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import java.io.File;
+
+import static net.jasper.mod.util.HUDTextures.REFRESH_ICON;
 // TODO: this could be a general class listing files of a directory and letting you select one given a callback function
 
 /**
@@ -51,12 +55,23 @@ public class RecordingSelector extends Screen {
         client.mouse.lockCursor();
     }
 
+    private ButtonWidget refreshButton;
+
     protected void init() {
         this.recordingSelectionList = new RecordingSelectionListWidget(MinecraftClient.getInstance(), this.directoryPath);
         this.addSelectableChild(this.recordingSelectionList);
 
         // Button placement:
-        //    [Delete] [Open Recording Folder] [Done]
+        //   [Refresh] [Delete] [Open Recording Folder] [Done]
+        refreshButton = TexturedButtonWidget.builder(
+                    Text.of(""),
+                    (button) -> this.onRefresh()
+            )
+            .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.refresh")))
+            .dimensions(this.width / 2 - 65 - 170, this.height - 38, 20, 20)
+            .build();
+        this.addDrawableChild(refreshButton);
+
         this.addDrawableChild(ButtonWidget.builder(
                 Text.translatable("playerautoma.fileSelector.delete"),
                 (button) -> this.onDelete()
@@ -79,6 +94,10 @@ public class RecordingSelector extends Screen {
         .build());
 
         super.init();
+    }
+
+    private void onRefresh() {
+        this.recordingSelectionList.updateFiles();
     }
 
     private void onDone() {
@@ -118,6 +137,10 @@ public class RecordingSelector extends Screen {
 
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        // Render refresh texture over refresh button
+        int scaledSize = 20;
+        context.drawTexture(REFRESH_ICON, refreshButton.getX(), refreshButton.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+
         this.recordingSelectionList.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
     }

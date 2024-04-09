@@ -32,10 +32,12 @@ Other than that the default keybindings are as follows.
 -  `I`   Load Recording
 
 ### Commands
-From v0.4.3 and onwards commands are available and allow you to control the mod using them. 
+The latest available commands allow you some control over the mod. 
 The commands should be self-explanatory and are as follows. See [this](documentation/commands.md) for detailed documentation.
 ```
 /record <start|stop|clear>
+/record <store> <name> <json|rec>
+/record <load> <name>
 /record quickslot <store|load> <slot>
 /replay <start|stop|loop|togglepause>
 ```

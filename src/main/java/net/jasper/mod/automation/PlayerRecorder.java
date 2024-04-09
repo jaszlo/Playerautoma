@@ -4,10 +4,13 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.RecordingStorer;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.mixins.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
 import net.jasper.mod.util.data.*;
+import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
@@ -19,12 +22,13 @@ import net.minecraft.util.hit.HitResult;
 import org.slf4j.Logger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
+import static net.jasper.mod.util.HUDTextures.*;
 
 /**
  * Class records player input and allows to replay those
@@ -44,10 +48,13 @@ public class PlayerRecorder {
     // Is used to handle asynchronous nature of slot clicks
     public static Queue<SlotClick> lastSlotClicked = new ConcurrentLinkedDeque<>();
 
+    // Modifier State for current tick in replay
+    public static final Queue<String> pressedModifiers = new ConcurrentLinkedDeque<>();
+
     public static void registerInputRecorder() {
         // Register Task-Queues
         tasks.register("playerActions");
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) {
                 // Player not in-game. Therefore, reset recorder by stopping any activity
                 stopRecord();
@@ -58,19 +65,30 @@ public class PlayerRecorder {
                 return;
             }
 
-            // Create current KeyMap (Map of which keys to pressed state)
-            List<Boolean> currentKeyMap = new ArrayList<>();
+            // Create current KeyMap (Map of which keys to pressed state) and a map of the amount of times they have been pressed
+            List<String> pressedKeys = new ArrayList<>();
+            Map<String, Integer> timesPressed = new HashMap<>();
             for (KeyBinding k : client.options.allKeys) {
-                currentKeyMap.add(k.isPressed());
+                if (k.isPressed()) pressedKeys.add(k.getTranslationKey());
+                int count = ((KeyBindingAccessor) k).getTimesPressed();
+                if (count > 0) timesPressed.put(k.getTranslationKey(), count);
             }
+
+            // Create List to track which modifiers have been pressed
+            List<String> modifiers = new ArrayList<>();
+            if (Screen.hasControlDown()) modifiers.add(Constants.CTRL);
+            if (Screen.hasShiftDown()) modifiers.add(Constants.SHIFT);
+            if (Screen.hasAltDown()) modifiers.add(Constants.ALT);
 
             // Create a new RecordEntry and add it to the record
             Recording.RecordEntry newEntry = new Recording.RecordEntry(
-                    currentKeyMap,
-                    new LookingDirection(client.player.getYaw(), client.player.getPitch()),
-                    client.player.getInventory().selectedSlot,
-                    lastSlotClicked.poll(),
-                    client.currentScreen == null ? null : client.currentScreen.getClass()
+                pressedKeys,
+                timesPressed,
+                modifiers,
+                new LookingDirection(client.player.getYaw(), client.player.getPitch()),
+                client.player.getInventory().selectedSlot,
+                lastSlotClicked.poll(),
+                client.currentScreen == null ? null : client.currentScreen.getClass()
             );
             record.add(newEntry);
         });
@@ -82,6 +100,11 @@ public class PlayerRecorder {
         }
         ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
+
+        if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
+            KeyBinding.unpressAll();
+        }
+
         ClientHelpers.centerPlayer();
         lastSlotClicked.clear();
         state = RECORDING;
@@ -108,6 +131,12 @@ public class PlayerRecorder {
                 return;
             }
         }
+
+        // If menu prevention is activated enable it by default if not already enabled
+        if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && !MenuPrevention.preventToBackground) {
+            MenuPrevention.toggleBackgroundPrevention();
+        }
+
         // If starting while paused tasks needs to be cleared and resumed
         tasks.clear();
         tasks.resume();
@@ -130,7 +159,8 @@ public class PlayerRecorder {
 
         for (Recording.RecordEntry entry : record.entries) {
             // Get all data for current record tick (i) to replay
-            List<Boolean> keyMap = entry.keysPressed();
+            List<String> keysPressed = entry.keysPressed();
+            Map<String, Integer> timesPressed = entry.timesPressed();
             LookingDirection currentLookingDirection = entry.lookingDirection();
             int selectedSlot = entry.slotSelection();
             SlotClick clickedSlot = entry.slotClicked();
@@ -147,10 +177,21 @@ public class PlayerRecorder {
                 client.player.getInventory().selectedSlot = selectedSlot;
 
                 // Update keys pressed
-                int j = 0;
-                for (KeyBinding k : client.options.allKeys) {
-                    k.setPressed(keyMap.get(j++));
+                KeyBinding.unpressAll();
+                Map<String, KeyBinding> keysByID = KeyBindingAccessor.getKeysByID();
+                assert keysByID != null : "Failed to apply Mixin for 'KEYS_TO_BINDINGS' Accessor";
+                for (String translationKey : keysPressed) {
+                    KeyBinding k = keysByID.get(translationKey);
+                    k.setPressed(true);
                 }
+                // Update keys pressed count
+                for (String translationKey : timesPressed.keySet()) {
+                    ((KeyBindingAccessor) keysByID.get(translationKey)).setTimesPressed(timesPressed.get(translationKey));
+                }
+
+                // Toggle modifiers accordingly
+                pressedModifiers.clear();
+                pressedModifiers.addAll(entry.modifiers());
 
                 // Always attack in replay if something is in the way
                 if (client.options.attackKey.isPressed()) {
@@ -181,6 +222,7 @@ public class PlayerRecorder {
 
                 // Click Slot in inventory if possible
                 if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) ClientHelpers.clickSlot(clickedSlot);
+
             });
         }
 
@@ -188,9 +230,7 @@ public class PlayerRecorder {
             // Finish Replay if not looping
             tasks.add(() -> {
                 state = IDLE;
-                for (KeyBinding k : client.options.allKeys) {
-                    k.setPressed(false);
-                }
+                KeyBinding.unpressAll();
                 ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.replayDone"));
             });
         }
@@ -223,9 +263,7 @@ public class PlayerRecorder {
             state = PAUSED;
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
             // Toggle of all keys to stop player from doing anything
-            for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
-                k.setPressed(false);
-            }
+            KeyBinding.unpressAll();
         }
     }
 
@@ -240,10 +278,25 @@ public class PlayerRecorder {
         tasks.clear();
         InventoryAutomation.inventoryTasks.clear();
 
-        // Toggle of all keys to stop player from doing anything
-        for (KeyBinding k : MinecraftClient.getInstance().options.allKeys) {
-            k.setPressed(false);
+        // Toggle of all keys to stop player from doing anything after finishing replay
+        KeyBinding.unpressAll();
+
+        // If default menu prevention is enabled it needs to be disabled here if enabled
+        if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && MenuPrevention.preventToBackground) {
+            MenuPrevention.toggleBackgroundPrevention();
         }
+
+    }
+
+    private static File createNewFileName(String name) {
+        File selected = Path.of(RECORDING_PATH, name).toFile();
+        String fileType = RecordingStorer.useJSON.getValue() ? ".json" : ".rec";
+        String newName = name;
+        while (selected.exists()) {
+            newName = newName.substring(0, newName.length() - fileType.length()) + "_new" + fileType;
+            selected = Path.of(RECORDING_PATH, newName).toFile();
+        }
+        return selected;
     }
 
     public static void storeRecord(String name) {
@@ -257,14 +310,9 @@ public class PlayerRecorder {
 
         File selected = null;
         ObjectOutputStream objectOutputStream = null;
-        String basePath = MinecraftClient.getInstance().runDirectory.getAbsolutePath() + "/recordings/";
         try {
             // If file already exists create new file with "_new" before file type.
-            selected = new File(basePath + name);
-            String newName = name.substring(0, name.length() - 4) + "_new.rec";
-            if (selected.exists()) {
-                selected = new File(basePath + newName);
-            }
+            selected = createNewFileName(name);
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             // Store as .json/.rec according to option
@@ -296,49 +344,65 @@ public class PlayerRecorder {
     }
 
 
+    public static void loadRecord(String name) {
+        File selected = Path.of(RECORDING_PATH, name).toFile();
+        loadRecord(selected);
+    }
     public static void loadRecord(File selected) {
         if (state.isAny(RECORDING, REPLAYING)) {
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
             return;
         }
 
-        // Load as .json/.rec according to option
-        if (RecordingStorer.useJSON.getValue()) {
-            try {
-                FileReader fileReader = new FileReader(selected);
-                BufferedReader reader = new BufferedReader(fileReader);
-                StringBuilder readFile = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    readFile.append(line);
+        // Try to load file as .json and .rec which ever works use it
+        // TODO: When adding more file types add an enum for this and do not brute force
+        String[] options = { "json", "rec" };
+        boolean success = false;
+        for (String option : options) {
+            if (option.equals("json")) {
+                try {
+                    FileReader fileReader = new FileReader(selected);
+                    BufferedReader reader = new BufferedReader(fileReader);
+                    StringBuilder readFile = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        readFile.append(line);
+                    }
+                    record = JsonHelper.deserialize(readFile.toString());
+                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
+                } catch(Exception e) {
+                    // success will stay on false and message will be printed after for loop
+                    continue;
                 }
-                record = JsonHelper.deserialize(readFile.toString());
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
-            } catch(Exception e) {
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
-            }
-            return;
-        }
+                success = true;
+                break;
+            } else if (option.equals("rec")) {
+                ObjectInputStream objectInputStream = null;
+                try {
+                    objectInputStream = new ObjectInputStream(new FileInputStream(selected));
+                    // This can happen when a file is selected and then deleted via the file explorer
+                    if (objectInputStream == null) throw new IOException("objectInputStream is null");
 
-        ObjectInputStream objectInputStream = null;
-        try {
-            objectInputStream = new ObjectInputStream(new FileInputStream(selected));
-            // This can happen when a file is selected and then deleted via the file explorer
-            if (objectInputStream == null) throw new IOException("objectInputStream is null");
+                    record = (Recording) objectInputStream.readObject();
+                    objectInputStream.close();
+                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    try {
+                        if (objectInputStream != null) objectInputStream.close();
+                    } catch (IOException closeFailed) {
+                        closeFailed.printStackTrace();
+                        LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
+                    }
+                    continue;
 
-            record = (Recording) objectInputStream.readObject();
-            objectInputStream.close();
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                if (objectInputStream != null) objectInputStream.close();
-            } catch (IOException closeFailed) {
-                closeFailed.printStackTrace();
-                LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
+                }
+                success = true;
+                break;
             }
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
         }
+        if (!success) ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
+
     }
 
     public enum State {
@@ -346,11 +410,6 @@ public class PlayerRecorder {
         REPLAYING,
         IDLE,
         PAUSED;
-
-        private static final Identifier REPLAYING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/replaying.png");
-        private static final Identifier RECORDING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/recording.png");
-        private static final Identifier PAUSING_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/pausing.png");
-        private static final Identifier IDLE_ICON = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/recorder_icons/idle.png");
 
 
         public int getColor() {
