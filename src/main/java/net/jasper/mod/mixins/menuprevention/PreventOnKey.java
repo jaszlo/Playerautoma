@@ -4,7 +4,6 @@ import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.mixins.KeyBindingAccessor;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.Keyboard;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
