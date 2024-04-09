@@ -20,6 +20,7 @@
   * Commands now run only client side
   * Removes dot at the end of tooltips
   * Recording from previous versions are **NOT compatible**
+  * Optimize .json/.rec files to reduce size
 
 # Version 0.4.3:
 * Bug Fixes:
