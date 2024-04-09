@@ -9,6 +9,7 @@
     "CancelReplay",
     "InGameHudDimensions",
     "KeyBindingAccessor",
+    "ModifierInjection",
     "SlotClickedCallback",
     "menuprevention.PreventSetScreen",
     "menuprevention.PreventUpdateMouse"

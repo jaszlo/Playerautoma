@@ -6,6 +6,7 @@
   * Special Keys (e.g. dropping, swapping hands etc.) now work fine in replay
     * Still some minor error when holding button pressed
     * e.g. dropping one item short when holding 'q' to drop a stack
+  * Modifiers such as CTRL + 'q' to drop a stack now work by tracking them for recording
 * New Features:
   * Menu prevention allows to put minecraft in the background while replaying
   * Option to automatically enable menu prevention when starting a record
