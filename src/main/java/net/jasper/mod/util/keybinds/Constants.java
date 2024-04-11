@@ -31,7 +31,7 @@ public class Constants {
             "playerautoma.keys.loadRecording",
             "playerautoma.keys.pauseReplay",
             "playerautoma.keys.openMenu",
-            "toBackground"
+            "playerautoma.keys.menuPrevention"
     };
 
     protected static final int AMOUNT_KEYBINDS = translations.length;

@@ -38,6 +38,7 @@
   "playerautoma.keys.loadRecording": "Load Recording",
   "playerautoma.keys.pauseReplay":"Pause Replay",
   "playerautoma.keys.openMenu": "Open Menu",
+  "playerautoma.keys.menuPrevention": "Toggle Menu Prevention",
 
   "playerautoma.options": "PlayerAutoma Options...",
   "playerautoma.option.showHud": "Show HUD",
