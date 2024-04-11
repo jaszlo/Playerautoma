@@ -35,6 +35,7 @@
   "playerautoma.keys.loadRecording": "Cargar Grabación...",
   "playerautoma.keys.pauseReplay": "Pausar Reproducción",
   "playerautoma.keys.openMenu": "Abrir Menú",
+  "playerautoma.keys.menuPrevention": "Alternar Prevención de Menú",
 
   "playerautoma.options": "Opciones de PlayerAutoma...",
   "playerautoma.option.showHud": "Mostrar HUD",
