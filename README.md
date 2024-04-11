@@ -28,7 +28,8 @@ Other than that the default keybindings are as follows.
 - `K`  Cancel Replay
 - `L`  Start looped Replay
 - `U`  Store Recording
--  `I`   Load Recording
+- `I`   Load Recording
+- `0` Menu Prevention
 
 ### Commands
 The latest available commands allow you some control over the mod. 
