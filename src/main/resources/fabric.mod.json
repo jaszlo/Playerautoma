@@ -14,7 +14,7 @@
 	},
 	"license": "CC0",
 	"icon": "assets/playerautoma/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"client":[
 			"net.jasper.mod.PlayerAutomaClient"
