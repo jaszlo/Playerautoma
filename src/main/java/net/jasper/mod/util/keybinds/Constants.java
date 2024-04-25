@@ -1,13 +1,17 @@
 package net.jasper.mod.util.keybinds;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.jasper.mod.automation.MenuPrevention;
+import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.ModMenu;
 import net.jasper.mod.gui.RecordingSelector;
 import net.jasper.mod.gui.RecordingStorer;
+import net.jasper.mod.util.ReplayPreviewEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -52,6 +56,9 @@ public class Constants {
     public static final KeyBinding STOP_REPLAY = bindings[3];
     public static final KeyBinding PREVENT_MENU = bindings[9];
 
+    private static boolean showPreview = false;
+    public static PlayerEntity preview = null;
+
     private static final Runnable[] callbackMethods = {
             PlayerRecorder::startRecord,
             PlayerRecorder::stopRecord,
@@ -62,7 +69,26 @@ public class Constants {
             RecordingSelector::open,
             PlayerRecorder::togglePauseReplay,
             ModMenu::open,
-            MenuPrevention::toggleBackgroundPrevention
+            //MenuPrevention::toggleBackgroundPrevention
+            () -> {
+                MinecraftClient client = MinecraftClient.getInstance();
+                if (client.player == null || client.world == null) {
+                    return;
+                }
+                showPreview = !showPreview;
+
+                if (showPreview) {
+                    PlayerAutomaClient.LOGGER.info("creating preview");
+                    preview = new ReplayPreviewEntity(client);
+                    client.world.addEntity(preview);
+                } else {
+                    PlayerAutomaClient.LOGGER.info("removing entity preview");
+                    client.world.removeEntity(preview.getId(), Entity.RemovalReason.DISCARDED);
+                    preview = null;
+
+                }
+            }
+
     };
 
     protected static KeyBind[] defaultKeybinds = new KeyBind[AMOUNT_KEYBINDS];

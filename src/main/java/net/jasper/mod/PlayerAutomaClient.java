@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 
 import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerAutomaHUD;
+import net.jasper.mod.util.ReplayPreviewEntity;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ public class PlayerAutomaClient implements ClientModInitializer {
 	public static final String RECORDING_FOLDER_NAME = "Recordings";
 
 	public static final String RECORDING_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), RECORDING_FOLDER_NAME).toString();
+
 	@Override
 	public void onInitializeClient() {
 		// Create folder for recordings if not exists
@@ -55,6 +57,9 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 		// Register MenuPrevention. That allows to run Recording with minecraft in the background.
 		MenuPrevention.register();
+
+		// Register Player Preview for Replay
+		ReplayPreviewEntity.register();
 
 	}
 }

@@ -15,5 +15,8 @@
     "menuprevention.PreventSetScreen",
     "menuprevention.PreventUpdateMouse",
     "menuprevention.ScreenInjection"
+  ],
+  "mixins": [
+    "PlayerEntityAccessor"
   ]
 }
