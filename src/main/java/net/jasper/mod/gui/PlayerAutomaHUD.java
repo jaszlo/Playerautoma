@@ -4,11 +4,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
-import net.jasper.mod.mixins.InGameHudDimensions;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.text.Text;
 
 /**
@@ -82,8 +80,9 @@ public class PlayerAutomaHUD {
 
 
         public int[] getPosition(int scaledSize) {
-            InGameHud hud = MinecraftClient.getInstance().inGameHud;
-            InGameHudDimensions dim = (InGameHudDimensions) hud;
+            MinecraftClient client = MinecraftClient.getInstance();
+            int scaledWidth = client.getWindow().getScaledWidth();
+            int scaledHeight = client.getWindow().getScaledHeight();
 
             // Get the longest text offset of the state if text is displayed
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -96,12 +95,12 @@ public class PlayerAutomaHUD {
             }
 
             return switch (this) {
-                case TOP_LEFT ->     new int[]{ (int)(dim.getScaledWidth() * 0.01),  (int)(dim.getScaledHeight() * 0.01)              };
-                case CENTER_LEFT ->  new int[]{ (int)(dim.getScaledWidth() * 0.01),  (int)(dim.getScaledHeight() * 0.5)               };
-                case BOTTOM_LEFT ->  new int[]{ (int)(dim.getScaledWidth() * 0.01),  (int)(dim.getScaledHeight() * 0.99) - scaledSize  };
-                case TOP_RIGHT ->    new int[]{ (int)(dim.getScaledWidth() * 0.99 - scaledSize - textOffset) , (int)(dim.getScaledHeight() * 0.01)              };
-                case CENTER_RIGHT -> new int[]{ (int)(dim.getScaledWidth() * 0.99 - scaledSize - textOffset) , (int)(dim.getScaledHeight() * 0.5)               };
-                case BOTTOM_RIGHT -> new int[]{ (int)(dim.getScaledWidth() * 0.99 - scaledSize - textOffset) , (int)(dim.getScaledHeight() * 0.99) - scaledSize  };
+                case TOP_LEFT ->     new int[]{ (int)(scaledWidth * 0.01),  (int)(scaledHeight * 0.01)              };
+                case CENTER_LEFT ->  new int[]{ (int)(scaledWidth * 0.01),  (int)(scaledHeight * 0.5)               };
+                case BOTTOM_LEFT ->  new int[]{ (int)(scaledWidth * 0.01),  (int)(scaledHeight * 0.99) - scaledSize  };
+                case TOP_RIGHT ->    new int[]{ (int)(scaledWidth * 0.99 - scaledSize - textOffset) , (int)(scaledHeight * 0.01)              };
+                case CENTER_RIGHT -> new int[]{ (int)(scaledWidth * 0.99 - scaledSize - textOffset) , (int)(scaledHeight * 0.5)               };
+                case BOTTOM_RIGHT -> new int[]{ (int)(scaledWidth * 0.99 - scaledSize - textOffset) , (int)(scaledHeight * 0.99) - scaledSize  };
             };
         }
     }

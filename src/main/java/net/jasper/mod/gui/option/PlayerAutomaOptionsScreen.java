@@ -3,7 +3,6 @@ package net.jasper.mod.gui.option;
 import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.util.data.LookingDirection;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.screen.option.KeybindsScreen;
@@ -131,7 +130,7 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         ButtonWidget showHudButton = ButtonWidget.builder(
                 Text.translatable(showHudOption.key).append(": ").append(showHudOption.textProvider.provide(showHudOption.getValue())),
-                (b) -> {
+                (_b) -> {
                     showHudOption.next();
                     setHudPositionButton.active = showHudOption.getValue() != PlayerAutomaHUD.ShowHUDOption.NOTHING;
                 }).build();
@@ -145,7 +144,7 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         useRelativeLookingDirectionOption.setButton(useRelativeLookingDirectionButton);
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
                 Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.textProvider.provide(useDefaultDirectionOption.getValue())),
-                (b) -> {
+                (_b) -> {
                     useDefaultDirectionOption.next();
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
                     useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
@@ -172,7 +171,7 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
-                (button) -> {
+                (_b) -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.setScreen(new KeybindsScreen(this, client.options));
                 }
@@ -191,13 +190,8 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         adder.add(openKeyBindOptionsButton, 2);
         adder.add(EmptyWidget.ofHeight(16), 2);
-        adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent)).width(200).build(), 2, adder.copyPositioner().marginTop(6));
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);
-    }
-
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackgroundTexture(context);
     }
 }

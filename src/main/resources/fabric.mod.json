@@ -14,7 +14,7 @@
 	},
 	"license": "CC0",
 	"icon": "assets/playerautoma/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"client":[
 			"net.jasper.mod.PlayerAutomaClient"
@@ -26,7 +26,7 @@
 	"depends": {
 		"fabricloader": ">=0.14.22",
 		"minecraft": "~1.20",
-		"java": ">=17",
+		"java": ">=21",
 		"fabric-api": "*"
 	},
 	"suggests": {
