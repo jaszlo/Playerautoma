@@ -145,9 +145,11 @@ public class RecordingSelector extends Screen {
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
     }
 
+    /* Removed in 1.20.5
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackgroundTexture(context);
     }
+     */
 
     private class RecordingSelectionListWidget extends AlwaysSelectedEntryListWidget<RecordingSelectionListWidget.RecordingEntry> {
         final String directoryPath;
@@ -176,9 +178,11 @@ public class RecordingSelector extends Screen {
             }
         }
 
+        /* Removed for 1.20.5
         protected int getScrollbarPositionX() {
             return super.getScrollbarPositionX() + 20;
         }
+         */
 
         public int getRowWidth() {
             return super.getRowWidth() + 50;
