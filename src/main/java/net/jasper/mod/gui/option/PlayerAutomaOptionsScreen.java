@@ -194,10 +194,4 @@ public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);
     }
-
-    /* Removed with 1.20.5
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackgroundTexture(context);
-    }
-     */
 }
