@@ -4,6 +4,7 @@ import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -43,8 +44,13 @@ public class MenuPrevention {
         if (client.player == null) {
             return;
         }
-        preventToBackground = !preventToBackground;
 
+        // Do not allow background prevention to be toggled while in screen to prevent typing to toggle feature!
+        if (client.currentScreen instanceof ChatScreen) {
+            return;
+        }
+
+        preventToBackground = !preventToBackground;
 
         if (PlayerAutomaOptionsScreen.writeStateToChatOption.getValue()) {
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
