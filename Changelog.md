@@ -1,3 +1,12 @@
+# Version 0.4.5:
+* Bug Fixes:
+  * Pressing the Menu Prevention Key while in chat no longer toggles menu prevention
+* New Features:
+  * Adds better support for [mod-menu](https://modrinth.com/mod/modmenu)
+    * Accurate links
+    * more meta-data
+    * options screen reachable from mod-menu main screen
+
 # Version 0.4.4:
 * Bug Fixes:
   * Stopping Replay no longer says "Stopped recording"
