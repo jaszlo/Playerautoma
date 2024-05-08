@@ -3,7 +3,7 @@ package net.jasper.mod.util.keybinds;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.gui.ModMenu;
+import net.jasper.mod.gui.PlayerAutomaMenu;
 import net.jasper.mod.gui.RecordingSelector;
 import net.jasper.mod.gui.RecordingStorer;
 import net.minecraft.client.option.KeyBinding;
@@ -61,7 +61,7 @@ public class Constants {
             RecordingStorer::open,
             RecordingSelector::open,
             PlayerRecorder::togglePauseReplay,
-            ModMenu::open,
+            PlayerAutomaMenu::open,
             MenuPrevention::toggleBackgroundPrevention
     };
 

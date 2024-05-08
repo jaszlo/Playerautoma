@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 /**
  * Playerautoma option screen to configure settings
  */
-public class    PlayerAutomaOptionsScreen extends GameOptionsScreen {
+public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
     public static OptionButton<PlayerAutomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
         PlayerAutomaHUD.ShowHUDOption.TEXT_AND_ICON,
