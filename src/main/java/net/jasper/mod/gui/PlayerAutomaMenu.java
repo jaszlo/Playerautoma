@@ -16,12 +16,12 @@ import net.minecraft.text.Text;
 /**
  * Main-Menu if you like that allows for control of the InputRecorder via buttons.
  */
-public class ModMenu extends Screen {
+public class PlayerAutomaMenu extends Screen {
 
-    public static ModMenu SINGLETON = new ModMenu("PlayerAutomaMenu");
+    public static PlayerAutomaMenu SINGLETON = new PlayerAutomaMenu("PlayerAutomaMenu");
     private static boolean isOpen = false;
 
-    public ModMenu(String title) {
+    public PlayerAutomaMenu(String title) {
         super(Text.literal(title));
     }
 

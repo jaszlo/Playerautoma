@@ -18,6 +18,9 @@
 	"entrypoints": {
 		"client":[
 			"net.jasper.mod.PlayerAutomaClient"
+		],
+		"modmenu":[
+			"net.jasper.mod.ModMenuApiImpl"
 		]
 	},
 	"mixins": [
@@ -31,5 +34,14 @@
 	},
 	"suggests": {
 		"another-mod": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/6XzFPKRFYT",
+				"modmenu.modrinth": "https://modrinth.com/mod/playerautoma"
+			},
+			"update_checker": true
+		}
 	}
 }
