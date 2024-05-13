@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.jasper.mod.gui.RecordingStorer;
+import net.jasper.mod.gui.RecordingStorerScreen;
 import net.minecraft.text.Text;
 
 import java.io.File;
@@ -126,21 +126,21 @@ public class Commands {
     private static int handleStoreFileCommand(CommandContext<FabricClientCommandSource> context, String fileType) {
         String fileName = StringArgumentType.getString(context, "name");
 
-        boolean callNext = RecordingStorer.useJSON.getValue() && fileType.equals("rec") || !RecordingStorer.useJSON.getValue() && fileType.equals("json");
+        boolean callNext = RecordingStorerScreen.useJSON.getValue() && fileType.equals("rec") || !RecordingStorerScreen.useJSON.getValue() && fileType.equals("json");
 
         // Initialize button element to allow calling next
-        RecordingStorer.open();
-        RecordingStorer.SINGLETON.close();
+        RecordingStorerScreen.open();
+        RecordingStorerScreen.SINGLETON.close();
 
         // Set file type to selected
         if (callNext) {
-            RecordingStorer.useJSON.next();
+            RecordingStorerScreen.useJSON.next();
         }
         PlayerRecorder.storeRecord(fileName + "." + fileType);
 
         // Restore original filetype
         if (callNext) {
-            RecordingStorer.useJSON.next();
+            RecordingStorerScreen.useJSON.next();
         }
 
         return 1;

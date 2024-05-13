@@ -17,14 +17,14 @@ import java.time.format.DateTimeFormatter;
 /**
  * 'Screen' (more of a pop-up) that allows to store a recording with a given name.
  */
-public class RecordingStorer extends Screen {
+public class RecordingStorerScreen extends Screen {
 
 
-    public static final RecordingStorer SINGLETON = new RecordingStorer();
+    public static final RecordingStorerScreen SINGLETON = new RecordingStorerScreen();
     public static boolean isOpen;
     private TextFieldWidget input;
 
-    protected RecordingStorer() {
+    protected RecordingStorerScreen() {
         super(Text.of("RecordingStorer"));
         isOpen = false;
 

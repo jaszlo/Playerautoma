@@ -16,12 +16,12 @@ import net.minecraft.text.Text;
 /**
  * Main-Menu if you like that allows for control of the InputRecorder via buttons.
  */
-public class PlayerAutomaMenu extends Screen {
+public class PlayerAutomaMenuScreen extends Screen {
 
-    public static PlayerAutomaMenu SINGLETON = new PlayerAutomaMenu("PlayerAutomaMenu");
+    public static PlayerAutomaMenuScreen SINGLETON = new PlayerAutomaMenuScreen("PlayerAutomaMenu");
     private static boolean isOpen = false;
 
-    public PlayerAutomaMenu(String title) {
+    public PlayerAutomaMenuScreen(String title) {
         super(Text.literal(title));
     }
 
@@ -48,12 +48,12 @@ public class PlayerAutomaMenu extends Screen {
 
     public static ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.storeRecording"), button -> {
             SINGLETON.close();
-            RecordingStorer.open();
+            RecordingStorerScreen.open();
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.storeRecording"))).build();
 
     public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.loadRecording"), button -> {
         SINGLETON.close();
-        RecordingSelector.open();
+        RecordingSelectorScreen.open();
     }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.loadRecording"))).build();
 
     public static ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"), button -> {

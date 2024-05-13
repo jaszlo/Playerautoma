@@ -2,7 +2,7 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.gui.RecordingStorer;
+import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
@@ -290,7 +290,7 @@ public class PlayerRecorder {
 
     private static File createNewFileName(String name) {
         File selected = Path.of(RECORDING_PATH, name).toFile();
-        String fileType = RecordingStorer.useJSON.getValue() ? ".json" : ".rec";
+        String fileType = RecordingStorerScreen.useJSON.getValue() ? ".json" : ".rec";
         String newName = name;
         while (selected.exists()) {
             newName = newName.substring(0, newName.length() - fileType.length()) + "_new" + fileType;
@@ -316,7 +316,7 @@ public class PlayerRecorder {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             // Store as .json/.rec according to option
-            if (RecordingStorer.useJSON.getValue()) {
+            if (RecordingStorerScreen.useJSON.getValue()) {
                 String json = JsonHelper.serialize(record);
                 FileWriter fileWriter = new FileWriter(selected);
                 BufferedWriter writer = new BufferedWriter(fileWriter);
