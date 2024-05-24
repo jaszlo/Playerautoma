@@ -16,7 +16,8 @@ public class Recording implements Serializable {
             LookingDirection lookingDirection,
             int slotSelection,
             SlotClick slotClicked,
-            Class<?> currentScreen
+            Class<?> currentScreen,
+            String command
     ) implements Serializable {}
 
     public final List<RecordEntry> entries = new ArrayList<>();

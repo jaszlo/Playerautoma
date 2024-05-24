@@ -1,4 +1,4 @@
-package net.jasper.mod.mixins;
+package net.jasper.mod.mixins.accessors;
 
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;

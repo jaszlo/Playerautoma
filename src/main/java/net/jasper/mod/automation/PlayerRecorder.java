@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
-import net.jasper.mod.mixins.KeyBindingAccessor;
+import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
 import net.jasper.mod.util.data.*;

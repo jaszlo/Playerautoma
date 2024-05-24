@@ -7,12 +7,12 @@
   },
   "client": [
     "CancelReplay",
-    "KeyBindingAccessor",
+    "accessors.KeyBindingAccessor",
     "ModifierInjection",
-    "SlotClickedCallback",
-    "menuprevention.PreventOnKey",
-    "menuprevention.PreventSetScreen",
-    "menuprevention.PreventUpdateMouse",
-    "menuprevention.ScreenInjection"
+    "HandledScreenMixin",
+    "KeyboardMixin",
+    "MinecraftClientMixin",
+    "MouseMixin",
+    "ScreenMixin"
   ]
 }
