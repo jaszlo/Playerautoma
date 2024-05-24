@@ -33,6 +33,7 @@ public class JsonHelper {
     private static final String SLOT_CLICKED = "slotClicked";
     private static final String ENTRIES = "entries";
     private static final String CURRENT_SCREEN = "currentScreen";
+    private static final String COMMAND = "command";
 
     public static final Map<String, Integer> keyNameToIndex = new HashMap<>();
 
@@ -97,15 +98,16 @@ public class JsonHelper {
                     slotClicked.addProperty(BUTTON, entry.slotClicked().button());
                     slotClicked.addProperty(ACTION_TYPE, entry.slotClicked().actionType().toString());
                     jsonEntry.add(SLOT_CLICKED, slotClicked);
-                } else {
-                    jsonEntry.addProperty(SLOT_CLICKED, "null");
                 }
 
                 // Current Screen
                 if (entry.currentScreen() != null) {
                     jsonEntry.addProperty(CURRENT_SCREEN, entry.currentScreen().getName());
-                } else {
-                    jsonEntry.addProperty(CURRENT_SCREEN, "null");
+                }
+
+                // Current command
+                if (entry.command() != null) {
+                    jsonEntry.addProperty(COMMAND, entry.command());
                 }
             }
             entries.add(jsonEntry);
@@ -143,7 +145,6 @@ public class JsonHelper {
                 timesPressed.put(translationKey, jsonTimesPressed.get(translationKey).getAsInt());
             }
 
-
             JsonArray jsonModifiers = jsonEntry.get(MODIFIERS).getAsJsonArray();
             List<String> modifiers = new ArrayList<>();
             for (JsonElement modifier : jsonModifiers) {
@@ -167,16 +168,24 @@ public class JsonHelper {
                             SlotActionType.valueOf(jsonSlotClick.get(ACTION_TYPE).getAsString())
                     );
             } catch (Exception e) {
-                // Do nothing. When this happens the value is null as it should be
+                // Do nothing. When this happens the value is null as it should be and is not present
                 // PlayerAutomaClient.LOGGER.info(e.toString());
             }
 
             Class<?> currentScreen = null;
             try {
                 currentScreen = Class.forName(jsonEntry.get(CURRENT_SCREEN).getAsString());
-            } catch (ClassNotFoundException e) {
-                // Do nothing. When this happens the value is null as it should be
+            } catch (Exception e) {
+                // Do nothing. When this happens the value is null as it should be and is not present
                 //PlayerAutomaClient.LOGGER.info(e.toString());
+            }
+
+            String command = null;
+            try {
+                command = jsonEntry.get(COMMAND).getAsString();
+            } catch (Exception e) {
+                // Do nothing. When this happens the value is null as it should be and is not present
+                // PlayerAutomaClient.LOGGER.info(e.toString());
             }
 
             Recording.RecordEntry entry = new Recording.RecordEntry(
@@ -186,7 +195,8 @@ public class JsonHelper {
                 lookingDirection,
                 selectedSlot,
                 slotclick,
-                currentScreen
+                currentScreen,
+        command
             );
             result.add(entry);
         }

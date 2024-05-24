@@ -6,13 +6,12 @@
     "defaultRequire": 0
   },
   "client": [
-    "CancelReplay",
-    "accessors.KeyBindingAccessor",
-    "ModifierInjection",
+    "ClientPlayerNetworkHandlerMixin",
     "HandledScreenMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
     "MouseMixin",
-    "ScreenMixin"
+    "ScreenMixin",
+    "accessors.KeyBindingAccessor"
   ]
 }
