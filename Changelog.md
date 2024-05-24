@@ -1,3 +1,11 @@
+# Version v0.4.6
+* New Features:
+  * Non-Communication commands are now recorded and can be replayed
+  * Specific or all commands can also be ignored via a toggle and blacklist option
+  * New Option Screen fo manage blacklist of commands
+* Changes:
+  * Recordings of older versions won't work with this version!
+
 # Version 0.4.5:
 * Bug Fixes:
   * Pressing the Menu Prevention Key while in chat no longer toggles menu prevention
