@@ -46,7 +46,7 @@ public class RecordingStorerScreen extends Screen {
                 this.height / 2 - 30,
                 200,
                 20,
-                Text.translatable("playerautoma.fileSelector.enterName"),
+                Text.translatable("playerautoma.screens.fileSelector.enterName"),
                 MinecraftClient.getInstance().textRenderer
         );
 
@@ -60,7 +60,7 @@ public class RecordingStorerScreen extends Screen {
         );
 
         // Set Text Field Properties
-        textField.setTooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.textField")));
+        textField.setTooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.textField")));
         textField.setEditable(true);
 
         // Format the date and time as name of recording
@@ -79,7 +79,7 @@ public class RecordingStorerScreen extends Screen {
                   PlayerRecorder.storeRecord(name);
                   this.close();
               }).dimensions(this.width / 2 - 100, this.height / 2 + 10, 150, 20)
-                .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.save")))
+                .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.save")))
                 .build();
 
 

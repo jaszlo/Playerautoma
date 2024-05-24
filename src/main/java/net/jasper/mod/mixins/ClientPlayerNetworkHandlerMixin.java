@@ -1,6 +1,8 @@
 package net.jasper.mod.mixins;
 
 import net.jasper.mod.automation.PlayerRecorder;
+import net.jasper.mod.gui.option.CommandsToExcludeOption;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,7 +19,7 @@ import java.util.Arrays;
 public class ClientPlayerNetworkHandlerMixin {
 
     // sendMessage in ChatScreen.java removes '/'. Prefix therefore can start without it
-    @Unique String[] IGNORED_COMMANDS_PREFIX = new String[] {
+    @Unique String[] userCommandsForbidden = new String[] {
             "record",
             "replay",
             "say",
@@ -31,9 +33,16 @@ public class ClientPlayerNetworkHandlerMixin {
 
     @Inject(method="sendChatCommand", at=@At("HEAD"))
     private void recordCommand(String message, CallbackInfo ci) {
-        if (Arrays.stream(IGNORED_COMMANDS_PREFIX).noneMatch(message::startsWith)) {
+        // If not enabled never track commands
+        if (!PlayerAutomaOptionsScreen.recordCommands.getValue()) {
+            return;
+        }
+
+        // When '/' is there remove it if not just check if it starts with current command to ignore
+        boolean noMatchWithUserIgnoreList = CommandsToExcludeOption.userCommandsToIgnore.stream().noneMatch(e -> e.startsWith("/") && message.startsWith(e.substring(1)) || message.startsWith(e));
+        boolean noMatchWithForbiddenList = Arrays.stream(userCommandsForbidden).noneMatch(message::startsWith);
+        if (noMatchWithUserIgnoreList && noMatchWithForbiddenList) {
             PlayerRecorder.lastCommandUsed.add(message);
         }
     }
-
 }

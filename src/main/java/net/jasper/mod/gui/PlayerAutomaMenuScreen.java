@@ -26,35 +26,35 @@ public class PlayerAutomaMenuScreen extends Screen {
     }
 
     // Player Recorder
-    public static ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.startRecording"), button -> {
+    public static ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
             SINGLETON.close();
             PlayerRecorder.startRecord();
         }).tooltip(Tooltip.of(Text.literal("playerautoma.menu.tooltip.startRecording"))).build();
 
-    public static ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.stopRecording"), button -> {
+    public static ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
             SINGLETON.close();
             PlayerRecorder.stopRecord();
-        }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.stopRecording"))).build();
+        }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.stopRecording"))).build();
 
-    public static ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.menu.startReplay"), button -> {
+    public static ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startReplay"), button -> {
             SINGLETON.close();
             PlayerRecorder.startReplay(false);
-        }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.startReplay"))).build();
+        }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startReplay"))).build();
 
-    public static ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.menu.startLoop"), button -> {
+    public static ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startLoop"), button -> {
             SINGLETON.close();
             PlayerRecorder.startLoop();
-        }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.startLoop"))).build();
+        }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startLoop"))).build();
 
-    public static ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.storeRecording"), button -> {
+    public static ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"), button -> {
             SINGLETON.close();
             RecordingStorerScreen.open();
-        }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.storeRecording"))).build();
+        }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.storeRecording"))).build();
 
-    public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.menu.loadRecording"), button -> {
+    public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.loadRecording"), button -> {
         SINGLETON.close();
         RecordingSelectorScreen.open();
-    }).tooltip(Tooltip.of(Text.translatable("playerautoma.menu.tooltip.loadRecording"))).build();
+    }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.loadRecording"))).build();
 
     public static ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"), button -> {
         SINGLETON.close();

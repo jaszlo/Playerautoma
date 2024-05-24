@@ -67,20 +67,20 @@ public class RecordingSelectorScreen extends Screen {
                     Text.of(""),
                     (button) -> this.onRefresh()
             )
-            .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.refresh")))
+            .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.refresh")))
             .dimensions(this.width / 2 - 65 - 170, this.height - 38, 20, 20)
             .build();
         this.addDrawableChild(refreshButton);
 
         this.addDrawableChild(ButtonWidget.builder(
-                Text.translatable("playerautoma.fileSelector.delete"),
+                Text.translatable("playerautoma.screens.fileSelector.delete"),
                 (button) -> this.onDelete()
         )
         .dimensions(this.width / 2 - 65 - 140, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
-                Text.translatable("playerautoma.fileSelector.openFolder"),
+                Text.translatable("playerautoma.screens.fileSelector.openFolder"),
                 (button) -> Util.getOperatingSystem().open(new File(this.directoryPath).toURI())
         )
         .dimensions(this.width / 2 - 65, this.height - 38, 130, 20)
@@ -116,7 +116,7 @@ public class RecordingSelectorScreen extends Screen {
             if (!deleteSuccess) {
                 PlayerAutomaClient.LOGGER.warn("Could not delete recording file " + recEntry.fileName);
                 this.close();
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailed"));
+                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailedRecording"));
             }
             this.recordingSelectionList.updateFiles();
         }
