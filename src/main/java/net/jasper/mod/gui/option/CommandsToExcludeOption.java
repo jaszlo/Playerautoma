@@ -59,12 +59,12 @@ public class CommandsToExcludeOption extends Screen {
                 Text.translatable("playerautoma.screens.commandsToExclude.delete"),
                 (button) -> this.onDelete()
         )
-        .dimensions(this.width / 2 - 65 - 280, this.height - 38, 130, 20)
+        .dimensions(this.width / 2 - 280, this.height - 38, 130, 20)
         .build());
 
         this.tfw = new TextFieldWidget(
             this.client.textRenderer,
-            this.width / 2 - 65 - 140,
+            this.width / 2 - 140,
             this.height - 38,
             130,
             20,
@@ -79,14 +79,14 @@ public class CommandsToExcludeOption extends Screen {
                 Text.translatable("playerautoma.screens.commandsToExclude.add"),
                 (button) -> this.commandSelectionList.add(this.tfw.getText())
         )
-        .dimensions(this.width / 2 - 65, this.height - 38, 130, 20)
+        .dimensions(this.width / 2, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
                 ScreenTexts.DONE,
                 (button) -> this.onDone()
         )
-        .dimensions(this.width / 2 - 65 + 140, this.height - 38, 130, 20)
+        .dimensions(this.width / 2 + 140, this.height - 38, 130, 20)
         .build());
 
         super.init();
@@ -179,7 +179,7 @@ public class CommandsToExcludeOption extends Screen {
 
         public void add(String command) {
             CommandEntry toAdd = new CommandEntry(command);
-            if (this.children().contains(toAdd)) {
+            if (this.children().contains(toAdd) || command.isEmpty()) {
                 return;
             }
             this.children().add(toAdd);

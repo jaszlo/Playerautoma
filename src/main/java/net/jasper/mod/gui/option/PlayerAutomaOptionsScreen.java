@@ -128,7 +128,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                 MinecraftClient client= MinecraftClient.getInstance();
                 client.setScreen(new CommandsToExcludeOption("Commands to Exclude", client.currentScreen));
             }
-    ).build();
+    ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.openCommandsToExclude"))).build();
 
     public PlayerAutomaOptionsScreen(String title, Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of(title));
@@ -192,8 +192,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                     recordCommands.next();
                     openCommandsToExclude.active = recordCommands.getValue();
                 }
-        ).build();
+        ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordCommands"))).build();
         recordCommands.setButton(recordCommandosButton);
+        openCommandsToExclude.active = recordCommands.getValue();
 
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
@@ -203,7 +204,6 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                     client.setScreen(new KeybindsScreen(this, client.options));
                 }
         ).build();
-        openCommandsToExclude.active = recordCommands.getValue();
 
         adder.add(showHudButton);
         adder.add(setHudPositionButton);

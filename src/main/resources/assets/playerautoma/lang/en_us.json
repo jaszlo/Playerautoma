@@ -45,6 +45,8 @@
   "playerautoma.options": "PlayerAutoma Options...",
   "playerautoma.option.recordCommands": "Record Commands",
   "playerautoma.option.openCommandsToExclude": "Ignore Commands...",
+  "playerautoma.option.tooltip.recordCommands": "When enabled will track commands for recordings",
+  "playerautoma.option.tooltip.openCommandsToExclude": "Modify specific commands to ignore when recording",
   "playerautoma.option.showHud": "Show HUD",
   "playerautoma.option.useDefaultDirection": "Use Default Direction",
   "playerautoma.option.setDefaultDirection": "Default Direction",
@@ -81,7 +83,7 @@
   "playerautoma.option.resetKeyBindingsOnRecording": "Reset Keys",
   "playerautoma.option.tooltip.resetKeyBindingsOnRecording": "When 'ON resets Keybindings when recording is started",
 
-  "playerautoma.messages.menuPreventionToggle": "Menu prevention has been turned ",
+  "playerautoma.messages.menuPreventionToggle": "Menu prevention has been turned",
   "playerautoma.messages.fileDeletionError": "Failed to delete file",
   "playerautoma.messages.startRecording": "Started Recording",
   "playerautoma.messages.stopRecording": "Stopped Recording",

@@ -45,6 +45,8 @@
   "playerautoma.options": "PlayerAutoma Optionen... ",
   "playerautoma.option.recordCommands": "Nehme Kommandos auf",
   "playerautoma.option.openCommandsToExclude": "Ignoriere Kommando...",
+  "playerautoma.option.tooltip.recordCommands": "Wenn aktiviert, werden Befehle aufgenommen",
+  "playerautoma.option.tooltip.openCommandsToExclude": "Spezifische Befehle bei der Aufnahme ignorieren",
   "playerautoma.option.showHud": "HUD anzeigen",
   "playerautoma.option.useDefaultDirection": "Standardrichtung nutzen",
   "playerautoma.option.setDefaultDirection": "Standardrichtung",

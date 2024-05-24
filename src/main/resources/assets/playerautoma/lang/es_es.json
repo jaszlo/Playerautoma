@@ -43,6 +43,9 @@
   "playerautoma.options": "Opciones de PlayerAutoma...",
   "playerautoma.option.recordCommands": "Grabar comandos",
   "playerautoma.option.openCommandsToExclude": "Ignorar comando...",
+  "playerautoma.option.tooltip.recordCommands": "Cuando está habilitado, rastreará los comandos para grabaciones",
+  "playerautoma.option.tooltip.openCommandsToExclude": "Modificar comandos específicos para ignorar al grabar",
+
   "playerautoma.option.showHud": "Mostrar HUD",
   "playerautoma.option.useDefaultDirection": "Usar Dirección Predeterminada",
   "playerautoma.option.setDefaultDirection": "Dirección Predeterminada",
