@@ -17,7 +17,13 @@ public class ClientPlayerNetworkHandlerMixin {
     @Unique String[] IGNORED_COMMANDS_PREFIX = new String[] {
             "record",
             "replay",
-            "say"
+            "say",
+            "msg",
+            "message",
+            "alert",
+            "email",
+            "reply",
+            "r "
     };
 
     @Inject(method="sendChatCommand", at=@At("HEAD"))

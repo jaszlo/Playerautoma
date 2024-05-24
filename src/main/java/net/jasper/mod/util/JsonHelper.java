@@ -196,7 +196,7 @@ public class JsonHelper {
                 selectedSlot,
                 slotclick,
                 currentScreen,
-        command
+                command
             );
             result.add(entry);
         }
