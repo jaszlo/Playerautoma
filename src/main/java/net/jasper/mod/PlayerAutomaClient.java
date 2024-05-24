@@ -6,7 +6,6 @@ import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ChatScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

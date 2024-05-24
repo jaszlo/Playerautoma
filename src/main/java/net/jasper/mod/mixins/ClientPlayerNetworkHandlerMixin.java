@@ -10,6 +10,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Arrays;
 
+/**
+ * Class that track all commands that were send to the server
+ */
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayerNetworkHandlerMixin {
 

@@ -14,6 +14,9 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
 
+/**
+ * Class to register all commands associated with playerautoma
+ */
 public class Commands {
     public static void register() {
         // Register /record <start|stop|clear>

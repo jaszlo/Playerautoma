@@ -72,7 +72,7 @@ public class OptionButton<Value> {
         }
 
         if (valueIndex < 0) {
-            LOGGER.error("currentValue is not a defined value for Option " + key);
+            LOGGER.error("currentValue is not a defined value for Option {}", key);
             valueIndex = 0;
             this.currentValue = values[0];
         }
@@ -156,7 +156,7 @@ public class OptionButton<Value> {
         try {
             this.currentValue = decoder.decode(readValue);
         } catch (Exception e) {
-            LOGGER.warn("Forbidden value '" + readValue + "' found in playerautoma_options.txt for '" + this.key + "'");
+            LOGGER.warn("Forbidden value '{}' found in playerautoma_options.txt for '{}'", readValue, this.key);
             this.currentValue = defaultValue;
             store();
         }

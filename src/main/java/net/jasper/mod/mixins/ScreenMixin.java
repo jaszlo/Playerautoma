@@ -15,6 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.jasper.mod.util.keybinds.Constants.STOP_REPLAY;
 
 
+/**
+ *  Class implementing menu prevention functionality and modifier key state for replays
+ */
 @Mixin(Screen.class)
 public class ScreenMixin {
 

@@ -11,6 +11,9 @@ import net.minecraft.text.Text;
 
 import static net.jasper.mod.util.HUDTextures.BLOCK_MENU_ICON;
 
+/**
+ * Class to track state and implement menu prevention that allows for replays to work in background
+ */
 public class MenuPrevention {
 
     public static boolean preventToBackground = false;

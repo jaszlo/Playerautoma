@@ -11,6 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Class implementing menu prevention functionality
+ */
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
     @Inject(method="setScreen", at=@At("HEAD"), cancellable=true)
