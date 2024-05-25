@@ -28,37 +28,33 @@ public class RecordingSelectorScreen extends Screen {
     private RecordingSelectionListWidget recordingSelectionList;
     private final String directoryPath;
 
-    // Should no longer use a singleton when used in general
-    public static final RecordingSelectorScreen SINGLETON = new RecordingSelectorScreen("Select a Recording", PlayerAutomaClient.RECORDING_PATH);
-    public static boolean isOpen;
+    private final Screen parent;
+    private final MinecraftClient client;
 
-    public RecordingSelectorScreen(String title, String directoryPath) {
-        super(Text.of(title));
-        this.directoryPath = directoryPath;
-        isOpen = false;
+    public RecordingSelectorScreen(Screen parent) {
+        super(Text.translatable("playerautoma.screens.title.selector"));
+        this.directoryPath = PlayerAutomaClient.RECORDING_PATH;
+        this.parent = parent;
+        this.client = MinecraftClient.getInstance();
         this.init();
     }
 
-    public static void open() {
-        if (!isOpen) {
-            SINGLETON.recordingSelectionList.updateFiles();
-            MinecraftClient.getInstance().setScreen(SINGLETON);
-            isOpen = !isOpen;
-        }
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new RecordingSelectorScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
     }
 
     @Override
     public void close() {
-        isOpen = false;
-        MinecraftClient client = MinecraftClient.getInstance();
-        client.setScreen(null);
-        client.mouse.lockCursor();
+        this.client.setScreen(this.parent);
     }
 
     private ButtonWidget refreshButton;
 
     protected void init() {
-        this.recordingSelectionList = new RecordingSelectionListWidget(MinecraftClient.getInstance(), this.directoryPath);
+        this.recordingSelectionList = new RecordingSelectionListWidget(this.client, this.directoryPath);
         this.addSelectableChild(this.recordingSelectionList);
 
         // Button placement:
@@ -101,12 +97,11 @@ public class RecordingSelectorScreen extends Screen {
     }
 
     private void onDone() {
-        isOpen = false;
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
             PlayerRecorder.loadRecord(recEntry.file);
         }
-        MinecraftClient.getInstance().setScreen(null);
+        this.client.setScreen(null);
     }
 
     private void onDelete() {
@@ -114,7 +109,7 @@ public class RecordingSelectorScreen extends Screen {
         if (recEntry != null) {
             boolean deleteSuccess = recEntry.file.delete();
             if (!deleteSuccess) {
-                PlayerAutomaClient.LOGGER.warn("Could not delete recording file " + recEntry.fileName);
+                PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
                 this.close();
                 ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailedRecording"));
             }

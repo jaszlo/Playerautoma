@@ -6,6 +6,7 @@ import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -34,8 +35,8 @@ public class CommandsToExcludeOption extends Screen {
 
     public static final List<String> userCommandsToIgnore = new ArrayList<>();
 
-    public CommandsToExcludeOption(String title, Screen parent) {
-        super(Text.of(title));
+    public CommandsToExcludeOption(Screen parent) {
+        super(Text.translatable("playerautoma.screens.title.excludeCommands"));
         this.parent = parent;
         this.client = MinecraftClient.getInstance();
         this.init();
@@ -72,6 +73,7 @@ public class CommandsToExcludeOption extends Screen {
         );
         this.tfw.setEditable(true);
         this.tfw.active = true;
+        this.tfw.setTooltip(Tooltip.of(Text.translatable("playerautoma.screens.tooltip.commandsToExclude.add")));
 
         this.addDrawableChild(this.tfw);
 
@@ -80,6 +82,7 @@ public class CommandsToExcludeOption extends Screen {
                 (button) -> this.commandSelectionList.add(this.tfw.getText())
         )
         .dimensions(this.width / 2, this.height - 38, 130, 20)
+        .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.tooltip.commandsToExclude.add")))
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(

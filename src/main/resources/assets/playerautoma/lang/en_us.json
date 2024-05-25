@@ -30,6 +30,13 @@
 
   "playerautoma.screens.commandsToExclude.delete": "Delete",
   "playerautoma.screens.commandsToExclude.add": "Add",
+  "playerautoma.screens.tooltip.commandsToExclude.add": "Add command prefix with or without a the leading '/'",
+
+  "playerautoma.screens.title.modMenu": "Playerautoma Menu",
+  "playerautoma.screens.title.modOptions": "Playerautoma Options",
+  "playerautoma.screens.title.selector": "Load a Recording",
+  "playerautoma.screens.title.storer": "Safe a Recording",
+  "playerautoma.screens.title.excludeCommands": "Exclude Commands",
 
   "playerautoma.keys.startRecording": "Start Recording",
   "playerautoma.keys.stopRecording":"Stop Recording",

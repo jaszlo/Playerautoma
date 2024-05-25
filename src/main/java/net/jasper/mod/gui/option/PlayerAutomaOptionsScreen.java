@@ -126,12 +126,25 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
             Text.translatable("playerautoma.option.openCommandsToExclude"),
             (_b) -> {
                 MinecraftClient client= MinecraftClient.getInstance();
-                client.setScreen(new CommandsToExcludeOption("Commands to Exclude", client.currentScreen));
+                client.setScreen(new CommandsToExcludeOption(client.currentScreen));
             }
     ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.openCommandsToExclude"))).build();
 
-    public PlayerAutomaOptionsScreen(String title, Screen parent) {
-        super(parent, MinecraftClient.getInstance().options, Text.of(title));
+    public PlayerAutomaOptionsScreen(Screen parent) {
+        super(parent, MinecraftClient.getInstance().options, Text.translatable("playerautoma.screens.title.modOptions"));
+    }
+
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new PlayerAutomaOptionsScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
+    }
+
+    @Override
+    public void close() {
+        assert this.client != null;
+        this.client.setScreen(this.parent);
     }
 
 

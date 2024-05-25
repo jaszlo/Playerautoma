@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.jasper.mod.gui.RecordingStorerScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 import java.io.File;
@@ -132,8 +133,8 @@ public class Commands {
         boolean callNext = RecordingStorerScreen.useJSON.getValue() && fileType.equals("rec") || !RecordingStorerScreen.useJSON.getValue() && fileType.equals("json");
 
         // Initialize button element to allow calling next
-        RecordingStorerScreen.open();
-        RecordingStorerScreen.SINGLETON.close();
+        Screen currentScreen =  RecordingStorerScreen.open();
+        currentScreen.close();
 
         // Set file type to selected
         if (callNext) {

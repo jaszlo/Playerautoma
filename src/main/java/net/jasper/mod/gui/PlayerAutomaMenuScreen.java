@@ -9,77 +9,59 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.EmptyWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+
+import java.util.Objects;
 
 /**
  * Main-Menu if you like that allows for control of the InputRecorder via buttons.
  */
 public class PlayerAutomaMenuScreen extends Screen {
+    private final Screen parent;
+    private final MinecraftClient client;
 
-    public static PlayerAutomaMenuScreen SINGLETON = new PlayerAutomaMenuScreen("PlayerAutomaMenu");
-    private static boolean isOpen = false;
-
-    public PlayerAutomaMenuScreen(String title) {
-        super(Text.literal(title));
+    public PlayerAutomaMenuScreen(Screen parent) {
+        super(Text.translatable("playerautoma.screens.title.modMenu"));
+        this.parent = parent;
+        this.client = MinecraftClient.getInstance();
     }
 
     // Player Recorder
     public static ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
-            SINGLETON.close();
+            Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerRecorder.startRecord();
         }).tooltip(Tooltip.of(Text.literal("playerautoma.menu.tooltip.startRecording"))).build();
 
     public static ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
-            SINGLETON.close();
+            Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerRecorder.stopRecord();
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.stopRecording"))).build();
 
     public static ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startReplay"), button -> {
-            SINGLETON.close();
+            Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerRecorder.startReplay(false);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startReplay"))).build();
 
     public static ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startLoop"), button -> {
-            SINGLETON.close();
+            Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerRecorder.startLoop();
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startLoop"))).build();
 
-    public static ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"), button -> {
-            SINGLETON.close();
-            RecordingStorerScreen.open();
-        }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.storeRecording"))).build();
+    public static ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"),
+            button -> RecordingStorerScreen.open()).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.storeRecording"))).build();
 
-    public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.loadRecording"), button -> {
-        SINGLETON.close();
-        RecordingSelectorScreen.open();
-    }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.loadRecording"))).build();
+    public static ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.loadRecording"),
+            button -> RecordingSelectorScreen.open()).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.loadRecording"))).build();
 
-    public static ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"), button -> {
-        SINGLETON.close();
-        MinecraftClient.getInstance().setScreen(new PlayerAutomaOptionsScreen("PlayerautomaOptions", SINGLETON));
-    }).width(200).build();
+    public static ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"),
+            button -> PlayerAutomaOptionsScreen.open()).width(200).build();
 
-    public static void open() {
-        if (!isOpen && !handled) {
-            MinecraftClient.getInstance().setScreen(SINGLETON);
-
-            isOpen = !isOpen;
-        }
-
-        handled = false;
-    }
-
-    private static boolean handled = false;
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == InputUtil.GLFW_KEY_O) {
-            handled = true;
-            SINGLETON.close();
-        }
-
-        return super.keyPressed(keyCode, scanCode, modifiers);
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new PlayerAutomaMenuScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
     }
 
     @Override
@@ -89,10 +71,7 @@ public class PlayerAutomaMenuScreen extends Screen {
 
     @Override
     public void close() {
-        isOpen = false;
-        MinecraftClient client = MinecraftClient.getInstance();
-        client.setScreen(null);
-        client.mouse.lockCursor();
+        this.client.setScreen(this.parent);
     }
 
     @Override

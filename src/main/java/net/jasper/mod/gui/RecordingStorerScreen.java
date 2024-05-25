@@ -20,13 +20,12 @@ import java.time.format.DateTimeFormatter;
 public class RecordingStorerScreen extends Screen {
 
 
-    public static final RecordingStorerScreen SINGLETON = new RecordingStorerScreen();
-    public static boolean isOpen;
+    private final Screen parent;
     private TextFieldWidget input;
 
-    protected RecordingStorerScreen() {
-        super(Text.of("RecordingStorer"));
-        isOpen = false;
+    protected RecordingStorerScreen(Screen parent) {
+        super(Text.translatable("playerautoma.screens.title.storer"));
+        this.parent = parent;
 
     }
 
@@ -97,20 +96,16 @@ public class RecordingStorerScreen extends Screen {
         this.addDrawableChild(useJSONButton);
     }
 
-    public static void open() {
-        if (!isOpen) {
-            MinecraftClient.getInstance().setScreen(SINGLETON);
-            SINGLETON.input.active = true;
-            isOpen = !isOpen;
-        }
-
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new RecordingStorerScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
     }
 
     @Override
     public void close() {
-        isOpen = false;
         MinecraftClient client = MinecraftClient.getInstance();
-        client.setScreen(null);
-        client.mouse.lockCursor();
+        client.setScreen(this.parent);
     }
 }

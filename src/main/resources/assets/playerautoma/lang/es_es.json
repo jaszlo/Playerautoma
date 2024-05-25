@@ -29,6 +29,13 @@
   "playerautoma.screens.commandsToExclude.delete": "Eliminar",
   "playerautoma.screens.commandsToExclude.add": "agregar",
 
+  "playerautoma.screens.title.modMenu": "Menú de Playerautoma",
+  "playerautoma.screens.title.modOptions": "Opciones de Playerautoma",
+  "playerautoma.screens.title.selector": "Cargar una grabación",
+  "playerautoma.screens.title.storer": "Guardar una grabación",
+  "playerautoma.screens.title.excludeCommands": "Excluir comandos",
+
+
   "playerautoma.keys.startRecording": "Iniciar Grabación",
   "playerautoma.keys.stopRecording": "Detener Grabación",
   "playerautoma.keys.startReplay": "Iniciar Reproducción",

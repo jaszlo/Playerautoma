@@ -31,6 +31,13 @@
   "playerautoma.screens.commandsToExclude.delete": "Löschen",
   "playerautoma.screens.commandsToExclude.add": "Hinzufügen",
 
+  "playerautoma.screens.title.modMenu": "Playerautoma-Menü",
+  "playerautoma.screens.title.modOptions": "Playerautoma-Optionen",
+  "playerautoma.screens.title.selector": "Eine Aufnahme laden",
+  "playerautoma.screens.title.storer": "Eine Aufnahme speichern",
+  "playerautoma.screens.title.excludeCommands": "Befehle ausschließen",
+
+
   "playerautoma.keys.startRecording": "Aufnahme starten",
   "playerautoma.keys.stopRecording": "Aufnahme stoppen",
   "playerautoma.keys.startReplay": "Wiedergabe starten",
