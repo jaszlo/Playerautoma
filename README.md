@@ -33,7 +33,7 @@ Other than that the default keybindings are as follows.
 - `0` Menu Prevention
 
 ### Commands
-The latest available commands allow you some control over the mod. 
+Commands allow you some control over the mod. 
 The commands should be self-explanatory and are as follows. See [this](documentation/commands.md) for detailed documentation.
 ```
 /record <start|stop|clear>
@@ -43,9 +43,15 @@ The commands should be self-explanatory and are as follows. See [this](documenta
 /replay <start|stop|loop|togglepause>
 ```
 
+### Recording Commands
+You can also record commands entered. This option is turned off by default.
+This specifies to track commands not to replay them. Meaning if you have a replay that contains
+commands they will be replayed regardless of the option specified.
+You can also black-list specific commands. Again this only black list them for the recording.
+
 ## Development Setup
 
-1. Project Structure > Select JDK to `JDK17` and Language Level to `SKD default`
+1. Project Structure > Select JDK to `JDK21` and Language Level to `SKD default`
 2. Settings > Build, Execution, Deployment > Build Tools > Gradle > Select Gradle JVM to `Project SDK`
 3. run `.\gradlew genSources`
 4. Gradle (Sidebar) > Tasks > fabric > runClient

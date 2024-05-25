@@ -35,6 +35,7 @@ public class PlayerAutomaClient implements ClientModInitializer {
 			}
 		}
 
+
 		// Initialize New Keybinds
 		PlayerAutomaKeyBinds.register();
 

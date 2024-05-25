@@ -1,4 +1,4 @@
-package net.jasper.mod.mixins.menuprevention;
+package net.jasper.mod.mixins;
 
 import net.jasper.mod.automation.MenuPrevention;
 import net.minecraft.client.MinecraftClient;
@@ -11,8 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Class implementing menu prevention functionality
+ */
 @Mixin(MinecraftClient.class)
-public class PreventSetScreen {
+public class MinecraftClientMixin {
     @Inject(method="setScreen", at=@At("HEAD"), cancellable=true)
     private void injected(Screen screen, CallbackInfo ci) {
         if (MenuPrevention.preventToBackground) {

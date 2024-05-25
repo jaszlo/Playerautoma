@@ -14,7 +14,6 @@ import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
-
 /**
  * Playerautoma option screen to configure settings
  */
@@ -113,9 +112,41 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public PlayerAutomaOptionsScreen(String title, Screen parent) {
-        super(parent, MinecraftClient.getInstance().options, Text.of(title));
+
+    public static OptionButton<Boolean> recordCommands = new OptionButton<>(
+      false,
+      OptionButton.BOOLEAN_VALUES,
+      "playerautoma.option.recordCommands",
+      Object::toString,
+      Boolean::parseBoolean,
+      (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static ButtonWidget openCommandsToExclude = ButtonWidget.builder(
+            Text.translatable("playerautoma.option.openCommandsToExclude"),
+            (_b) -> {
+                MinecraftClient client= MinecraftClient.getInstance();
+                client.setScreen(new CommandsToExcludeOption(client.currentScreen));
+            }
+    ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.openCommandsToExclude"))).build();
+
+    public PlayerAutomaOptionsScreen(Screen parent) {
+        super(parent, MinecraftClient.getInstance().options, Text.translatable("playerautoma.screens.title.modOptions"));
     }
+
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new PlayerAutomaOptionsScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
+    }
+
+    @Override
+    public void close() {
+        assert this.client != null;
+        this.client.setScreen(this.parent);
+    }
+
 
     public void init() {
         super.init();
@@ -168,6 +199,16 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget resetKeyBindingsOnRecordingButton = resetKeyBindingsOnRecordingOption.buttonOf();
         resetKeyBindingsOnRecordingButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.resetKeyBindingsOnRecording")));
 
+        ButtonWidget recordCommandosButton = ButtonWidget.builder(
+                Text.translatable(recordCommands.key).append(": ").append(recordCommands.textProvider.provide(recordCommands.getValue())),
+                (_b) -> {
+                    recordCommands.next();
+                    openCommandsToExclude.active = recordCommands.getValue();
+                }
+        ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordCommands"))).build();
+        recordCommands.setButton(recordCommandosButton);
+        openCommandsToExclude.active = recordCommands.getValue();
+
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
@@ -187,6 +228,8 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
         adder.add(resetKeyBindingsOnRecordingButton);
+        adder.add(recordCommands.button);
+        adder.add(openCommandsToExclude);
 
         adder.add(openKeyBindOptionsButton, 2);
         adder.add(EmptyWidget.ofHeight(16), 2);

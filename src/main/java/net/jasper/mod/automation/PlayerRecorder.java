@@ -2,9 +2,9 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.gui.RecordingStorer;
+import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
-import net.jasper.mod.mixins.KeyBindingAccessor;
+import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
 import net.jasper.mod.util.data.*;
@@ -51,6 +51,8 @@ public class PlayerRecorder {
     // Modifier State for current tick in replay
     public static final Queue<String> pressedModifiers = new ConcurrentLinkedDeque<>();
 
+    public static final Queue<String> lastCommandUsed = new ConcurrentLinkedDeque<>();
+
     public static void registerInputRecorder() {
         // Register Task-Queues
         tasks.register("playerActions");
@@ -88,7 +90,8 @@ public class PlayerRecorder {
                 new LookingDirection(client.player.getYaw(), client.player.getPitch()),
                 client.player.getInventory().selectedSlot,
                 lastSlotClicked.poll(),
-                client.currentScreen == null ? null : client.currentScreen.getClass()
+                client.currentScreen == null ? null : client.currentScreen.getClass(),
+                lastCommandUsed.poll()
             );
             record.add(newEntry);
         });
@@ -107,6 +110,7 @@ public class PlayerRecorder {
 
         ClientHelpers.centerPlayer();
         lastSlotClicked.clear();
+        lastCommandUsed.clear();
         state = RECORDING;
     }
 
@@ -153,7 +157,7 @@ public class PlayerRecorder {
                                 && PlayerAutomaOptionsScreen.useRelativeLookingDirectionOption.getValue();
 
         // Get first RecordEntry Looking direction to calculate difference
-        LookingDirection l = record.entries.get(0).lookingDirection();
+        LookingDirection l = record.entries.getFirst().lookingDirection();
         float pitchDiff = isRelative ? l.pitch() - client.player.getPitch() : 0;
         float yawDiff = isRelative ? l.yaw() - client.player.getYaw() : 0;
 
@@ -165,6 +169,7 @@ public class PlayerRecorder {
             int selectedSlot = entry.slotSelection();
             SlotClick clickedSlot = entry.slotClicked();
             Class<?> currentScreen = entry.currentScreen();
+            String command = entry.command();
 
             // Replay Ticks
             tasks.add(() -> {
@@ -223,6 +228,8 @@ public class PlayerRecorder {
                 // Click Slot in inventory if possible
                 if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) ClientHelpers.clickSlot(clickedSlot);
 
+                // Execute command if possible
+                if (command != null) Objects.requireNonNull(client.getNetworkHandler()).sendChatCommand(command);
             });
         }
 
@@ -290,7 +297,7 @@ public class PlayerRecorder {
 
     private static File createNewFileName(String name) {
         File selected = Path.of(RECORDING_PATH, name).toFile();
-        String fileType = RecordingStorer.useJSON.getValue() ? ".json" : ".rec";
+        String fileType = RecordingStorerScreen.useJSON.getValue() ? ".json" : ".rec";
         String newName = name;
         while (selected.exists()) {
             newName = newName.substring(0, newName.length() - fileType.length()) + "_new" + fileType;
@@ -316,7 +323,7 @@ public class PlayerRecorder {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             // Store as .json/.rec according to option
-            if (RecordingStorer.useJSON.getValue()) {
+            if (RecordingStorerScreen.useJSON.getValue()) {
                 String json = JsonHelper.serialize(record);
                 FileWriter fileWriter = new FileWriter(selected);
                 BufferedWriter writer = new BufferedWriter(fileWriter);
@@ -333,7 +340,7 @@ public class PlayerRecorder {
             e.printStackTrace();
             try {
                 if (objectOutputStream != null) objectOutputStream.close();
-                LOGGER.info("Deletion of failed file: " + selected.delete());
+                LOGGER.info("Deletion of failed file: {}", selected.delete());
             } catch (IOException closeFailed) {
                 closeFailed.printStackTrace();
                 LOGGER.warn("Error closing file in error handling!"); // This should not happen :(

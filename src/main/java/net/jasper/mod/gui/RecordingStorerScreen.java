@@ -17,16 +17,15 @@ import java.time.format.DateTimeFormatter;
 /**
  * 'Screen' (more of a pop-up) that allows to store a recording with a given name.
  */
-public class RecordingStorer extends Screen {
+public class RecordingStorerScreen extends Screen {
 
 
-    public static final RecordingStorer SINGLETON = new RecordingStorer();
-    public static boolean isOpen;
+    private final Screen parent;
     private TextFieldWidget input;
 
-    protected RecordingStorer() {
-        super(Text.of("RecordingStorer"));
-        isOpen = false;
+    protected RecordingStorerScreen(Screen parent) {
+        super(Text.translatable("playerautoma.screens.title.storer"));
+        this.parent = parent;
 
     }
 
@@ -46,7 +45,7 @@ public class RecordingStorer extends Screen {
                 this.height / 2 - 30,
                 200,
                 20,
-                Text.translatable("playerautoma.fileSelector.enterName"),
+                Text.translatable("playerautoma.screens.fileSelector.enterName"),
                 MinecraftClient.getInstance().textRenderer
         );
 
@@ -60,7 +59,7 @@ public class RecordingStorer extends Screen {
         );
 
         // Set Text Field Properties
-        textField.setTooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.textField")));
+        textField.setTooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.textField")));
         textField.setEditable(true);
 
         // Format the date and time as name of recording
@@ -79,7 +78,7 @@ public class RecordingStorer extends Screen {
                   PlayerRecorder.storeRecord(name);
                   this.close();
               }).dimensions(this.width / 2 - 100, this.height / 2 + 10, 150, 20)
-                .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.save")))
+                .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.save")))
                 .build();
 
 
@@ -97,20 +96,16 @@ public class RecordingStorer extends Screen {
         this.addDrawableChild(useJSONButton);
     }
 
-    public static void open() {
-        if (!isOpen) {
-            MinecraftClient.getInstance().setScreen(SINGLETON);
-            SINGLETON.input.active = true;
-            isOpen = !isOpen;
-        }
-
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new RecordingStorerScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
     }
 
     @Override
     public void close() {
-        isOpen = false;
         MinecraftClient client = MinecraftClient.getInstance();
-        client.setScreen(null);
-        client.mouse.lockCursor();
+        client.setScreen(this.parent);
     }
 }

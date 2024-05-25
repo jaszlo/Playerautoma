@@ -5,7 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.jasper.mod.gui.RecordingStorer;
+import net.jasper.mod.gui.RecordingStorerScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 import java.io.File;
@@ -14,6 +15,9 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
 
+/**
+ * Class to register all commands associated with playerautoma
+ */
 public class Commands {
     public static void register() {
         // Register /record <start|stop|clear>
@@ -126,21 +130,21 @@ public class Commands {
     private static int handleStoreFileCommand(CommandContext<FabricClientCommandSource> context, String fileType) {
         String fileName = StringArgumentType.getString(context, "name");
 
-        boolean callNext = RecordingStorer.useJSON.getValue() && fileType.equals("rec") || !RecordingStorer.useJSON.getValue() && fileType.equals("json");
+        boolean callNext = RecordingStorerScreen.useJSON.getValue() && fileType.equals("rec") || !RecordingStorerScreen.useJSON.getValue() && fileType.equals("json");
 
         // Initialize button element to allow calling next
-        RecordingStorer.open();
-        RecordingStorer.SINGLETON.close();
+        Screen currentScreen =  RecordingStorerScreen.open();
+        currentScreen.close();
 
         // Set file type to selected
         if (callNext) {
-            RecordingStorer.useJSON.next();
+            RecordingStorerScreen.useJSON.next();
         }
         PlayerRecorder.storeRecord(fileName + "." + fileType);
 
         // Restore original filetype
         if (callNext) {
-            RecordingStorer.useJSON.next();
+            RecordingStorerScreen.useJSON.next();
         }
 
         return 1;

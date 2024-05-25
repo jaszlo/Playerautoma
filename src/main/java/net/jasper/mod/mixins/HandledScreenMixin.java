@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Sets the last slot clicked for the Player-Recorder to store it
  */
 @Mixin(HandledScreen.class)
-public abstract class SlotClickedCallback {
+public class HandledScreenMixin {
     @Inject(method="onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at=@At("HEAD"))
     private void injected(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         // Register slot click for InputRecorder if isRecording and not replaying

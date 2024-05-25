@@ -23,42 +23,38 @@ import static net.jasper.mod.util.HUDTextures.REFRESH_ICON;
 /**
  * Screen copied from language-selection. Allows to select stored recordings.
  */
-public class RecordingSelector extends Screen {
+public class RecordingSelectorScreen extends Screen {
 
     private RecordingSelectionListWidget recordingSelectionList;
     private final String directoryPath;
 
-    // Should no longer use a singleton when used in general
-    public static final RecordingSelector SINGLETON = new RecordingSelector("Select a Recording", PlayerAutomaClient.RECORDING_PATH);
-    public static boolean isOpen;
+    private final Screen parent;
+    private final MinecraftClient client;
 
-    public RecordingSelector(String title, String directoryPath) {
-        super(Text.of(title));
-        this.directoryPath = directoryPath;
-        isOpen = false;
+    public RecordingSelectorScreen(Screen parent) {
+        super(Text.translatable("playerautoma.screens.title.selector"));
+        this.directoryPath = PlayerAutomaClient.RECORDING_PATH;
+        this.parent = parent;
+        this.client = MinecraftClient.getInstance();
         this.init();
     }
 
-    public static void open() {
-        if (!isOpen) {
-            SINGLETON.recordingSelectionList.updateFiles();
-            MinecraftClient.getInstance().setScreen(SINGLETON);
-            isOpen = !isOpen;
-        }
+    public static Screen open() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        Screen result = new RecordingSelectorScreen(client.currentScreen);
+        client.setScreen(result);
+        return result;
     }
 
     @Override
     public void close() {
-        isOpen = false;
-        MinecraftClient client = MinecraftClient.getInstance();
-        client.setScreen(null);
-        client.mouse.lockCursor();
+        this.client.setScreen(this.parent);
     }
 
     private ButtonWidget refreshButton;
 
     protected void init() {
-        this.recordingSelectionList = new RecordingSelectionListWidget(MinecraftClient.getInstance(), this.directoryPath);
+        this.recordingSelectionList = new RecordingSelectionListWidget(this.client, this.directoryPath);
         this.addSelectableChild(this.recordingSelectionList);
 
         // Button placement:
@@ -67,20 +63,20 @@ public class RecordingSelector extends Screen {
                     Text.of(""),
                     (button) -> this.onRefresh()
             )
-            .tooltip(Tooltip.of(Text.translatable("playerautoma.fileSelector.tooltip.refresh")))
+            .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.refresh")))
             .dimensions(this.width / 2 - 65 - 170, this.height - 38, 20, 20)
             .build();
         this.addDrawableChild(refreshButton);
 
         this.addDrawableChild(ButtonWidget.builder(
-                Text.translatable("playerautoma.fileSelector.delete"),
+                Text.translatable("playerautoma.screens.fileSelector.delete"),
                 (button) -> this.onDelete()
         )
         .dimensions(this.width / 2 - 65 - 140, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
-                Text.translatable("playerautoma.fileSelector.openFolder"),
+                Text.translatable("playerautoma.screens.fileSelector.openFolder"),
                 (button) -> Util.getOperatingSystem().open(new File(this.directoryPath).toURI())
         )
         .dimensions(this.width / 2 - 65, this.height - 38, 130, 20)
@@ -101,12 +97,11 @@ public class RecordingSelector extends Screen {
     }
 
     private void onDone() {
-        isOpen = false;
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
             PlayerRecorder.loadRecord(recEntry.file);
         }
-        MinecraftClient.getInstance().setScreen(null);
+        this.client.setScreen(null);
     }
 
     private void onDelete() {
@@ -114,9 +109,9 @@ public class RecordingSelector extends Screen {
         if (recEntry != null) {
             boolean deleteSuccess = recEntry.file.delete();
             if (!deleteSuccess) {
-                PlayerAutomaClient.LOGGER.warn("Could not delete recording file " + recEntry.fileName);
+                PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
                 this.close();
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailed"));
+                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailedRecording"));
             }
             this.recordingSelectionList.updateFiles();
         }
@@ -149,7 +144,7 @@ public class RecordingSelector extends Screen {
         final String directoryPath;
         public RecordingSelectionListWidget(MinecraftClient client, String directoryPath) {
             // EntryListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight)
-            super(client, RecordingSelector.this.width, RecordingSelector.this.height - 93, 32, 18);
+            super(client, RecordingSelectorScreen.this.width, RecordingSelectorScreen.this.height - 93, 32, 18);
             this.directoryPath = directoryPath;
             this.updateFiles();
 
@@ -176,7 +171,7 @@ public class RecordingSelector extends Screen {
             return super.getRowWidth() + 50;
         }
 
-        public class RecordingEntry extends AlwaysSelectedEntryListWidget.Entry<RecordingSelector.RecordingSelectionListWidget.RecordingEntry> {
+        public class RecordingEntry extends AlwaysSelectedEntryListWidget.Entry<RecordingSelectorScreen.RecordingSelectionListWidget.RecordingEntry> {
             final String fileName;
             final File file;
             private long clickTime;
@@ -187,13 +182,13 @@ public class RecordingSelector extends Screen {
             }
 
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                context.drawCenteredTextWithShadow(RecordingSelector.this.textRenderer, this.fileName, RecordingSelector.RecordingSelectionListWidget.this.width / 2, y + 1, 16777215);
+                context.drawCenteredTextWithShadow(RecordingSelectorScreen.this.textRenderer, this.fileName, RecordingSelectorScreen.RecordingSelectionListWidget.this.width / 2, y + 1, 16777215);
             }
 
             public boolean mouseClicked(double mouseX, double mouseY, int button) {
                 this.onPressed();
                 if (Util.getMeasuringTimeMs() - this.clickTime < 250L) {
-                    RecordingSelector.this.onDone();
+                    RecordingSelectorScreen.this.onDone();
                 }
 
                 this.clickTime = Util.getMeasuringTimeMs();
@@ -201,7 +196,7 @@ public class RecordingSelector extends Screen {
             }
 
             void onPressed() {
-                RecordingSelector.RecordingSelectionListWidget.this.setSelected(this);
+                RecordingSelectorScreen.RecordingSelectionListWidget.this.setSelected(this);
             }
 
             @Override

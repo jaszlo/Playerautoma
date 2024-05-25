@@ -8,7 +8,7 @@ public class ModMenuApiImpl implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return (ConfigScreenFactory<PlayerAutomaOptionsScreen>) parent -> new PlayerAutomaOptionsScreen("", parent);
+        return (ConfigScreenFactory<PlayerAutomaOptionsScreen>) PlayerAutomaOptionsScreen::new;
     }
 
 }
