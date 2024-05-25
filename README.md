@@ -50,7 +50,7 @@ You can also black-list specific commands. Again this only black list them for t
 
 ## Development Setup
 
-1. Project Structure > Select JDK to `JDK17` and Language Level to `SKD default`
+1. Project Structure > Select JDK to `JDK21` and Language Level to `SKD default`
 2. Settings > Build, Execution, Deployment > Build Tools > Gradle > Select Gradle JVM to `Project SDK`
 3. run `.\gradlew genSources`
 4. Gradle (Sidebar) > Tasks > fabric > runClient
