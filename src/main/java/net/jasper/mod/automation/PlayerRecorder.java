@@ -11,7 +11,6 @@ import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
@@ -215,15 +214,11 @@ public class PlayerRecorder {
                     }
                 }
 
-                // Close screen if needed
+                // KeyStrokes are consumed by screens and not recorded therefore track screen
+                // If there is a screen opened and the next currentScreen is null close the current one
                 if (client.currentScreen != null && currentScreen == null) {
                     client.currentScreen.close();
                     client.setScreen(null);
-                }
-
-                // Inventory is not opened via Keybinding therefore open manually if needed
-                if (client.currentScreen == null && currentScreen == InventoryScreen.class) {
-                    client.setScreen(new InventoryScreen(client.player));
                 }
 
                 // Click Slot in inventory if possible
@@ -338,13 +333,13 @@ public class PlayerRecorder {
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storedRecording"));
 
         } catch(IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage());
             try {
                 if (objectOutputStream != null) objectOutputStream.close();
                 LOGGER.info("Deletion of failed file: {}", selected.delete());
             } catch (IOException closeFailed) {
-                closeFailed.printStackTrace();
-                LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
+                LOGGER.warn(closeFailed.getMessage());
+                LOGGER.warn("Error closing file (storeRecord) in error handling!"); // This should not happen :(
             }
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storeFailed"));
             LOGGER.info("Failed to create output stream for selected file");
@@ -395,12 +390,12 @@ public class PlayerRecorder {
                     objectInputStream.close();
                     ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOGGER.warn(e.getMessage());
                     try {
                         if (objectInputStream != null) objectInputStream.close();
                     } catch (IOException closeFailed) {
-                        closeFailed.printStackTrace();
-                        LOGGER.warn("Error closing file in error handling!"); // This should not happen :(
+                        LOGGER.warn(closeFailed.getMessage());
+                        LOGGER.warn("Error closing file (loadRecord) in error handling!"); // This should not happen :(
                     }
                     continue;
 
