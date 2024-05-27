@@ -38,7 +38,6 @@ public class RecordingStorerScreen extends Screen {
             (bool) -> (bool ? Text.of(".json") : Text.of(".rec"))
     );
 
-
     protected void init() {
         TextWidget text = new TextWidget(
                 this.width / 2 - 100,

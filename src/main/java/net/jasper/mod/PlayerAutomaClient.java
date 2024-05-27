@@ -40,10 +40,10 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		PlayerAutomaKeyBinds.register();
 
 		// Register Inventory-Automations (Re-Stacking of Blocks)
-		InventoryAutomation.registerInventoryAutomation();
+		InventoryAutomation.register();
 
 		// Register Player-Recorder (Recording & Replaying)
-		PlayerRecorder.registerInputRecorder();
+		PlayerRecorder.register();
 
 		// Register HUD element for state of Player-Recorder
 		PlayerAutomaHUD.register();

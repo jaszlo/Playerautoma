@@ -12,13 +12,14 @@
   "playerautoma.screens.menu.storeRecording": "Store Recording...",
   "playerautoma.screens.menu.loadRecording": "Load Recording...",
 
-  "playerautoma.screens.menu.tooltip.startRecording": "Start Recording your movement and close the menu",
-  "playerautoma.screens.menu.tooltip.stopRecording": "Stop Recording your movements and close the menu",
-  "playerautoma.screens.menu.tooltip.startReplay": "Start Replaying and close the menu",
-  "playerautoma.screens.menu.tooltip.stopReplay": "Stop the Replay and close the menu",
-  "playerautoma.screens.menu.tooltip.startLoop": "Start a looped Replay and close the menu",
+  "playerautoma.screens.menu.tooltip.startRecording": "Start Recording your movement",
+  "playerautoma.screens.menu.tooltip.stopRecording": "Stop Recording your movements",
+  "playerautoma.screens.menu.tooltip.startReplay": "Start Replaying",
+  "playerautoma.screens.menu.tooltip.stopReplay": "Stop the Replay",
+  "playerautoma.screens.menu.tooltip.pauseReplay": "Toggle Pause the Replay",
+  "playerautoma.screens.menu.tooltip.startLoop": "Start a looped Replay",
   "playerautoma.screens.menu.tooltip.storeRecording": "Stores your Recording to a .rec file in your .minecraft/Recordings folder",
-  "playerautoma.screens.menu.tooltip.loadRecording": "Load Recording from a file and close the menu",
+  "playerautoma.screens.menu.tooltip.loadRecording": "Load Recording from a file",
 
   "playerautoma.screens.fileSelector.delete": "Delete",
   "playerautoma.screens.fileSelector.openFolder": "Open Recording Folder",
@@ -37,6 +38,7 @@
   "playerautoma.screens.title.selector": "Load a Recording",
   "playerautoma.screens.title.storer": "Safe a Recording",
   "playerautoma.screens.title.excludeCommands": "Exclude Commands",
+  "playerautoma.screens.title.quickMenu": "Quick Menu",
 
   "playerautoma.keys.startRecording": "Start Recording",
   "playerautoma.keys.stopRecording":"Stop Recording",

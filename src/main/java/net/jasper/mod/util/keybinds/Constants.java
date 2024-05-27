@@ -31,7 +31,8 @@ public class Constants {
             "playerautoma.keys.loadRecording",
             "playerautoma.keys.pauseReplay",
             "playerautoma.keys.openMenu",
-            "playerautoma.keys.menuPrevention"
+            "playerautoma.keys.menuPrevention",
+            "playerautoma.keys.quickMenu"
     };
 
     protected static final int AMOUNT_KEYBINDS = translations.length;
@@ -46,23 +47,26 @@ public class Constants {
             new KeyBinding(translations[6], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_I, KEYBINDING_CATEGORY),
             new KeyBinding(translations[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, KEYBINDING_CATEGORY),
             new KeyBinding(translations[8], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY),
-            new KeyBinding(translations[9], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_0, KEYBINDING_CATEGORY)
+            new KeyBinding(translations[9], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_0, KEYBINDING_CATEGORY),
+            new KeyBinding(translations[10], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, KEYBINDING_CATEGORY),
     };
 
     public static final KeyBinding STOP_REPLAY = bindings[3];
     public static final KeyBinding PREVENT_MENU = bindings[9];
+    public static final KeyBinding QUICK_MENU = bindings[10];
 
     private static final Runnable[] callbackMethods = {
             PlayerRecorder::startRecord,
             PlayerRecorder::stopRecord,
-            () -> PlayerRecorder.startReplay(false),
+            PlayerRecorder::startReplay,
             PlayerRecorder::stopReplay,
             PlayerRecorder::startLoop,
             RecordingStorerScreen::open,
             RecordingSelectorScreen::open,
             PlayerRecorder::togglePauseReplay,
             PlayerAutomaMenuScreen::open,
-            MenuPrevention::toggleBackgroundPrevention
+            MenuPrevention::toggleBackgroundPrevention,
+            () -> {} // Do nothing! The quickMenu opens onPress and closes onRelease and needs to be handled differently
     };
 
     protected static KeyBind[] defaultKeybinds = new KeyBind[AMOUNT_KEYBINDS];

@@ -2,11 +2,13 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.gui.QuickMenu;
 import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
+import net.jasper.mod.util.Textures;
 import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
@@ -27,7 +29,6 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
-import static net.jasper.mod.util.HUDTextures.*;
 
 /**
  * Class records player input and allows to replay those
@@ -52,7 +53,7 @@ public class PlayerRecorder {
 
     public static final Queue<String> lastCommandUsed = new ConcurrentLinkedDeque<>();
 
-    public static void registerInputRecorder() {
+    public static void register() {
         // Register Task-Queues
         tasks.register("playerActions");
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
@@ -124,7 +125,37 @@ public class PlayerRecorder {
         record.clear();
     }
 
+    /**
+     * Starts a replay. Will replay once and then stop.
+     */
+    public static void startReplay() {
+        startReplay(false, Integer.MIN_VALUE);
+    }
+
+    /**
+     * Start a replay. Will loop indefinitely if told so
+     * @param looped Loop indefinitely if true
+     */
     public static void startReplay(boolean looped) {
+        startReplay(looped, Integer.MIN_VALUE);
+    }
+
+    /**
+     * Start a replay. Will loop for loopCount times
+     * @param loopCount Amount of replay loops
+     */
+    public static void startReplay(int loopCount) {
+        startReplay(true, loopCount);
+    }
+
+    /**
+     * Starts a replay
+     * @param looped if true loops the replay
+     * @param loopCount if looped is false count has no effect.
+     *              if looped is true and count is negative loop indefinitely
+     *              if looped is true and count is positive loop for that amount
+     */
+    private static void startReplay(boolean looped, int loopCount) {
         if (record.isEmpty()) {
             return;
         }
@@ -216,7 +247,8 @@ public class PlayerRecorder {
 
                 // KeyStrokes are consumed by screens and not recorded therefore track screen
                 // If there is a screen opened and the next currentScreen is null close the current one
-                if (client.currentScreen != null && currentScreen == null) {
+                // Also never close the quickMenu or modmenu
+                if (client.currentScreen != null && currentScreen == null && !(client.currentScreen instanceof QuickMenu)) {
                     client.currentScreen.close();
                     client.setScreen(null);
                 }
@@ -239,9 +271,18 @@ public class PlayerRecorder {
         }
 
         if (looped) {
-            // Replay Again (Looping)
-            tasks.add(() -> startReplay(true));
+            // Stop looping
+            if (loopCount == 1) {
+                tasks.add(PlayerRecorder::stopReplay);
+            // Loop until count reaches 0
+            } else if (loopCount > 1) {
+                tasks.add(() -> startReplay(true, loopCount - 1));
+            // Loop indefinitely
+            } else /* loopCount < 0 */ {
+                tasks.add(() -> startReplay(true, Integer.MIN_VALUE));
+            }
         }
+
     }
 
     public static void startLoop() {
@@ -426,10 +467,10 @@ public class PlayerRecorder {
 
         public Identifier getIcon() {
             return switch (PlayerRecorder.state) {
-                case IDLE -> IDLE_ICON;
-                case PAUSED -> PAUSING_ICON;
-                case RECORDING -> RECORDING_ICON;
-                case REPLAYING -> REPLAYING_ICON;
+                case IDLE -> Textures.HUD.IDLE_ICON;
+                case PAUSED -> Textures.HUD.PAUSING_ICON;
+                case RECORDING -> Textures.HUD.RECORDING_ICON;
+                case REPLAYING -> Textures.HUD.REPLAYING_ICON;
             };
         }
 

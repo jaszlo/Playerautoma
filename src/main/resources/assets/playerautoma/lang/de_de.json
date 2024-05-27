@@ -12,13 +12,14 @@
   "playerautoma.screens.menu.storeRecording": "Aufnahme speichern...",
   "playerautoma.screens.menu.loadRecording": "Aufnahme laden...",
 
-  "playerautoma.screens.menu.tooltip.startRecording": "Starte die Aufnahme deiner Bewegungen und schließe das Menü",
-  "playerautoma.screens.menu.tooltip.stopRecording": "Stoppe die Aufnahme deiner Bewegungen und schließe das Menü",
-  "playerautoma.screens.menu.tooltip.startReplay": "Starte die Wiedergabe und schließe das Menü",
-  "playerautoma.screens.menu.tooltip.stopReplay": "Stoppe die Wiedergabe und schließe das Menü",
-  "playerautoma.screens.menu.tooltip.startLoop": "Starte eine wiederholte Wiedergabe und schließe das Menü",
+  "playerautoma.screens.menu.tooltip.startRecording": "Starte die Aufnahme deiner Bewegungen",
+  "playerautoma.screens.menu.tooltip.stopRecording": "Stoppe die Aufnahme deiner Bewegungen",
+  "playerautoma.screens.menu.tooltip.startReplay": "Starte die Wiedergabe",
+  "playerautoma.screens.menu.tooltip.pauseReplay": "Wechsel Pausierung",
+  "playerautoma.screens.menu.tooltip.stopReplay": "Stoppe die Wiedergabe",
+  "playerautoma.screens.menu.tooltip.startLoop": "Starte eine wiederholte Wiedergabe",
   "playerautoma.screens.menu.tooltip.storeRecording": "Speichert deine Aufnahme in einer .rec-Datei im .minecraft/Recordings-Ordner",
-  "playerautoma.screens.menu.tooltip.loadRecording": "Lade eine Aufnahme aus einer Datei und schließe das Menü",
+  "playerautoma.screens.menu.tooltip.loadRecording": "Lade eine Aufnahme aus einer Datei",
 
   "playerautoma.screens.fileSelector.delete": "Löschen",
   "playerautoma.screens.fileSelector.openFolder": "Aufnahmeordner öffnen",
@@ -36,6 +37,7 @@
   "playerautoma.screens.title.selector": "Eine Aufnahme laden",
   "playerautoma.screens.title.storer": "Eine Aufnahme speichern",
   "playerautoma.screens.title.excludeCommands": "Befehle ausschließen",
+  "playerautoma.screens.title.quickMenu": "Schnellmenü",
 
 
   "playerautoma.keys.startRecording": "Aufnahme starten",

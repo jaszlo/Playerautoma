@@ -18,7 +18,7 @@ public class InventoryAutomation {
     private static boolean doAutomation = true;
 
     public static final TaskQueue inventoryTasks = new TaskQueue(TaskQueue.HIGH_PRIORITY);
-    public static void registerInventoryAutomation() {
+    public static void register() {
         inventoryTasks.register("inventoryTasks");
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             // If is disabled in settings do nothing

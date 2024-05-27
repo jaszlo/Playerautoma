@@ -17,7 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import java.io.File;
 
-import static net.jasper.mod.util.HUDTextures.REFRESH_ICON;
+import static net.jasper.mod.util.Textures.SelectorScreen.REFRESH_ICON;
 // TODO: this could be a general class listing files of a directory and letting you select one given a callback function
 
 /**

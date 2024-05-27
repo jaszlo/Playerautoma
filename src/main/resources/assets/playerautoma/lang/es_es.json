@@ -10,13 +10,14 @@
   "playerautoma.screens.menu.startLoop": "Iniciar Reproducción en Bucle",
   "playerautoma.screens.menu.storeRecording": "Guardar Grabación...",
   "playerautoma.screens.menu.loadRecording": "Cargar Grabación...",
-  "playerautoma.screens.menu.tooltip.startRecording": "Iniciar la grabación de tus movimientos y cerrar el menú",
-  "playerautoma.screens.menu.tooltip.stopRecording": "Detener la grabación de tus movimientos y cerrar el menú",
-  "playerautoma.screens.menu.tooltip.startReplay": "Iniciar la reproducción y cerrar el menú",
-  "playerautoma.screens.menu.tooltip.stopReplay": "Detener la reproducción y cerrar el menú",
-  "playerautoma.screens.menu.tooltip.startLoop": "Iniciar una reproducción en bucle y cerrar el menú",
+  "playerautoma.screens.menu.tooltip.startRecording": "Iniciar la grabación de tus movimientos",
+  "playerautoma.screens.menu.tooltip.stopRecording": "Detener la grabación de tus movimientos",
+  "playerautoma.screens.menu.tooltip.startReplay": "Iniciar la reproducción",
+  "playerautoma.screens.menu.tooltip.pauseReplay": "Alternar Pausa de la Repetición",
+  "playerautoma.screens.menu.tooltip.stopReplay": "Detener la reproducción",
+  "playerautoma.screens.menu.tooltip.startLoop": "Iniciar una reproducción en bucle",
   "playerautoma.screens.menu.tooltip.storeRecording": "Guardar tu grabación en un archivo .rec en la carpeta .minecraft/Recordings",
-  "playerautoma.screens.menu.tooltip.loadRecording": "Cargar grabación desde un archivo y cerrar el menú",
+  "playerautoma.screens.menu.tooltip.loadRecording": "Cargar grabación desde un archivo",
 
   "playerautoma.screens.fileSelector.delete": "Eliminar",
   "playerautoma.screens.fileSelector.openFolder": "Abrir Carpeta de Grabaciones",
@@ -34,6 +35,8 @@
   "playerautoma.screens.title.selector": "Cargar una grabación",
   "playerautoma.screens.title.storer": "Guardar una grabación",
   "playerautoma.screens.title.excludeCommands": "Excluir comandos",
+  "playerautoma.screens.title.quickMenu": "Menú Rápido",
+
 
 
   "playerautoma.keys.startRecording": "Iniciar Grabación",
