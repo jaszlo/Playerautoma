@@ -189,6 +189,7 @@ public class PlayerRecorder {
                     KeyBinding k = keysByID.get(translationKey);
                     k.setPressed(true);
                 }
+
                 // Update keys pressed count
                 for (String translationKey : timesPressed.keySet()) {
                     ((KeyBindingAccessor) keysByID.get(translationKey)).setTimesPressed(timesPressed.get(translationKey));
