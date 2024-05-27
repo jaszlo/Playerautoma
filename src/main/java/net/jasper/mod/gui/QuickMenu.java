@@ -75,6 +75,12 @@ public class QuickMenu extends Screen {
         }
     }
 
+    // Remove the blur by Overriding method
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderDarkening(context);
+    }
+
     public static Screen open() {
         loopCount = 0;
         MinecraftClient client = MinecraftClient.getInstance();
