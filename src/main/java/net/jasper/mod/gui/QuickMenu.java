@@ -191,14 +191,13 @@ public class QuickMenu extends Screen {
         this.mouseY = mouseY;
 
         // Draw loop count Text
-        if (loopCount < 0) {
-            loopCountText.setWidth(textRenderer.getWidth(INFINITY));
-            loopCountText.setMessage(INFINITY);
-        } else if (loopCount > 0) {
-            Text t = Text.of(loopCount + "");
-            loopCountText.setWidth(textRenderer.getWidth(t));
-            loopCountText.setMessage(t);
-        }
+        Text toSet;
+        if (loopCount < 0)       toSet = INFINITY;
+        else if (loopCount == 0) toSet = Text.of("");
+        else /* loopCount > 0 */ toSet = Text.of("" + loopCount);
+
+        loopCountText.setWidth(textRenderer.getWidth(toSet));
+        loopCountText.setMessage(toSet);
 
         // Draw current Tooltip
         {
