@@ -30,6 +30,7 @@ public class QuickMenu extends Screen {
 
     private final TextWidget currentTooltip;
     private final TextWidget loopCountText;
+    private final Text INFINITY = Text.of("∞");
 
     public static int loopCount = 0;
 
@@ -50,11 +51,13 @@ public class QuickMenu extends Screen {
         // This flag prevents the quickMenu from being reopened the next frame because the key was still pressed
         // Only releasing the quick menu key once will set 'wasClosed' to false again and make it possible to open the quick menu again.
         wasClosed = true;
-
-        if (loopCount > 0) {
+        // -1 == Infinity
+        if (loopCount < 0) {
+            PlayerRecorder.startLoop();
+        } else if (loopCount > 0) {
             PlayerRecorder.startReplay(loopCount);
-            loopCount = 0;
         }
+        loopCount = 0;
 
         this.client.setScreen(this.parent);
     }
@@ -69,9 +72,9 @@ public class QuickMenu extends Screen {
         boolean mouseOver = buttonLoopReplay.isMouseOver(this.mouseX, this.mouseY);
         boolean rightClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
         if (mouseOver && rightClicked) {
-            PlayerRecorder.startLoop();
+            // Toggle Infinity
+            loopCount = loopCount < 0 ? 0 : -1; // Infinity
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
-            this.close();
         }
     }
 
@@ -132,7 +135,13 @@ public class QuickMenu extends Screen {
 
     public ButtonWidget buttonLoopReplay = ButtonWidget.builder(
             Text.of(""),
-            b -> loopCount++
+            b -> {
+                if (loopCount < 0) {
+                    loopCount = 1;
+                } else {
+                    loopCount++;
+                }
+            }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
     public void init() {
@@ -151,7 +160,7 @@ public class QuickMenu extends Screen {
         adder.add(this.buttonStopReplay);
         adder.add(this.buttonLoopReplay);
 
-        adder.add(EmptyWidget.ofHeight(16), 4);
+        adder.add(EmptyWidget.ofHeight(24), 4);
 
         adder.add(this.currentTooltip, 4);
 
@@ -182,7 +191,10 @@ public class QuickMenu extends Screen {
         this.mouseY = mouseY;
 
         // Draw loop count Text
-        if (loopCount > 0) {
+        if (loopCount < 0) {
+            loopCountText.setWidth(textRenderer.getWidth(INFINITY));
+            loopCountText.setMessage(INFINITY);
+        } else if (loopCount > 0) {
             Text t = Text.of(loopCount + "");
             loopCountText.setWidth(textRenderer.getWidth(t));
             loopCountText.setMessage(t);
