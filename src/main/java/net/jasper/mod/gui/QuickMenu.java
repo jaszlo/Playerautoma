@@ -72,7 +72,7 @@ public class QuickMenu extends Screen {
         boolean mouseOver = buttonLoopReplay.isMouseOver(this.mouseX, this.mouseY);
         boolean rightClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
         if (mouseOver && rightClicked) {
-            // Toggle Infinity
+            // Toggle Infinity com
             loopCount = loopCount < 0 ? 0 : -1; // Infinity
             client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
         }
