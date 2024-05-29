@@ -46,7 +46,7 @@
   "playerautoma.keys.startLoop": "Iniciar Reproducción en Bucle",
   "playerautoma.keys.storeRecording": "Guardar Grabación...",
   "playerautoma.keys.loadRecording": "Cargar Grabación...",
-  "playerautoma.keys.pauseReplay": "Pausar Reproducción",
+  "playerautoma.keys.pauseReplayOrRecord": "Pausar Reproducción/Grabación",
   "playerautoma.keys.openMenu": "Abrir Menú",
   "playerautoma.keys.menuPrevention": "Alternar Prevención de Menú",
 

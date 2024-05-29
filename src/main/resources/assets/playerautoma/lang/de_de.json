@@ -47,7 +47,7 @@
   "playerautoma.keys.startLoop": "Wiederholung starten",
   "playerautoma.keys.storeRecording": "Aufnahme speichern",
   "playerautoma.keys.loadRecording": "Aufnahme laden",
-  "playerautoma.keys.pauseReplay": "Wiedergabe pausieren",
+  "playerautoma.keys.pauseReplayOrRecord": "Wiedergabe/Aufnahme pausieren",
   "playerautoma.keys.openMenu": "Menü öffnen",
   "playerautoma.keys.menuPrevention": "Menüverhinderung umschalten",
 

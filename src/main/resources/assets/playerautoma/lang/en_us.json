@@ -47,7 +47,7 @@
   "playerautoma.keys.startLoop": "Start Loop",
   "playerautoma.keys.storeRecording":"Store Recording",
   "playerautoma.keys.loadRecording": "Load Recording",
-  "playerautoma.keys.pauseReplay":"Pause Replay",
+  "playerautoma.keys.pauseReplayOrRecord":"Pause Replay/Recording",
   "playerautoma.keys.openMenu": "Open Menu",
   "playerautoma.keys.menuPrevention": "Toggle Menu Prevention",
 
