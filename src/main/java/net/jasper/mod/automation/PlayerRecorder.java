@@ -120,7 +120,7 @@ public class PlayerRecorder {
     }
 
     public static void stopRecord() {
-        if (state.isRecording()) {
+        if (state.isRecording() || state.isPausedRecording()) {
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.stopRecording"));
             state = IDLE;
         }
@@ -491,17 +491,17 @@ public class PlayerRecorder {
 
         public int getColor() {
             return switch (this) {
-                case RECORDING -> 0xff0000;         // Red
-                case REPLAYING -> 0x0f7302;         // Green
-                case PAUSED_REPLAY, PAUSED_RECORDING -> 0x000669;     // Blue
-                default -> 0xFFFFFF;                // White
+                case RECORDING, PAUSED_RECORDING -> 0xff0000;   // Red
+                case REPLAYING, PAUSED_REPLAY -> 0x0f7302;      // Green
+                default -> 0xFFFFFF;                            // White
             };
         }
 
         public Identifier getIcon() {
             return switch (PlayerRecorder.state) {
                 case IDLE -> Textures.HUD.IDLE_ICON;
-                case PAUSED_REPLAY, PAUSED_RECORDING -> Textures.HUD.PAUSING_ICON;
+                case PAUSED_REPLAY -> Textures.HUD.REPLAYING_PAUSED_ICON;
+                case PAUSED_RECORDING -> Textures.HUD.RECORDING_PAUSED_ICON;
                 case RECORDING -> Textures.HUD.RECORDING_ICON;
                 case REPLAYING -> Textures.HUD.REPLAYING_ICON;
             };
@@ -523,7 +523,6 @@ public class PlayerRecorder {
         public boolean isPausedRecording() {
             return this == PAUSED_RECORDING;
         }
-
 
         public boolean isRecording() {
             return this == RECORDING;

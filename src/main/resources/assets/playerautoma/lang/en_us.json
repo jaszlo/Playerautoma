@@ -13,10 +13,13 @@
   "playerautoma.screens.menu.loadRecording": "Load Recording...",
 
   "playerautoma.screens.menu.tooltip.startRecording": "Start Recording your movement",
+  "playerautoma.screens.menu.tooltip.pauseRecording": "Toggle Pause Recording. Continue when you're ready again.",
+  "playerautoma.screens.menu.tooltip.resumeRecording": "Continue Recording",
   "playerautoma.screens.menu.tooltip.stopRecording": "Stop Recording your movements",
   "playerautoma.screens.menu.tooltip.startReplay": "Start Replaying",
   "playerautoma.screens.menu.tooltip.stopReplay": "Stop the Replay",
   "playerautoma.screens.menu.tooltip.pauseReplay": "Toggle Pause the Replay",
+  "playerautoma.screens.menu.tooltip.resumeReplay": "Continue Replaying",
   "playerautoma.screens.menu.tooltip.startLoop": "Start a looped Replay",
   "playerautoma.screens.menu.tooltip.storeRecording": "Stores your Recording to a .rec file in your .minecraft/Recordings folder",
   "playerautoma.screens.menu.tooltip.loadRecording": "Load Recording from a file",

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
@@ -124,46 +125,39 @@ public class QuickMenu extends Screen {
         return result;
     }
 
-    public ButtonWidget buttonStartRecord = ButtonWidget.builder(
+    public ButtonWidget buttonStartPauseRecord = ButtonWidget.builder(
             Text.of(""),
             b -> {
-                PlayerRecorder.startRecord();
-                this.close();
+                if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isPausedRecording()) {
+                    PlayerRecorder.togglePauseRecord();
+                } else {
+                    PlayerRecorder.startRecord();
+                }
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
     public ButtonWidget buttonStopRecord = ButtonWidget.builder(
             Text.of(""),
-            b -> {
-                PlayerRecorder.stopRecord();
-                this.close();
-            }
+            b -> PlayerRecorder.stopRecord()
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
 
-    public ButtonWidget buttonStartReplay = ButtonWidget.builder(
+    public ButtonWidget buttonStartPauseReplay = ButtonWidget.builder(
             Text.of(""),
             b -> {
-                PlayerRecorder.startReplay(false);
-                this.close();
+                if (PlayerRecorder.state.isReplaying() || PlayerRecorder.state.isPausedReplaying()) {
+                    PlayerRecorder.togglePauseReplay();
+                } else {
+                    PlayerRecorder.startReplay(false);
+                }
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
     public ButtonWidget buttonStopReplay = ButtonWidget.builder(
             Text.of(""),
-            b -> {
-                PlayerRecorder.stopReplay();
-                this.close();
-            }
+            b -> PlayerRecorder.stopReplay()
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
-    public ButtonWidget buttonPauseReplay = ButtonWidget.builder(
-            Text.of(""),
-            b -> {
-                PlayerRecorder.togglePauseReplay();
-                this.close();
-            }
-    ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
     public ButtonWidget buttonLoopReplay = ButtonWidget.builder(
             Text.of(""),
@@ -174,21 +168,20 @@ public class QuickMenu extends Screen {
         assert this.client != null;
         GridWidget gridWidget = new GridWidget();
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
-        GridWidget.Adder adder = gridWidget.createAdder(4);
+        GridWidget.Adder adder = gridWidget.createAdder(6);
 
         // Start Record | Stop Record
-        adder.add(this.buttonStartRecord, 2);
-        adder.add(this.buttonStopRecord, 2);
+        adder.add(this.buttonStartPauseRecord, 3);
+        adder.add(this.buttonStopRecord, 3);
 
-        // Start Replay | Stop Replay | Pause Replay | Loop Replay
-        adder.add(this.buttonStartReplay);
-        adder.add(this.buttonPauseReplay);
-        adder.add(this.buttonStopReplay);
-        adder.add(this.buttonLoopReplay);
+        // Start Replay/Stop Replay | Pause Replay | Loop Replay
+        adder.add(this.buttonStartPauseReplay, 2);
+        adder.add(this.buttonStopReplay, 2);
+        adder.add(this.buttonLoopReplay, 2);
 
-        adder.add(EmptyWidget.ofHeight(24), 4);
+        adder.add(EmptyWidget.ofHeight(24), 6);
 
-        adder.add(this.currentTooltip, 4);
+        adder.add(this.currentTooltip, 6);
 
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
@@ -200,10 +193,9 @@ public class QuickMenu extends Screen {
 
         // Add tooltips
         tooltips.clear();
-        tooltips.put(this.buttonStartRecord, Text.translatable("playerautoma.screens.menu.tooltip.startRecording"));
+        tooltips.put(this.buttonStartPauseRecord, Text.translatable("playerautoma.screens.menu.tooltip.startRecording").append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.pauseRecording")).append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.resumeRecording")));
         tooltips.put(this.buttonStopRecord, Text.translatable("playerautoma.screens.menu.tooltip.stopRecording"));
-        tooltips.put(this.buttonStartReplay, Text.translatable("playerautoma.screens.menu.tooltip.startReplay"));
-        tooltips.put(this.buttonPauseReplay, Text.translatable("playerautoma.screens.menu.tooltip.pauseReplay"));
+        tooltips.put(this.buttonStartPauseReplay, Text.translatable("playerautoma.screens.menu.tooltip.startReplay").append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.pauseReplay")).append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.resumeReplay")));
         tooltips.put(this.buttonStopReplay, Text.translatable("playerautoma.screens.menu.tooltip.stopReplay"));
         tooltips.put(this.buttonLoopReplay, Text.translatable("playerautoma.screens.menu.tooltip.startLoop"));
     }
@@ -234,6 +226,23 @@ public class QuickMenu extends Screen {
                 if (button.isMouseOver(mouseX, mouseY)) {
                     // Adjust position to still be centered by first retrieving center via old width/xPos
                     Text t = tooltips.getOrDefault(button, Text.of(""));
+
+                    // Special ToolTip case for button who switch function on context
+                    {
+                        boolean split = button == this.buttonStartPauseRecord || button == this.buttonStartPauseReplay;
+                        int START_INDEX = 0; int PAUSE_INDEX = 1; int CONTINUE_INDEX = 2;
+
+                        // Determine which tooltip to use. Tooltip are all for the same button as one big string seperated via ":"
+                        int splitIndex = START_INDEX;
+                        if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isReplaying()) splitIndex = PAUSE_INDEX;
+                        if (PlayerRecorder.state.isPausedRecording() || PlayerRecorder.state.isPausedReplaying()) splitIndex = CONTINUE_INDEX;
+
+                        if (split) {
+                            String adjustedTooltip = t.getString().split(":")[splitIndex];
+                            t = Text.of(adjustedTooltip);
+                        }
+                    }
+
                     int currentX = currentTooltip.getX();
                     int oldWidth = currentTooltip.getWidth();
                     int center = currentX + oldWidth / 2;
@@ -264,12 +273,13 @@ public class QuickMenu extends Screen {
             int scaledSize = scale * size;
 
             context.getMatrices().push();
-            // Start replay
-            context.drawTexture(Textures.QuickMenu.START_RECORDING, this.buttonStartRecord.getX() + 2, this.buttonStartRecord.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            Identifier startPauseRecordTexture = PlayerRecorder.state.isRecording() ? Textures.QuickMenu.PAUSED_RECORDING : Textures.QuickMenu.START_RECORDING;
+            Identifier startPauseReplayTexture = PlayerRecorder.state.isReplaying() ? Textures.QuickMenu.PAUSE_REPLAY : Textures.QuickMenu.START_REPLAY;
+
+            context.drawTexture(startPauseRecordTexture, this.buttonStartPauseRecord.getX() + 2, this.buttonStartPauseRecord.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
             context.drawTexture(Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX() + 1, this.buttonStopRecord.getY() + 1, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
-            context.drawTexture(Textures.QuickMenu.START_REPLAY, this.buttonStartReplay.getX() + 2, this.buttonStartReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.PAUSE_REPLAY, this.buttonPauseReplay.getX() + 2, this.buttonPauseReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(startPauseReplayTexture, this.buttonStartPauseReplay.getX() + 2, this.buttonStartPauseReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
             context.drawTexture(Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX() + 2, this.buttonStopReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
             context.drawTexture(Textures.QuickMenu.START_LOOP, this.buttonLoopReplay.getX() + 2, this.buttonLoopReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
