@@ -96,6 +96,8 @@
   "playerautoma.messages.fileDeletionError": "Error al eliminar el archivo",
   "playerautoma.messages.startRecording": "Inicio de la grabación",
   "playerautoma.messages.stopRecording": "Detención de la grabación",
+  "playerautoma.messages.pauseRecording": "Pausada de la grabación",
+  "playerautoma.messages.resumeRecording": "Reanudada de la grabación",
   "playerautoma.messages.startReplay": "Inicio de la reproducción",
   "playerautoma.messages.startLoopedReplay": "Inicio de la reproducción en bucle",
   "playerautoma.messages.replayDone": "Reproducción completada",

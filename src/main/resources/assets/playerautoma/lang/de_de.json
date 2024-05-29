@@ -95,6 +95,8 @@
   "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",
   "playerautoma.messages.startRecording": "Aufnahme gestartet",
   "playerautoma.messages.stopRecording": "Aufnahme gestoppt",
+  "playerautoma.messages.pauseRecording": "Aufnahme pausiert",
+  "playerautoma.messages.resumeRecording": "Aufnahme fortgesetzt",
   "playerautoma.messages.startReplay": "Wiedergabe gestartet",
   "playerautoma.messages.startLoopedReplay": "Wiederholte Wiedergabe gestartet",
   "playerautoma.messages.replayDone": "Wiedergabe abgeschlossen",

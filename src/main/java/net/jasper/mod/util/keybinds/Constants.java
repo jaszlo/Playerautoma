@@ -10,6 +10,8 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Set;
+
 /**
  * Class storing all KeyBinding-Constants
  */
@@ -37,7 +39,7 @@ public class Constants {
 
     protected static final int AMOUNT_KEYBINDS = translations.length;
 
-    private static final KeyBinding[] bindings = {
+    private static final KeyBinding[] BINDINGS = {
             new KeyBinding(translations[0], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, KEYBINDING_CATEGORY),
             new KeyBinding(translations[1], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, KEYBINDING_CATEGORY),
             new KeyBinding(translations[2], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_J, KEYBINDING_CATEGORY),
@@ -51,9 +53,11 @@ public class Constants {
             new KeyBinding(translations[10], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, KEYBINDING_CATEGORY),
     };
 
-    public static final KeyBinding STOP_REPLAY = bindings[3];
-    public static final KeyBinding PREVENT_MENU = bindings[9];
-    public static final KeyBinding QUICK_MENU = bindings[10];
+    public static final Set<KeyBinding> PLAYERAUTOMA_KEYBINDINGS = Set.of(BINDINGS);
+
+    public static final KeyBinding STOP_REPLAY = BINDINGS[3];
+    public static final KeyBinding PREVENT_MENU = BINDINGS[9];
+    public static final KeyBinding QUICK_MENU = BINDINGS[10];
 
     private static final Runnable[] callbackMethods = {
             PlayerRecorder::startRecord,
@@ -63,7 +67,7 @@ public class Constants {
             PlayerRecorder::startLoop,
             RecordingStorerScreen::open,
             RecordingSelectorScreen::open,
-            PlayerRecorder::togglePauseReplay,
+            PlayerRecorder::togglePause,
             PlayerAutomaMenuScreen::open,
             MenuPrevention::toggleBackgroundPrevention,
             () -> {} // Do nothing! The quickMenu opens onPress and closes onRelease and needs to be handled differently
@@ -73,8 +77,8 @@ public class Constants {
 
     static {
         for (int i = 0; i < AMOUNT_KEYBINDS; i++) {
-            defaultKeybinds[i] = new KeyBind(translations[i], bindings[i], callbackMethods[i]);
-            KeyBindingHelper.registerKeyBinding(bindings[i]);
+            defaultKeybinds[i] = new KeyBind(translations[i], BINDINGS[i], callbackMethods[i]);
+            KeyBindingHelper.registerKeyBinding(BINDINGS[i]);
         }
     }
 }

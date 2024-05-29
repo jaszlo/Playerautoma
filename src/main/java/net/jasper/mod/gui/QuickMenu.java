@@ -32,6 +32,10 @@ public class QuickMenu extends Screen {
     private final TextWidget loopCountText;
     private final Text INFINITY = Text.of("∞");
 
+    private long lastRightClick = 0;
+    private long lastLeftClick = 0;
+    private boolean lastLeftClickState = false; // Flag to prevent double button click sound from happening
+
     public static int loopCount = 0;
 
     private final Map<ButtonWidget, Text> tooltips = new HashMap<>();
@@ -71,11 +75,39 @@ public class QuickMenu extends Screen {
     public void tick() {
         boolean mouseOver = buttonLoopReplay.isMouseOver(this.mouseX, this.mouseY);
         boolean rightClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
+        boolean leftClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+
+        // Check cooldown. If not reached just return
+        long CLICK_COOLDOWN = 200; // Milliseconds
+        long now = System.currentTimeMillis();
         if (mouseOver && rightClicked) {
-            // Toggle Infinity com
-            loopCount = loopCount < 0 ? 0 : -1; // Infinity
-            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+            if (now - this.lastRightClick >= CLICK_COOLDOWN) {
+                // Toggle Infinity
+                loopCount = loopCount < 0 ? 0 : -1; // Infinity
+                client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+
+                // Update successful right click
+                this.lastRightClick = now;
+            }
+        } else if (mouseOver && leftClicked) {
+            if (now - this.lastLeftClick >= CLICK_COOLDOWN) {
+                // Update loopCount
+                if (loopCount < 0) {
+                    loopCount = 1;
+                } else {
+                    loopCount++;
+                }
+
+                // Play sound but not on first click to prevent double click
+                if (this.lastLeftClickState) {
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                }
+
+                // Update successful left click
+                this.lastLeftClick = now;
+            }
         }
+        this.lastLeftClickState = leftClicked;
     }
 
     // Remove the blur by Overriding method
@@ -135,13 +167,7 @@ public class QuickMenu extends Screen {
 
     public ButtonWidget buttonLoopReplay = ButtonWidget.builder(
             Text.of(""),
-            b -> {
-                if (loopCount < 0) {
-                    loopCount = 1;
-                } else {
-                    loopCount++;
-                }
-            }
+            b -> {/*Do Nothing. Is handled in 'tick' method to allow holding pressed */}
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
     public void init() {

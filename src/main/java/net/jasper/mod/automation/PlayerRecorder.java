@@ -63,7 +63,8 @@ public class PlayerRecorder {
                 stopReplay();
             }
 
-            if (!state.isRecording()) {
+            // If not Recording or currently paused prevent actions from being recorded
+            if (!state.isRecording() || state.isPausedRecording()) {
                 return;
             }
 
@@ -71,6 +72,10 @@ public class PlayerRecorder {
             List<String> pressedKeys = new ArrayList<>();
             Map<String, Integer> timesPressed = new HashMap<>();
             for (KeyBinding k : client.options.allKeys) {
+                // Do not record playerautoma KeyBindings
+                if (Constants.PLAYERAUTOMA_KEYBINDINGS.contains(k)) continue;
+
+                // Recording keyPress and pressedCounter
                 if (k.isPressed()) pressedKeys.add(k.getTranslationKey());
                 int count = ((KeyBindingAccessor) k).getTimesPressed();
                 if (count > 0) timesPressed.put(k.getTranslationKey(), count);
@@ -98,7 +103,7 @@ public class PlayerRecorder {
     }
 
     public static void startRecord() {
-        if (!state.isAny(IDLE, PAUSED)) {
+        if (!state.isAny(IDLE, PAUSED_REPLAY)) {
             return;
         }
         ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
@@ -294,26 +299,53 @@ public class PlayerRecorder {
     }
 
     public static void togglePauseReplay() {
-        if (!state.isAny(REPLAYING, PAUSED) || record.isEmpty()) {
+        if (!state.isAny(REPLAYING, PAUSED_REPLAY) || record.isEmpty()) {
             return;
         }
 
-        if (state.isPaused()) {
+        if (state.isPausedReplaying()) {
             tasks.resume();
             state = REPLAYING;
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.resumeReplay"));
         } else if (state.isReplaying()) {
             tasks.pause();
-            state = PAUSED;
+            state = PAUSED_REPLAY;
             ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
             // Toggle of all keys to stop player from doing anything
             KeyBinding.unpressAll();
         }
     }
 
+    public static void togglePauseRecord() {
+        if (!state.isAny(RECORDING, PAUSED_RECORDING) || record.isEmpty()) {
+            return;
+        }
+
+        // Continue Recording
+        if (state.isPausedRecording()) {
+            state = RECORDING;
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.resumeRecording"));
+        // Pause recording
+        } else if (state.isRecording()) {
+            state = PAUSED_RECORDING;
+            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseRecording"));
+            // Toggle of all keys to stop player from doing anything
+            KeyBinding.unpressAll();
+        }
+    }
+
+    public static void togglePause() {
+        if (state.isRecording() || state.isPausedRecording()) {
+            togglePauseRecord();
+        } else if (state.isReplaying() || state.isPausedReplaying()) {
+            togglePauseReplay();
+        }
+    }
+
+
     public static void stopReplay() {
         // Only stop replay if replaying or looping
-        if (!state.isAny(REPLAYING, PAUSED)) {
+        if (!state.isAny(REPLAYING, PAUSED_REPLAY)) {
             return;
         }
         ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.stopReplay"));
@@ -453,22 +485,23 @@ public class PlayerRecorder {
         RECORDING,
         REPLAYING,
         IDLE,
-        PAUSED;
+        PAUSED_REPLAY,
+        PAUSED_RECORDING;
 
 
         public int getColor() {
             return switch (this) {
-                case RECORDING -> 0xff0000; // Red
-                case REPLAYING -> 0x0f7302; // Green
-                case PAUSED -> 0x000669;    // Blue
-                default -> 0xFFFFFF;        // White
+                case RECORDING -> 0xff0000;         // Red
+                case REPLAYING -> 0x0f7302;         // Green
+                case PAUSED_REPLAY, PAUSED_RECORDING -> 0x000669;     // Blue
+                default -> 0xFFFFFF;                // White
             };
         }
 
         public Identifier getIcon() {
             return switch (PlayerRecorder.state) {
                 case IDLE -> Textures.HUD.IDLE_ICON;
-                case PAUSED -> Textures.HUD.PAUSING_ICON;
+                case PAUSED_REPLAY, PAUSED_RECORDING -> Textures.HUD.PAUSING_ICON;
                 case RECORDING -> Textures.HUD.RECORDING_ICON;
                 case REPLAYING -> Textures.HUD.REPLAYING_ICON;
             };
@@ -478,13 +511,19 @@ public class PlayerRecorder {
             return switch (this) {
                 case RECORDING -> Text.translatable("playerautoma.state.recording");
                 case REPLAYING -> Text.translatable("playerautoma.state.replaying");
-                case PAUSED -> Text.translatable("playerautoma.state.paused");
+                case PAUSED_REPLAY, PAUSED_RECORDING -> Text.translatable("playerautoma.state.paused");
                 default -> Text.translatable("playerautoma.state.idle");
             };
         }
-        public boolean isPaused() {
-            return this == PAUSED;
+
+        public boolean isPausedReplaying() {
+            return this == PAUSED_REPLAY;
         }
+
+        public boolean isPausedRecording() {
+            return this == PAUSED_RECORDING;
+        }
+
 
         public boolean isRecording() {
             return this == RECORDING;
