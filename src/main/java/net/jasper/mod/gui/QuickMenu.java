@@ -48,7 +48,6 @@ public class QuickMenu extends Screen {
         currentTooltip = new TextWidget(Text.of(""), this.client.textRenderer);
         loopCountText = new TextWidget(Text.of(""), this.client.textRenderer);
         this.init();
-
     }
 
     @Override
@@ -168,20 +167,21 @@ public class QuickMenu extends Screen {
         assert this.client != null;
         GridWidget gridWidget = new GridWidget();
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
-        GridWidget.Adder adder = gridWidget.createAdder(6);
+        GridWidget.Adder adder = gridWidget.createAdder(3);
 
         // Start Record | Stop Record
-        adder.add(this.buttonStartPauseRecord, 3);
-        adder.add(this.buttonStopRecord, 3);
+        adder.add(this.buttonStartPauseRecord);
+        adder.add(this.buttonStopRecord);
+        adder.add(EmptyWidget.ofWidth(BUTTON_DIMENSIONS));
 
         // Start Replay/Stop Replay | Pause Replay | Loop Replay
-        adder.add(this.buttonStartPauseReplay, 2);
-        adder.add(this.buttonStopReplay, 2);
-        adder.add(this.buttonLoopReplay, 2);
+        adder.add(this.buttonStartPauseReplay, 1);
+        adder.add(this.buttonStopReplay, 1);
+        adder.add(this.buttonLoopReplay, 1);
 
-        adder.add(EmptyWidget.ofHeight(24), 6);
+        adder.add(EmptyWidget.ofHeight(24), 3);
 
-        adder.add(this.currentTooltip, 6);
+        adder.add(this.currentTooltip, 3);
 
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
