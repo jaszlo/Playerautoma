@@ -1,6 +1,6 @@
 # Version v0.5.0
 * New Features:
-  * Quickmenu via (by default) holding F7 Key allows for
+  * Quickmenu via (by default) holding F4 Key allows for
     * Easy Control of the Player Recorder (Start/Stop Replay/Recording)
     * Looping for n-times via left-clicking loop button n-times
     * Looping indefinitely via right-clicking loop button once

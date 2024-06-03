@@ -50,7 +50,7 @@ public class Constants {
             new KeyBinding(translations[7], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, KEYBINDING_CATEGORY),
             new KeyBinding(translations[8], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, KEYBINDING_CATEGORY),
             new KeyBinding(translations[9], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_0, KEYBINDING_CATEGORY),
-            new KeyBinding(translations[10], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F7, KEYBINDING_CATEGORY),
+            new KeyBinding(translations[10], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F4, KEYBINDING_CATEGORY),
     };
 
     public static final Set<KeyBinding> PLAYERAUTOMA_KEYBINDINGS = Set.of(BINDINGS);

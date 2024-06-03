@@ -52,6 +52,7 @@
   "playerautoma.keys.loadRecording": "Load Recording",
   "playerautoma.keys.pauseReplayOrRecord":"Pause Replay/Recording",
   "playerautoma.keys.openMenu": "Open Menu",
+  "playerautoma.keys.quickMenu": "Quick menu",
   "playerautoma.keys.menuPrevention": "Toggle Menu Prevention",
 
   "playerautoma.options": "PlayerAutoma Options...",
@@ -69,6 +70,7 @@
   "playerautoma.option.defaultDirection.east": "East",
   "playerautoma.option.defaultDirection.west": "West",
   "playerautoma.option.restackItems": "Restack Items",
+  "playerautoma.option.tooltip.restackItems": "When a placing the last block of a stack will restock that stack if found in your inventroy",
   "playerautoma.option.useRelativeLookingDirection": "Looking Direction",
   "playerautoma.option.relativeLookingDirection": "Relative",
   "playerautoma.option.absoluteLookingDirection": "Absolute",
@@ -93,7 +95,7 @@
   "playerautoma.option.exportAs": "As",
   "playerautoma.options.tooltip.exportAs": ".json: Readable but Slower & Larger\n\n.rec: Not Readable but Fast and Small",
   "playerautoma.option.resetKeyBindingsOnRecording": "Reset Keys",
-  "playerautoma.option.tooltip.resetKeyBindingsOnRecording": "When 'ON resets Keybindings when recording is started",
+  "playerautoma.option.tooltip.resetKeyBindingsOnRecording": "When On resets Keybindings when recording is started",
 
   "playerautoma.messages.menuPreventionToggle": "Menu prevention has been turned ",
   "playerautoma.messages.fileDeletionError": "Failed to delete file",

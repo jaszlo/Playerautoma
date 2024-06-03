@@ -52,6 +52,7 @@
   "playerautoma.keys.loadRecording": "Aufnahme laden",
   "playerautoma.keys.pauseReplayOrRecord": "Wiedergabe/Aufnahme pausieren",
   "playerautoma.keys.openMenu": "Menü öffnen",
+  "playerautoma.keys.quickMenu": "Schnell menu",
   "playerautoma.keys.menuPrevention": "Menüverhinderung umschalten",
 
   "playerautoma.options": "PlayerAutoma Optionen... ",
@@ -69,6 +70,7 @@
   "playerautoma.option.defaultDirection.east": "Osten",
   "playerautoma.option.defaultDirection.west": "Westen",
   "playerautoma.option.restackItems": "Items restacken",
+  "playerautoma.option.tooltip.restackItems": "Wenn der letzte Block eines Stacks platziert wird und weitere dieser Blöcke im Inventar vorhanden sind, packe diese direkt in die aktive Hand",
   "playerautoma.option.relativeLookingDirection": "Relativ",
   "playerautoma.option.useRelativeLookingDirection": "Blickrichtung",
   "playerautoma.option.absoluteLookingDirection": "Absolut",
