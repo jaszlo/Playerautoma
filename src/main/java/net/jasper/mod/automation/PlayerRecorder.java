@@ -312,9 +312,16 @@ public class PlayerRecorder {
 
 
     public static void startLoop() {
-        if (state.isAny(RECORDING, REPLAYING) || record.isEmpty()) {
+        if (state.isRecording() || state.isPausedRecording()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileRecording"));
             return;
         }
+
+        if (record.isEmpty()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.startEmptyRecording"));
+            return;
+        }
+
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startLoopedReplay"));
         startReplay(true);
     }

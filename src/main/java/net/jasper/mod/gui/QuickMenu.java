@@ -48,6 +48,7 @@ public class QuickMenu extends Screen {
         currentTooltip = new TextWidget(Text.of(""), this.client.textRenderer);
         loopCountText = new TextWidget(Text.of(""), this.client.textRenderer);
         this.init();
+        this.updateButtonActive();
     }
 
     @Override
@@ -73,6 +74,14 @@ public class QuickMenu extends Screen {
 
     @Override
     public void tick() {
+        // Update if button should be active or not depending on state
+        this.updateButtonActive();
+
+        // If loop button is not active do not process its clicks any further
+        if (!buttonLoopReplay.active) {
+            return;
+        }
+
         boolean mouseOver = buttonLoopReplay.isMouseOver(this.mouseX, this.mouseY);
         boolean rightClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
         boolean leftClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
@@ -108,6 +117,17 @@ public class QuickMenu extends Screen {
             }
         }
         this.lastLeftClickState = leftClicked;
+    }
+
+
+
+    private void updateButtonActive() {
+        buttonStartPauseRecord.active = PlayerRecorder.state.isAny(PlayerRecorder.State.IDLE, PlayerRecorder.State.RECORDING, PlayerRecorder.State.PAUSED_RECORDING);
+        buttonStopRecord.active = PlayerRecorder.state.isAny(PlayerRecorder.State.RECORDING, PlayerRecorder.State.PAUSED_RECORDING);
+
+        buttonStartPauseReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.IDLE, PlayerRecorder.State.REPLAYING, PlayerRecorder.State.PAUSED_REPLAY);
+        buttonLoopReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.IDLE, PlayerRecorder.State.REPLAYING, PlayerRecorder.State.PAUSED_REPLAY);
+        buttonStopReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.REPLAYING, PlayerRecorder.State.PAUSED_REPLAY);
     }
 
     // Remove the blur by Overriding method
@@ -277,7 +297,7 @@ public class QuickMenu extends Screen {
             Identifier startPauseReplayTexture = PlayerRecorder.state.isReplaying() ? Textures.QuickMenu.PAUSE_REPLAY : Textures.QuickMenu.START_REPLAY;
 
             context.drawTexture(startPauseRecordTexture, this.buttonStartPauseRecord.getX() + 2, this.buttonStartPauseRecord.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX() + 1, this.buttonStopRecord.getY() + 1, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX() + 2, this.buttonStopRecord.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
             context.drawTexture(startPauseReplayTexture, this.buttonStartPauseReplay.getX() + 2, this.buttonStartPauseReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
             context.drawTexture(Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX() + 2, this.buttonStopReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);

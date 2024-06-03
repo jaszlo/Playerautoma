@@ -27,7 +27,7 @@ public class Textures {
         public static final Identifier PAUSED_RECORDING = HUD.RECORDING_PAUSED_ICON;
         public static final Identifier START_REPLAY = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/quickmenu_icons/start_replay.png");
         public static final Identifier STOP_REPLAY = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/quickmenu_icons/stop_replay.png");
-        public static final Identifier PAUSE_REPLAY = HUD.REPLAYING_PAUSED_ICON;
+        public static final Identifier PAUSE_REPLAY = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/quickmenu_icons/pause_replay.png");
         public static final Identifier START_LOOP = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/quickmenu_icons/start_loop.png");
     }
 }
