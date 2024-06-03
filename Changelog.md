@@ -1,16 +1,18 @@
 # Version v0.5.0
 * New Features:
   * Quickmenu via (by default) holding F7 Key allows for
-    * Easy Control of the Player Recorder
+    * Easy Control of the Player Recorder (Start/Stop Replay/Recording)
     * Looping for n-times via left-clicking loop button n-times
     * Looping indefinitely via right-clicking loop button once
-  * Pausing the Recording is possible via Quickmenu or Hotkey
+  * Pausing the Recording is possible via Quickmenu or Hotkey (Same as Pausing Replay by default)
 * Changes:
-  * Info no longer printed to chat rather appears in the players action bar
+  * Info no longer written to chat rather appears in the players action bar
   * Drops spanish translation
+  * Updates PlayerRecorder state icons
 * Bugfix:
   * Playerautoma Keybindings will no longer be recorded
-  * Now opening player automa main menu during replay is possible
+  * Now opening playerautoma main menu during replay is possible
+  * Adds missing translations to german
   
 
 # Version v0.4.6
