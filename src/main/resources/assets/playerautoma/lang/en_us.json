@@ -21,7 +21,7 @@
   "playerautoma.screens.menu.tooltip.stopReplay": "Stop the Replay",
   "playerautoma.screens.menu.tooltip.resumeReplay": "Continue Replaying",
   "playerautoma.screens.menu.tooltip.startLoop": "Start a looped Replay",
-  "playerautoma.screens.menu.tooltip.storeRecording": "Stores your Recording to a .rec file in your .minecraft/Recordings folder",
+  "playerautoma.screens.menu.tooltip.storeRecording": "Store your Recording to a file in your .minecraft/Recordings folder",
   "playerautoma.screens.menu.tooltip.loadRecording": "Load Recording from a file",
 
   "playerautoma.screens.fileSelector.delete": "Delete",
@@ -122,7 +122,9 @@
   "playerautoma.messages.error.cannotLoadDueToState": "Cannot load recording while recording or replaying",
   "playerautoma.messages.error.loadQuickslotMissing": "No Recording in QuickSlot ",
   "playerautoma.messages.error.cannotStartReplayWhileRecording": "Cannot start replay while recording",
+  "playerautoma.messages.error.cannotStartReplayWhileReplaying": "Cannot start replay while replaying",
   "playerautoma.messages.error.cannotStartRecordingWhileReplaying": "Cannot start recording while replaying",
+  "playerautoma.messages.error.cannotStartRecordingWhileRecording": "Cannot start recording while recording",
   "playerautoma.messages.error.cannotTogglePauseReplayWhileInvalidState": "Cannot pause or resume replay while not replaying",
   "playerautoma.messages.error.cannotTogglePauseRecordingWhileInvalidState": "Cannot pause or resume recording while not recording",
   "playerautoma.messages.error.cannotStopNotStartedReplay": "Cannot stop replay that has not been started yet",

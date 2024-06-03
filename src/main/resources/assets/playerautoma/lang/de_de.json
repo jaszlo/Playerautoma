@@ -21,7 +21,7 @@
   "playerautoma.screens.menu.tooltip.stopReplay": "Stoppe die Wiedergabe",
   "playerautoma.screens.menu.tooltip.resumeReplay": "Setze Wiedergabe fort",
   "playerautoma.screens.menu.tooltip.startLoop": "Starte eine wiederholte Wiedergabe",
-  "playerautoma.screens.menu.tooltip.storeRecording": "Speichert deine Aufnahme in einer .rec-Datei im .minecraft/Recordings-Ordner",
+  "playerautoma.screens.menu.tooltip.storeRecording": "Speichert deine Aufnahme in einer Datei im .minecraft/Recordings-Ordner",
   "playerautoma.screens.menu.tooltip.loadRecording": "Lade eine Aufnahme aus einer Datei",
 
   "playerautoma.screens.fileSelector.delete": "Löschen",
@@ -122,7 +122,9 @@
   "playerautoma.messages.error.cannotLoadDueToState": "Aufnahme kann nicht geladen werden, während sie aufgenommen oder wiedergegeben wird",
   "playerautoma.messages.error.loadQuickslotMissing": "Keine Aufnahme im Quickslot",
   "playerautoma.messages.error.cannotStartReplayWhileRecording": "Kann Wiedergabe nicht während der Aufnahme starten",
+  "playerautoma.messages.error.cannotStartReplayWhileReplaying": "Kann Wiedergabe nicht während der Wiedergabe starten",
   "playerautoma.messages.error.cannotStartRecordingWhileReplaying": "Kann Aufnahme nicht während der Wiedergabe starten",
+  "playerautoma.messages.error.cannotStartRecordingWhileRecording": "Kann Aufnahme nicht während der Aufnahme starten",
   "playerautoma.messages.error.cannotTogglePauseReplayWhileInvalidState": "Kann Wiedergabe nur pausieren oder fortsetzen, wenn diese gestartet wurde.",
   "playerautoma.messages.error.cannotTogglePauseRecordingWhileInvalidState": "Kann Aufnahme nur pausieren oder fortsetzen, wenn diese gestartet wurde.",
   "playerautoma.messages.error.cannotStopNotStartedReplay": "Kann keine Wiedergabe stoppen die nicht gestartet wurde",

@@ -115,6 +115,11 @@ public class PlayerRecorder {
             return;
         }
 
+        if (state.isRecording()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartRecordingWhileRecording"));
+            return;
+        }
+
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
@@ -189,6 +194,7 @@ public class PlayerRecorder {
         if (state.isAny(RECORDING, REPLAYING)) {
             // if state is replaying and has no tasks its looped therefore just continue and if not return
             if (!(state.isReplaying() && tasks.isEmpty())) {
+                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileReplaying"));
                 return;
             }
         }

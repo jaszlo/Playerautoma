@@ -31,7 +31,7 @@ public class PlayerAutomaMenuScreen extends Screen {
     public ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerRecorder.startRecord();
-        }).tooltip(Tooltip.of(Text.literal("playerautoma.menu.tooltip.startRecording"))).build();
+        }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startRecording"))).build();
 
     public ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();

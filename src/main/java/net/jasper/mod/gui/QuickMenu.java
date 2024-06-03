@@ -126,7 +126,7 @@ public class QuickMenu extends Screen {
         buttonStopRecord.active = PlayerRecorder.state.isAny(PlayerRecorder.State.RECORDING, PlayerRecorder.State.PAUSED_RECORDING);
 
         buttonStartPauseReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.IDLE, PlayerRecorder.State.REPLAYING, PlayerRecorder.State.PAUSED_REPLAY);
-        buttonLoopReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.IDLE, PlayerRecorder.State.REPLAYING, PlayerRecorder.State.PAUSED_REPLAY);
+        buttonLoopReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.IDLE);
         buttonStopReplay.active = PlayerRecorder.state.isAny(PlayerRecorder.State.REPLAYING, PlayerRecorder.State.PAUSED_REPLAY);
     }
 
@@ -147,6 +147,7 @@ public class QuickMenu extends Screen {
     public ButtonWidget buttonStartPauseRecord = ButtonWidget.builder(
             Text.of(""),
             b -> {
+                loopCount = 0;
                 if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isPausedRecording()) {
                     PlayerRecorder.togglePauseRecord();
                 } else {
@@ -157,13 +158,17 @@ public class QuickMenu extends Screen {
 
     public ButtonWidget buttonStopRecord = ButtonWidget.builder(
             Text.of(""),
-            b -> PlayerRecorder.stopRecord()
+            b -> {
+                loopCount = 0;
+                PlayerRecorder.stopRecord();
+            }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
 
     public ButtonWidget buttonStartPauseReplay = ButtonWidget.builder(
             Text.of(""),
             b -> {
+                loopCount = 0;
                 if (PlayerRecorder.state.isReplaying() || PlayerRecorder.state.isPausedReplaying()) {
                     PlayerRecorder.togglePauseReplay();
                 } else {
@@ -174,7 +179,10 @@ public class QuickMenu extends Screen {
 
     public ButtonWidget buttonStopReplay = ButtonWidget.builder(
             Text.of(""),
-            b -> PlayerRecorder.stopReplay()
+            b -> {
+                loopCount = 0;
+                PlayerRecorder.stopReplay();
+            }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
 
