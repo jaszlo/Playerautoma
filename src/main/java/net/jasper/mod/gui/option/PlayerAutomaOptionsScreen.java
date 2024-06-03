@@ -75,7 +75,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> writeStateToChatOption = new OptionButton<>(
+    public static OptionButton<Boolean> writeStateToActionBarOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.writeStateToChat",
@@ -190,8 +190,8 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget recordInventoryActivitiesButton = recordInventoryActivitiesOption.buttonOf();
         recordInventoryActivitiesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordInventoryActivities")));
 
-        ButtonWidget writeStateToChatButton = writeStateToChatOption.buttonOf();
-        writeStateToChatOption.setButton(writeStateToChatButton);
+        ButtonWidget writeStateToActionBarButton = writeStateToActionBarOption.buttonOf();
+        writeStateToActionBarOption.setButton(writeStateToActionBarButton);
 
         ButtonWidget alwaysPreventMenuButton = alwaysPreventMenuOption.buttonOf();
         alwaysPreventMenuButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.alwaysPreventMenu")));
@@ -220,7 +220,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         adder.add(showHudButton);
         adder.add(setHudPositionButton);
-        adder.add(writeStateToChatButton);
+        adder.add(writeStateToActionBarButton);
         adder.add(useDefaultDirectionButton);
         adder.add(setDefaultDirectionButton);
         adder.add(useRelativeLookingDirectionButton);

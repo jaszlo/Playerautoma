@@ -39,19 +39,24 @@ public class PlayerRecorder {
 
     public static Recording record = new Recording();
 
+
     public static State state = IDLE;
 
     // Will execute one task per tick
     public static final TaskQueue tasks = new TaskQueue(TaskQueue.MEDIUM_PRIORITY);
 
-    // Gets set in mixin SlotClickedCallback. Should only every contain one item. Else user made more than 50 clicks per second ???
+    // Gets set in HandledScreenMixin. Should only every contain one item. Else user made more than 50 clicks per second ???
     // Is used to handle asynchronous nature of slot clicks
     public static Queue<SlotClick> lastSlotClicked = new ConcurrentLinkedDeque<>();
 
-    // Modifier State for current tick in replay
+    // Gets set in mixin ClientPlayerNetworkHandlerMixin. Should only every contain one item. Else user made more than 50 commands per second ???
+    // Is used to handle asynchronous nature of chat input
+    public static final Queue<String> lastCommandUsed = new ConcurrentLinkedDeque<>();
+
+    // Keyboard Modifier State for current tick in replay
     public static final Queue<String> pressedModifiers = new ConcurrentLinkedDeque<>();
 
-    public static final Queue<String> lastCommandUsed = new ConcurrentLinkedDeque<>();
+
 
     public static void register() {
         // Register Task-Queues
@@ -102,11 +107,14 @@ public class PlayerRecorder {
         });
     }
 
+
     public static void startRecord() {
-        if (!state.isAny(IDLE, PAUSED_REPLAY)) {
+        if (state.isReplaying() || state.isPausedReplaying()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartRecordingWhileReplaying"));
             return;
         }
-        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startRecording"));
+
+        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
@@ -119,16 +127,20 @@ public class PlayerRecorder {
         state = RECORDING;
     }
 
+
     public static void stopRecord() {
         if (state.isRecording() || state.isPausedRecording()) {
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.stopRecording"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.stopRecording"));
             state = IDLE;
+        } else {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStopNotStartedRecording"));
         }
     }
 
     public static void clearRecord() {
         record.clear();
     }
+
 
     /**
      * Starts a replay. Will replay once and then stop.
@@ -137,6 +149,7 @@ public class PlayerRecorder {
         startReplay(false, Integer.MIN_VALUE);
     }
 
+
     /**
      * Start a replay. Will loop indefinitely if told so
      * @param looped Loop indefinitely if true
@@ -144,6 +157,7 @@ public class PlayerRecorder {
     public static void startReplay(boolean looped) {
         startReplay(looped, Integer.MIN_VALUE);
     }
+
 
     /**
      * Start a replay. Will loop for loopCount times
@@ -161,9 +175,16 @@ public class PlayerRecorder {
      *              if looped is true and count is positive loop for that amount
      */
     private static void startReplay(boolean looped, int loopCount) {
-        if (record.isEmpty()) {
+        if (state.isRecording() || state.isPausedRecording()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileRecording"));
             return;
         }
+
+        if (record.isEmpty()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.startEmptyRecording"));
+            return;
+        }
+
         if (state.isAny(RECORDING, REPLAYING)) {
             // if state is replaying and has no tasks its looped therefore just continue and if not return
             if (!(state.isReplaying() && tasks.isEmpty())) {
@@ -180,7 +201,7 @@ public class PlayerRecorder {
         tasks.clear();
         tasks.resume();
         state = REPLAYING;
-        if (!looped) ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startReplay"));
+        if (!looped) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startReplay"));
 
         ClientHelpers.centerPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
@@ -271,7 +292,7 @@ public class PlayerRecorder {
             tasks.add(() -> {
                 state = IDLE;
                 KeyBinding.unpressAll();
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.replayDone"));
+                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayDone"));
             });
         }
 
@@ -287,52 +308,58 @@ public class PlayerRecorder {
                 tasks.add(() -> startReplay(true, Integer.MIN_VALUE));
             }
         }
-
     }
+
 
     public static void startLoop() {
         if (state.isAny(RECORDING, REPLAYING) || record.isEmpty()) {
             return;
         }
-        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.startLoopedReplay"));
+        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startLoopedReplay"));
         startReplay(true);
     }
 
+
     public static void togglePauseReplay() {
         if (!state.isAny(REPLAYING, PAUSED_REPLAY) || record.isEmpty()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotTogglePauseReplayWhileInvalidState"));
             return;
+
         }
 
         if (state.isPausedReplaying()) {
             tasks.resume();
             state = REPLAYING;
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.resumeReplay"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.resumeReplay"));
         } else if (state.isReplaying()) {
             tasks.pause();
             state = PAUSED_REPLAY;
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseReplay"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.pauseReplay"));
             // Toggle of all keys to stop player from doing anything
             KeyBinding.unpressAll();
         }
     }
 
+
     public static void togglePauseRecord() {
         if (!state.isAny(RECORDING, PAUSED_RECORDING) || record.isEmpty()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotTogglePauseRecordingWhileInvalidState"));
             return;
         }
 
         // Continue Recording
         if (state.isPausedRecording()) {
             state = RECORDING;
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.resumeRecording"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.resumeRecording"));
         // Pause recording
         } else if (state.isRecording()) {
             state = PAUSED_RECORDING;
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.pauseRecording"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.pauseRecording"));
             // Toggle of all keys to stop player from doing anything
             KeyBinding.unpressAll();
         }
     }
+
 
     public static void togglePause() {
         if (state.isRecording() || state.isPausedRecording()) {
@@ -346,9 +373,10 @@ public class PlayerRecorder {
     public static void stopReplay() {
         // Only stop replay if replaying or looping
         if (!state.isAny(REPLAYING, PAUSED_REPLAY)) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStopNotStartedReplay"));
             return;
         }
-        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.stopReplay"));
+        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.stopReplay"));
         state = IDLE;
         // Clear all tasks to stop replay
         tasks.clear();
@@ -364,6 +392,7 @@ public class PlayerRecorder {
 
     }
 
+
     private static File createNewFileName(String name) {
         File selected = Path.of(RECORDING_PATH, name).toFile();
         String fileType = RecordingStorerScreen.useJSON.getValue() ? ".json" : ".rec";
@@ -375,12 +404,13 @@ public class PlayerRecorder {
         return selected;
     }
 
+
     public static void storeRecord(String name) {
         if (record.isEmpty()) {
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreEmpty"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreEmpty"));
             return;
         } else if (state.isAny(RECORDING, REPLAYING)) {
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreDueToState"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreDueToState"));
             return;
         }
 
@@ -403,7 +433,7 @@ public class PlayerRecorder {
                 objectOutputStream.writeObject(record);
             }
             objectOutputStream.close();
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storedRecording"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storedRecording"));
 
         } catch(IOException e) {
             LOGGER.warn(e.getMessage());
@@ -414,7 +444,7 @@ public class PlayerRecorder {
                 LOGGER.warn(closeFailed.getMessage());
                 LOGGER.warn("Error closing file (storeRecord) in error handling!"); // This should not happen :(
             }
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storeFailed"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.storeFailed"));
             LOGGER.info("Failed to create output stream for selected file");
         }
     }
@@ -424,9 +454,11 @@ public class PlayerRecorder {
         File selected = Path.of(RECORDING_PATH, name).toFile();
         loadRecord(selected);
     }
+
+
     public static void loadRecord(File selected) {
         if (state.isAny(RECORDING, REPLAYING)) {
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotLoadDueToState"));
             return;
         }
 
@@ -445,7 +477,7 @@ public class PlayerRecorder {
                         readFile.append(line);
                     }
                     record = JsonHelper.deserialize(readFile.toString());
-                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
+                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
                 } catch(Exception e) {
                     // success will stay on false and message will be printed after for loop
                     continue;
@@ -461,7 +493,7 @@ public class PlayerRecorder {
 
                     record = (Recording) objectInputStream.readObject();
                     objectInputStream.close();
-                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadedRecording"));
+                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage());
                     try {
@@ -477,7 +509,7 @@ public class PlayerRecorder {
                 break;
             }
         }
-        if (!success) ClientHelpers.writeToChat(Text.translatable("playerautoma.message.loadFailed"));
+        if (!success) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
 
     }
 

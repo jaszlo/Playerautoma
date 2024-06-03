@@ -78,7 +78,7 @@ public class QuickMenu extends Screen {
         boolean leftClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
 
         // Check cooldown. If not reached just return
-        long CLICK_COOLDOWN = 200; // Milliseconds
+        long CLICK_COOLDOWN = 100; // Milliseconds
         long now = System.currentTimeMillis();
         if (mouseOver && rightClicked) {
             if (now - this.lastRightClick >= CLICK_COOLDOWN) {

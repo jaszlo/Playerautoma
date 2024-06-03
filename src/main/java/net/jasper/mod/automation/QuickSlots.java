@@ -95,15 +95,15 @@ public class QuickSlots {
                     consumeKeyPress(client.options.hotbarKeys[i], 10);
                     // Check if store operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreDueToState"));
+                        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreDueToState"));
                         continue;
                     } else if (PlayerRecorder.record == null || PlayerRecorder.record.isEmpty()) {
-                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotStoreEmpty"));
+                        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreEmpty"));
                         continue;
                     }
 
                     store(i, PlayerRecorder.record.copy());
-                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.storeQuickslot").append(Text.of("" + (i  + 1))));
+                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storeQuickslot").append(Text.of("" + (i  + 1))));
 
                 // Load Recording from QuickSlot
                 } else if (ALTPressed[i]) {
@@ -112,15 +112,15 @@ public class QuickSlots {
                     Recording r = load(i);
                     // Check if load operation can be done
                     if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
-                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.cannotLoadDueToState"));
+                        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotLoadDueToState"));
                         continue;
                     } else if (r == null || r.isEmpty()) {
-                        ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadQuickslotMissing").append(Text.of("" + (i + 1))));
+                        ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadQuickslotMissing").append(Text.of("" + (i + 1))));
                         continue;
                     }
 
                     PlayerRecorder.record = r;
-                    ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.loadQuickslot").append(Text.of("" + (i + 1))));
+                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadQuickslot").append(Text.of("" + (i + 1))));
                 }
             }
 

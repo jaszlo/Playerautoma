@@ -42,15 +42,18 @@ public class ClientHelpers {
         player.setPosition(blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5);
     }
 
-    public static void writeToChat(String message) {
-        // Only if in-game and enabled options
-        if (MinecraftClient.getInstance().player != null && PlayerAutomaOptionsScreen.writeStateToChatOption.getValue()) {
-            MinecraftClient.getInstance().player.sendMessage(Text.of(message));
+
+    public static void writeToActionBar(Text message, boolean tinted) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null || client.inGameHud == null || !PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue()) {
+            return;
         }
+
+        client.inGameHud.setOverlayMessage(message, tinted);
     }
 
-    public static void writeToChat(Text message) {
-        writeToChat(message.getString());
+    public static void writeToActionBar(Text message) {
+        writeToActionBar(message, false);
     }
 
     public static void clickSlot(SlotClick click) {

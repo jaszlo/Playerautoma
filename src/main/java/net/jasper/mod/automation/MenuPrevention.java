@@ -55,8 +55,8 @@ public class MenuPrevention {
 
         preventToBackground = !preventToBackground;
 
-        if (PlayerAutomaOptionsScreen.writeStateToChatOption.getValue()) {
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
+        if (PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
         }
 
         int mouseMode = preventToBackground ? InputUtil.GLFW_CURSOR_NORMAL : InputUtil.GLFW_CURSOR_DISABLED;

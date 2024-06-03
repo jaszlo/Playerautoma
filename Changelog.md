@@ -1,8 +1,23 @@
+# Version v0.5.0
+* New Features:
+  * Quickmenu via (by default) holding F7 Key allows for
+    * Easy Control of the Player Recorder
+    * Looping for n-times via left-clicking loop button n-times
+    * Looping indefinitely via right-clicking loop button once
+  * Pausing the Recording is possible via Quickmenu or Hotkey
+* Changes:
+  * Info no longer printed to chat rather appears in the players action bar
+  * Drops spanish translation
+* Bugfix:
+  * Playerautoma Keybindings will no longer be recorded
+  * Now opening player automa main menu during replay is possible
+  
+
 # Version v0.4.6
 * New Features:
   * Non-Communication commands are now recorded and can be replayed
   * Specific or all commands can also be ignored via a toggle and blacklist option
-  * New Option Screen fo manage blacklist of commands
+  * New Option screen fo manage blacklist of commands
 * Changes:
   * Recordings of older versions won't work with this version!
 

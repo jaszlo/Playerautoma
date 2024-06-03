@@ -111,7 +111,7 @@ public class RecordingSelectorScreen extends Screen {
             if (!deleteSuccess) {
                 PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
                 this.close();
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailedRecording"));
+                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedRecording"));
             }
             this.recordingSelectionList.updateFiles();
         }
