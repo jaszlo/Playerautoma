@@ -2,6 +2,7 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.gui.PlayerAutomaMenuScreen;
 import net.jasper.mod.gui.QuickMenu;
 import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
@@ -274,7 +275,7 @@ public class PlayerRecorder {
                 // KeyStrokes are consumed by screens and not recorded therefore track screen
                 // If there is a screen opened and the next currentScreen is null close the current one
                 // Also never close the quickMenu or modmenu
-                if (client.currentScreen != null && currentScreen == null && !(client.currentScreen instanceof QuickMenu)) {
+                if (client.currentScreen != null && currentScreen == null && !((client.currentScreen instanceof QuickMenu) || (client.currentScreen instanceof PlayerAutomaMenuScreen))) {
                     client.currentScreen.close();
                     client.setScreen(null);
                 }
