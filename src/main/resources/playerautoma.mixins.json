@@ -13,6 +13,7 @@
     "MouseMixin",
     "ScreenMixin",
     "accessors.KeyBindingAccessor",
+    "accessors.NativeImageAccessor",
     "accessors.ScreenAccessor"
   ]
 }

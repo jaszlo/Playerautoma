@@ -13,7 +13,7 @@ import java.io.File;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
 
 /**
  * Class to register all commands associated with playerautoma
@@ -75,7 +75,7 @@ public class Commands {
                                 // Empty argument therefore keep startsWith as ""
                             }
 
-                            File[] fileList = new File(RECORDING_PATH).listFiles();
+                            File[] fileList = new File(PLAYERAUTOMA_RECORDING_PATH).listFiles();
                             if (fileList == null) {
                                 return builder.buildFuture();
                             }

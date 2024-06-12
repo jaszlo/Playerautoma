@@ -232,7 +232,6 @@ public class QuickMenu extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 

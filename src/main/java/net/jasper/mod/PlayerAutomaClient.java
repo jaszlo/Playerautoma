@@ -19,22 +19,35 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 	public static final String MOD_ID = "playerautoma";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID + "::client");
-	public static final String RECORDING_FOLDER_NAME = "Recordings";
+	public static final String RECORDING_FOLDER_NAME = "recordings";
+	public static final String RECORDING_PREVIEW_FOLDER_NAME = "recording_previews";
 
-	public static final String RECORDING_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), RECORDING_FOLDER_NAME).toString();
+	public static final String PLAYERAUTOMA_FOLDER_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), MOD_ID).toString();
+	public static final String PLAYERAUTOMA_RECORDING_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, RECORDING_FOLDER_NAME).toString();
+	public static final String PLAYERAUTOMA_RECORDING_PREVIEW_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, RECORDING_PREVIEW_FOLDER_NAME).toString();
+
+	public static final String[] REQUIRED_FOLDERS = {
+			PLAYERAUTOMA_FOLDER_PATH,
+			PLAYERAUTOMA_RECORDING_PATH,
+			PLAYERAUTOMA_RECORDING_PREVIEW_PATH
+	};
+
+
 	@Override
 	public void onInitializeClient() {
-		// Create folder for recordings if not exists
-		File recordingFolder = new File(RECORDING_PATH);
-		if (!recordingFolder.exists()) {
-			boolean failed = !recordingFolder.mkdir();
-			// Do not initialize mod if failed to create folder (should not happen)
-			if (failed)  {
-				LOGGER.error("Failed to create recording folder - PlayerAutoma will not be initialized");
-				return;
+
+		// Create all required folders
+		for (String path : REQUIRED_FOLDERS) {
+			File required = new File(path);
+			if (!required.exists()) {
+				boolean failed = required.mkdirs();
+				// Do not initialize mod if failed to create folder (should not happen)
+				if (!failed) {
+					LOGGER.error("Failed to create folder {}. Playerautoma will not be initialized", required.getName());
+					return;
+				}
 			}
 		}
-
 
 		// Initialize New Keybinds
 		PlayerAutomaKeyBinds.register();

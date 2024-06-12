@@ -1,6 +1,6 @@
 package net.jasper.mod.gui.option;
 
-import net.minecraft.client.MinecraftClient;
+import net.jasper.mod.PlayerAutomaClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class OptionButton<Value> {
     private static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::options");
 
     public static final Boolean[] BOOLEAN_VALUES = { true, false };
-    public static final File OPTION_FILE = new File(String.valueOf(Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), OPTION_FILE_NAME)));
+    public static final File OPTION_FILE = new File(String.valueOf(Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, OPTION_FILE_NAME)));
 
     public String key;
     public ButtonWidget button;

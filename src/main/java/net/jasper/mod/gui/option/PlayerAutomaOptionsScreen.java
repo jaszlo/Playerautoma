@@ -78,7 +78,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
     public static OptionButton<Boolean> writeStateToActionBarOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
-        "playerautoma.option.writeStateToChat",
+        "playerautoma.option.writeStateToActionBar",
         Object::toString,
         Boolean::parseBoolean,
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)

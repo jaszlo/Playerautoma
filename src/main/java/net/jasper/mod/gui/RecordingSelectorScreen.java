@@ -33,7 +33,7 @@ public class RecordingSelectorScreen extends Screen {
 
     public RecordingSelectorScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.selector"));
-        this.directoryPath = PlayerAutomaClient.RECORDING_PATH;
+        this.directoryPath = PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
         this.parent = parent;
         this.client = MinecraftClient.getInstance();
         this.init();

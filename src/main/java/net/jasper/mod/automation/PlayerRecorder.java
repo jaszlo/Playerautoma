@@ -28,7 +28,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import static net.jasper.mod.PlayerAutomaClient.RECORDING_PATH;
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
 
 /**
@@ -408,12 +408,12 @@ public class PlayerRecorder {
 
 
     private static File createNewFileName(String name) {
-        File selected = Path.of(RECORDING_PATH, name).toFile();
+        File selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, name).toFile();
         String fileType = RecordingStorerScreen.useJSON.getValue() ? ".json" : ".rec";
         String newName = name;
         while (selected.exists()) {
             newName = newName.substring(0, newName.length() - fileType.length()) + "_new" + fileType;
-            selected = Path.of(RECORDING_PATH, newName).toFile();
+            selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, newName).toFile();
         }
         return selected;
     }
@@ -465,7 +465,7 @@ public class PlayerRecorder {
 
 
     public static void loadRecord(String name) {
-        File selected = Path.of(RECORDING_PATH, name).toFile();
+        File selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, name).toFile();
         loadRecord(selected);
     }
 

@@ -9,6 +9,8 @@
   * Info no longer written to chat rather appears in the players action bar
   * Drops spanish translation
   * Updates PlayerRecorder state icons
+  * More and more descriptive error message (to action bar)
+  * Moves all playerautoma related files into one `playerautoma` folder in the `.minecraft` folder
 * Bugfix:
   * Playerautoma Keybindings will no longer be recorded
   * Now opening playerautoma main menu during replay is possible

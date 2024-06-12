@@ -1,11 +1,11 @@
 package net.jasper.mod.util.keybinds;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.PlayerAutomaMenuScreen;
 import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.gui.RecordingStorerScreen;
+import net.jasper.mod.util.RecordingPreviewRecorder;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -69,7 +69,7 @@ public class Constants {
             RecordingSelectorScreen::open,
             PlayerRecorder::togglePause,
             PlayerAutomaMenuScreen::open,
-            MenuPrevention::toggleBackgroundPrevention,
+            RecordingPreviewRecorder::create,//MenuPrevention::toggleBackgroundPrevention,
             () -> {} // Do nothing! The quickMenu opens onPress and closes onRelease and needs to be handled differently
     };
 
@@ -78,7 +78,12 @@ public class Constants {
     static {
         for (int i = 0; i < AMOUNT_KEYBINDS; i++) {
             defaultKeybinds[i] = new KeyBind(translations[i], BINDINGS[i], callbackMethods[i]);
-            KeyBindingHelper.registerKeyBinding(BINDINGS[i]);
+            try {
+                KeyBindingHelper.registerKeyBinding(BINDINGS[i]);
+            } catch (IllegalStateException e) {
+                // This happens if playerautoma fails to initialize. Therefore, do nothing and prevent minecraft from crashing.
+                break;
+            }
         }
     }
 }
