@@ -5,6 +5,7 @@
     * Looping for n-times via left-clicking loop button n-times
     * Looping indefinitely via right-clicking loop button once
   * Pausing the Recording is possible via Quickmenu or Hotkey (Same as Pausing Replay by default)
+  * `/record quickslot clear <1..9>` and `/record quickslot clear` commands have been added to clear all or single quickslot
 * Changes:
   * Info no longer written to chat rather appears in the players action bar
   * Drops spanish translation
@@ -15,6 +16,7 @@
   * Playerautoma Keybindings will no longer be recorded
   * Now opening playerautoma main menu during replay is possible
   * Adds missing translations to german
+  * `/record quickslot load|store` now work as intended
   
 
 # Version v0.4.6

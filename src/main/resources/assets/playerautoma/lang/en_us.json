@@ -23,6 +23,7 @@
   "playerautoma.screens.menu.tooltip.startLoop": "Start a looped Replay",
   "playerautoma.screens.menu.tooltip.storeRecording": "Store your Recording to a file in your .minecraft/Recordings folder",
   "playerautoma.screens.menu.tooltip.loadRecording": "Load Recording from a file",
+  "playerautoma.screens.menu.tooltip.quickslotbutton": "Left click to load Recording\n\nRick click to store Recording",
 
   "playerautoma.screens.fileSelector.delete": "Delete",
   "playerautoma.screens.fileSelector.openFolder": "Open Recording Folder",
@@ -113,6 +114,8 @@
   "playerautoma.messages.loadedRecording": "Loaded Recording",
   "playerautoma.messages.storeQuickslot": "Stored Recording to QuickSlot ",
   "playerautoma.messages.loadQuickslot": "Loaded Recording to QuickSlot ",
+  "playerautoma.messages.clearedAllQuickSlot": "Cleared all QuickSlots",
+  "playerautoma.messages.clearedOneQuickSlot": "Cleared QuickSlots",
 
   "playerautoma.messages.error.startEmptyRecording": "Nothing recorded. Can't start nothing!",
   "playerautoma.messages.error.cannotStoreEmpty": "Cannot store empty Recording",

@@ -46,13 +46,18 @@ public class Commands {
                 .then(literal("quickslot")
                     .then(literal("load")
                         .then(argument("slot", IntegerArgumentType.integer())
-                            .executes(context -> handleQuickSlotCommand(context, true))
+                            .executes(context -> handleQuickSlotCommand(context, "load"))
                         )
                     )
                     .then(literal("store")
                         .then(argument("slot", IntegerArgumentType.integer())
-                            .executes(context -> handleQuickSlotCommand(context, false))
+                            .executes(context -> handleQuickSlotCommand(context, "store"))
                         )
+                    )
+                    .then(literal("clear")
+                        .executes(context -> { QuickSlots.clearQuickSlot(); return 1; })
+                    .then(argument("slot", IntegerArgumentType.integer())
+                        .executes(context -> handleQuickSlotCommand(context, "clear")))
                     )
                 )
                 .then(literal("store")
@@ -150,18 +155,21 @@ public class Commands {
         return 1;
     }
 
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static int handleQuickSlotCommand(CommandContext<FabricClientCommandSource> context, boolean isLoad) {
+    private static int handleQuickSlotCommand(CommandContext<FabricClientCommandSource> context, String command) {
         final int slot = IntegerArgumentType.getInteger(context, "slot");
-        if (slot < 0 || 9 < slot) {
+        if (slot < 1 || 9 < slot) {
             context.getSource().sendFeedback(Text.literal("Slot Index out of range"));
             return 0;
         }
-        if (isLoad) {
-            QuickSlots.load(slot);
-        } else {
-            QuickSlots.store(slot, PlayerRecorder.record);
+        switch (command) {
+            case "load":
+                QuickSlots.loadRecording(slot - 1);
+                break;
+            case "store":
+                QuickSlots.storeRecording(slot - 1);
+                break;
+            case "clear":
+                QuickSlots.clearQuickSlot(slot - 1);
         }
         return 1;
     }

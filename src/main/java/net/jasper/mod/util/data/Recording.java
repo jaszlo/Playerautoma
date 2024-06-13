@@ -20,14 +20,21 @@ public class Recording implements Serializable {
             String command
     ) implements Serializable {}
 
-    public final List<RecordEntry> entries = new ArrayList<>();
+    public final List<RecordEntry> entries;
+    public RecordingThumbnail thumbnail;
+
+    public Recording(RecordingThumbnail thumbnail) {
+        this.entries = new ArrayList<>();
+        this.thumbnail = thumbnail;
+    }
 
     public String toString() {
        return "Recording[" + this.entries.size() + "]";
     }
 
     public void clear() {
-        entries.clear();
+        this.thumbnail = null;
+        this.entries.clear();
     }
 
     public void add(RecordEntry entry) {
@@ -38,7 +45,7 @@ public class Recording implements Serializable {
     }
 
     public Recording copy() {
-        Recording copy = new Recording();
+        Recording copy = new Recording(this.thumbnail);
         copy.entries.addAll(this.entries);
         return copy;
     }

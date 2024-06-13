@@ -121,7 +121,7 @@ public class JsonHelper {
 
     public static Recording deserialize(String s) {
         MinecraftClient client = MinecraftClient.getInstance();
-        Recording result = new Recording();
+        Recording result = new Recording(null);
 
         JsonObject parsed = JsonParser.parseString(s).getAsJsonObject();
 

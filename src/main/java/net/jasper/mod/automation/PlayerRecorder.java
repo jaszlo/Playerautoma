@@ -9,6 +9,7 @@ import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.JsonHelper;
+import net.jasper.mod.util.RecordingThumbnailRecorder;
 import net.jasper.mod.util.Textures;
 import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
@@ -38,7 +39,7 @@ public class PlayerRecorder {
 
     private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
 
-    public static Recording record = new Recording();
+    public static Recording record = new Recording(null);
 
 
     public static State state = IDLE;
@@ -56,8 +57,6 @@ public class PlayerRecorder {
 
     // Keyboard Modifier State for current tick in replay
     public static final Queue<String> pressedModifiers = new ConcurrentLinkedDeque<>();
-
-
 
     public static void register() {
         // Register Task-Queues
@@ -122,6 +121,7 @@ public class PlayerRecorder {
 
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
+        record.thumbnail = RecordingThumbnailRecorder.create();
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
             KeyBinding.unpressAll();
@@ -138,6 +138,7 @@ public class PlayerRecorder {
         if (state.isRecording() || state.isPausedRecording()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.stopRecording"));
             state = IDLE;
+            // Creates the thumbnail on stop - only used when stored
         } else {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStopNotStartedRecording"));
         }
@@ -390,6 +391,7 @@ public class PlayerRecorder {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStopNotStartedReplay"));
             return;
         }
+
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.stopReplay"));
         state = IDLE;
         // Clear all tasks to stop replay

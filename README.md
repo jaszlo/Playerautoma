@@ -38,7 +38,7 @@ The commands should be self-explanatory and are as follows. See [this](documenta
 /record <start|stop|clear>
 /record <store> <name> <json|rec>
 /record <load> <name>
-/record quickslot <store|load> <slot>
+/record quickslot <store|load|clear> <1..9>
 /replay <start|stop|loop|togglepause>
 ```
 
