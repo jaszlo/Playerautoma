@@ -3,6 +3,7 @@ package net.jasper.mod.util;
 import com.google.gson.*;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
+import net.jasper.mod.util.data.RecordingThumbnail;
 import net.jasper.mod.util.data.SlotClick;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -16,7 +17,7 @@ import java.util.Map;
 /**
  * Class to help de/serialize recordings from .json files.
  */
-public class JsonHelper {
+public class JsonHelpers {
 
     // Field names
     private static final String LENGTH = "length";
@@ -34,23 +35,27 @@ public class JsonHelper {
     private static final String ENTRIES = "entries";
     private static final String CURRENT_SCREEN = "currentScreen";
     private static final String COMMAND = "command";
-
-    public static final Map<String, Integer> keyNameToIndex = new HashMap<>();
-
-    static {
-        int i = 0;
-        for (KeyBinding b : MinecraftClient.getInstance().options.allKeys) {
-            keyNameToIndex.put(b.getTranslationKey(), i++);
-        }
-    }
+    private static final String THUMBNAIL = "thumbnail";
+    private static final String THUMBNAIL_COLORS = "colors";
+    private static final String THUMBNAIL_WIDTH = "width";
+    private static final String THUMBNAIL_HEIGHT = "height";
 
 
     public static String serialize(Recording r) {
         JsonObject result = new JsonObject();
         result.addProperty(LENGTH, r.entries.size());
 
-        JsonArray entries = new JsonArray();
+        // Add Thumbnail
+        JsonObject jsonThumbnail = new JsonObject();
+        jsonThumbnail.addProperty(THUMBNAIL_WIDTH, r.thumbnail.width());
+        jsonThumbnail.addProperty(THUMBNAIL_HEIGHT, r.thumbnail.height());
+        JsonArray colors = new JsonArray();
+        r.thumbnail.colors().forEach(colors::add);
+        jsonThumbnail.add(THUMBNAIL_COLORS, colors);
 
+        result.add(THUMBNAIL, jsonThumbnail);
+
+        JsonArray entries = new JsonArray();
         for (Recording.RecordEntry entry : r.entries) {
             JsonObject jsonEntry = new JsonObject();
             // Fill the entry with the actual values
@@ -122,8 +127,18 @@ public class JsonHelper {
     public static Recording deserialize(String s) {
         MinecraftClient client = MinecraftClient.getInstance();
         Recording result = new Recording(null);
-
         JsonObject parsed = JsonParser.parseString(s).getAsJsonObject();
+
+        // Read Thumbnail and set for recording
+        JsonObject jsonThumbnail = parsed.get(THUMBNAIL).getAsJsonObject();
+        List<Integer> colors = new ArrayList<>();
+        int width = jsonThumbnail.get(THUMBNAIL_WIDTH).getAsInt();
+        int height = jsonThumbnail.get(THUMBNAIL_HEIGHT).getAsInt();
+        JsonArray jsonColors = jsonThumbnail.get(THUMBNAIL_COLORS).getAsJsonArray();
+        for (JsonElement color : jsonColors) {
+            colors.add(color.getAsInt());
+        }
+        result.thumbnail = new RecordingThumbnail(colors, width, height);
 
         for (JsonElement jsonEntryElement : parsed.get(ENTRIES).getAsJsonArray()) {
             JsonObject jsonEntry = jsonEntryElement.getAsJsonObject();

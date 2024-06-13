@@ -3,7 +3,6 @@ package net.jasper.mod.gui;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
 import net.jasper.mod.mixins.accessors.ScreenAccessor;
-import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.Textures;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -40,6 +39,7 @@ public class QuickMenu extends Screen {
 
     private final Text INFINITY = Text.of("∞");
 
+    private long lastWheelClick = 0;
     private long lastRightClick = 0;
     private long lastLeftClick = 0;
     private boolean lastLeftClickState = false; // Flag to prevent double button click sound from happening
@@ -148,14 +148,15 @@ public class QuickMenu extends Screen {
 
         boolean rightClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
         boolean leftClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+        boolean wheelClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS;
+
+        long CLICK_COOLDOWN = 150; // Milliseconds
+        long now = System.currentTimeMillis();
 
         // If loop button is not active do not process its clicks any further
         if (buttonLoopReplay.active) {
             boolean mouseOver = buttonLoopReplay.isMouseOver(this.mouseX, this.mouseY);
-
             // Check cooldown. If not reached just return
-            long CLICK_COOLDOWN = 100; // Milliseconds
-            long now = System.currentTimeMillis();
             if (mouseOver && rightClicked) {
                 if (now - this.lastRightClick >= CLICK_COOLDOWN) {
                     // Toggle Infinity
@@ -191,13 +192,19 @@ public class QuickMenu extends Screen {
             boolean mouseOver = button.isMouseOver(this.mouseX, this.mouseY);
             if (mouseOver && rightClicked) {
                 // Check cooldown. If not reached just return
-                long CLICK_COOLDOWN = 100; // Milliseconds
-                long now = System.currentTimeMillis();
                 if (now - this.lastRightClick >= CLICK_COOLDOWN) {
                     // Update successful right click
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                     this.lastRightClick = now;
                     QuickSlots.loadRecording(i);
+                }
+            }
+            if (mouseOver && wheelClicked) {
+                if (now - this.lastWheelClick >= CLICK_COOLDOWN) {
+                    // Update successful wheel click
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    this.lastWheelClick = now;
+                    QuickSlots.clearQuickSlot(i);
                 }
             }
         }
@@ -232,7 +239,7 @@ public class QuickMenu extends Screen {
     public void init() {
         assert this.client != null;
         GridWidget gridWidget = new GridWidget();
-        gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
+        gridWidget.getMainPositioner().marginX(5).marginBottom(3).alignHorizontalCenter();
         GridWidget.Adder adder = gridWidget.createAdder(3);
 
         // Start Record | Stop Record
@@ -244,7 +251,7 @@ public class QuickMenu extends Screen {
         adder.add(this.buttonStartPauseReplay, 1);
         adder.add(this.buttonStopReplay, 1);
         adder.add(this.buttonLoopReplay, 1);
-        adder.add(EmptyWidget.ofHeight(24), 3);
+        adder.add(EmptyWidget.ofHeight(4), 3);
 
         for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
             adder.add(this.buttonsQuickSlots[i]);
@@ -269,7 +276,6 @@ public class QuickMenu extends Screen {
         tooltips.put(this.buttonStopReplay, Text.translatable("playerautoma.screens.menu.tooltip.stopReplay"));
         tooltips.put(this.buttonLoopReplay, Text.translatable("playerautoma.screens.menu.tooltip.startLoop"));
     }
-
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -334,23 +340,19 @@ public class QuickMenu extends Screen {
 
         // Draw Icons on buttons
         {
-            int scale = ClientHelpers.getGuiScale();
-            // Just looks better. Not sure how it looks on gui scale. But who is dumb enough to play like that?
-            scale = scale > 1 ? scale - 1 : scale;
-            // Texture are 12x12 and 14x14 therefore choose the larger one as default
-            int size = 14;
-            int scaledSize = scale * size;
+            // Use any button to get size for texture. all buttons have same size
+            int scaledSize = buttonStartPauseRecord.getWidth();
 
             context.getMatrices().push();
             Identifier startPauseRecordTexture = PlayerRecorder.state.isRecording() ? Textures.QuickMenu.PAUSED_RECORDING : Textures.QuickMenu.START_RECORDING;
             Identifier startPauseReplayTexture = PlayerRecorder.state.isReplaying() ? Textures.QuickMenu.PAUSE_REPLAY : Textures.QuickMenu.START_REPLAY;
 
-            context.drawTexture(startPauseRecordTexture, this.buttonStartPauseRecord.getX() + 2, this.buttonStartPauseRecord.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX() + 2, this.buttonStopRecord.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(startPauseRecordTexture, this.buttonStartPauseRecord.getX(), this.buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX(), this.buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
-            context.drawTexture(startPauseReplayTexture, this.buttonStartPauseReplay.getX() + 2, this.buttonStartPauseReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX() + 2, this.buttonStopReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.START_LOOP, this.buttonLoopReplay.getX() + 2, this.buttonLoopReplay.getY() + 2, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(startPauseReplayTexture, this.buttonStartPauseReplay.getX(), this.buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX(), this.buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(Textures.QuickMenu.START_LOOP, this.buttonLoopReplay.getX(), this.buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
             context.getMatrices().pop();
         }

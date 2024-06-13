@@ -23,7 +23,7 @@
   "playerautoma.screens.menu.tooltip.startLoop": "Starte eine wiederholte Wiedergabe",
   "playerautoma.screens.menu.tooltip.storeRecording": "Speichert deine Aufnahme in einer Datei im .minecraft/Recordings-Ordner",
   "playerautoma.screens.menu.tooltip.loadRecording": "Lade eine Aufnahme aus einer Datei",
-  "playerautoma.screens.menu.tooltip.quickslotbutton": "Linksklick zum Laden einer Aufnahme\n\nRechtsklick zum speichern einer Aufnahme",
+  "playerautoma.screens.menu.tooltip.quickslotbutton": "Rechtsklick zum Laden einer Aufnahme\nLinksklick zum speichern einer Aufnahme\NSkrollklick zum löschen",
 
   "playerautoma.screens.fileSelector.delete": "Löschen",
   "playerautoma.screens.fileSelector.openFolder": "Aufnahmeordner öffnen",

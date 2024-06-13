@@ -4,8 +4,13 @@
     * Easy Control of the Player Recorder (Start/Stop Replay/Recording)
     * Looping for n-times via left-clicking loop button n-times
     * Looping indefinitely via right-clicking loop button once
+    * Quickslot storing/loading via right- and left-clicking
   * Pausing the Recording is possible via Quickmenu or Hotkey (Same as Pausing Replay by default)
   * `/record quickslot clear <1..9>` and `/record quickslot clear` commands have been added to clear all or single quickslot
+  * Thumbnails as a preview for recordings are created and displayed when
+    * storing screen
+    * loading screen
+    * quickmenu quickslots
 * Changes:
   * Info no longer written to chat rather appears in the players action bar
   * Drops spanish translation

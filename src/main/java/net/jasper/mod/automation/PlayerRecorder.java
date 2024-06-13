@@ -8,7 +8,7 @@ import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
-import net.jasper.mod.util.JsonHelper;
+import net.jasper.mod.util.JsonHelpers;
 import net.jasper.mod.util.RecordingThumbnailRecorder;
 import net.jasper.mod.util.Textures;
 import net.jasper.mod.util.data.*;
@@ -16,6 +16,7 @@ import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -40,7 +41,8 @@ public class PlayerRecorder {
     private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
 
     public static Recording record = new Recording(null);
-
+    public static NativeImageBackedTexture thumbnailTexture = null;
+    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = new Identifier(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
 
     public static State state = IDLE;
 
@@ -121,7 +123,14 @@ public class PlayerRecorder {
 
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
-        record.thumbnail = RecordingThumbnailRecorder.create();
+
+        RecordingThumbnail screenshot = RecordingThumbnailRecorder.create();
+        if (screenshot != null) {
+            record.thumbnail = screenshot;
+            thumbnailTexture = new NativeImageBackedTexture(screenshot.toNativeImage());
+            MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
+
+        }
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
             KeyBinding.unpressAll();
@@ -146,6 +155,8 @@ public class PlayerRecorder {
 
     public static void clearRecord() {
         record.clear();
+        thumbnailTexture = null;
+        MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
     }
 
 
@@ -435,11 +446,12 @@ public class PlayerRecorder {
         try {
             // If file already exists create new file with "_new" before file type.
             selected = createNewFileName(name);
-            objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected));
+            FileOutputStream fos = new FileOutputStream(selected);
+            objectOutputStream = new ObjectOutputStream(fos);
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             // Store as .json/.rec according to option
             if (RecordingStorerScreen.useJSON.getValue()) {
-                String json = JsonHelper.serialize(record);
+                String json = JsonHelpers.serialize(record);
                 FileWriter fileWriter = new FileWriter(selected);
                 BufferedWriter writer = new BufferedWriter(fileWriter);
                 writer.write(json);
@@ -449,6 +461,7 @@ public class PlayerRecorder {
                 objectOutputStream.writeObject(record);
             }
             objectOutputStream.close();
+            fos.close();
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storedRecording"));
 
         } catch(IOException e) {
@@ -465,12 +478,10 @@ public class PlayerRecorder {
         }
     }
 
-
     public static void loadRecord(String name) {
         File selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, name).toFile();
         loadRecord(selected);
     }
-
 
     public static void loadRecord(File selected) {
         if (state.isAny(RECORDING, REPLAYING)) {
@@ -492,7 +503,9 @@ public class PlayerRecorder {
                     while ((line = reader.readLine()) != null) {
                         readFile.append(line);
                     }
-                    record = JsonHelper.deserialize(readFile.toString());
+                    record = JsonHelpers.deserialize(readFile.toString());
+                    reader.close();
+                    fileReader.close();
                     ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
                 } catch(Exception e) {
                     // success will stay on false and message will be printed after for loop
@@ -503,12 +516,14 @@ public class PlayerRecorder {
             } else if (option.equals("rec")) {
                 ObjectInputStream objectInputStream = null;
                 try {
-                    objectInputStream = new ObjectInputStream(new FileInputStream(selected));
+                    FileInputStream fis = new FileInputStream(selected);
+                    objectInputStream = new ObjectInputStream(fis);
                     // This can happen when a file is selected and then deleted via the file explorer
                     if (objectInputStream == null) throw new IOException("objectInputStream is null");
 
                     record = (Recording) objectInputStream.readObject();
                     objectInputStream.close();
+                    fis.close();
                     ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage());

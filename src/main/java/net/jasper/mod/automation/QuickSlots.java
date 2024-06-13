@@ -75,7 +75,7 @@ public class QuickSlots {
 
     public static void clearQuickSlot(int slot) {
         if (slot >= 0 && slot <= QUICKSLOTS_N) {
-            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedOneQuickSlot").append(" " + slot));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedOneQuickSlot").append(" " + (slot + 1)));
             quickSlots[slot].clear();
         }
     }

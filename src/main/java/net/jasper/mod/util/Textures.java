@@ -1,6 +1,7 @@
 package net.jasper.mod.util;
 
 import net.jasper.mod.PlayerAutomaClient;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.util.Identifier;
 
 /**
@@ -30,4 +31,8 @@ public class Textures {
         public static final Identifier PAUSE_REPLAY = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/quickmenu_icons/pause_replay.png");
         public static final Identifier START_LOOP = new Identifier(PlayerAutomaClient.MOD_ID, "textures/gui/quickmenu_icons/start_loop.png");
     }
+
+    // Other
+
+    public static final ButtonTextures DEFAULT_BUTTON_TEXTURES = new ButtonTextures(new Identifier("widget/button"), new Identifier("widget/button_disabled"), new Identifier("widget/button_highlighted"));
 }
