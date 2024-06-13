@@ -30,6 +30,8 @@ Other than that the default keybindings are as follows.
 - `U`  Store Recording
 - `I`   Load Recording
 - `0` Menu Prevention
+- `CTRL + [1..9]` Store to QuickSlot
+- `ALT + [1..9]` Store to QuickSlot
 
 ### Commands
 Commands allow you some control over the mod. 

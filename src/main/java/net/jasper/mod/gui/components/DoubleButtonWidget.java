@@ -7,7 +7,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
-// TODO: Use this for QuickMenu in the future?
+// TODO: Use this for QuickMenu in the future, also finish implementation?
 public class DoubleButtonWidget extends ButtonWidget {
     private static final NarrationSupplier DEFAULT_NARRATION_SUPPLIER = textSupplier -> (MutableText)textSupplier.get();
     private PressAction onLeftClick;
