@@ -1,6 +1,7 @@
 package net.jasper.mod.gui.option;
 
 import net.jasper.mod.gui.PlayerAutomaHUD;
+import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.LookingDirection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -292,7 +293,8 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(recordCommands.button);
         adder.add(openCommandsToExclude);
 
-        adder.add(openKeyBindOptionsButton, 2);
+        // Quick and VERY dirty fix for most common desktop size
+        if (ClientHelpers.getGuiScale() <= 3) adder.add(openKeyBindOptionsButton, 2);
         adder.add(EmptyWidget.ofHeight(16), 2);
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
