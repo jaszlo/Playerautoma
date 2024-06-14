@@ -33,8 +33,9 @@ public class QuickMenu extends Screen {
     private final TextWidget loopCountText;
 
     private final ButtonWidget[] buttonsQuickSlots = new ButtonWidget[QuickSlots.QUICKSLOTS_N];
-    private final float EMPTY_QUICKSLOT_BUTTON_ALPHA = 0.25f;
+    private final float EMPTY_QUICKSLOT_BUTTON_ALPHA = 0.6f;
     private final float FULL_QUICKSLOT_BUTTON_ALPHA = 1f;
+    private final float BACKGROUND_OUTLINE_ALPHA = 0.3f;
 
     private final Text INFINITY = Text.of("∞");
 
@@ -299,57 +300,83 @@ public class QuickMenu extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
+        // Draw black rectangle as background with grey border
+        {
+            int x1 = buttonStartPauseRecord.getX() - 10;
+            int y1 = buttonStartPauseRecord.getY() - 10;
+            int x2 = buttonsQuickSlots[buttonsQuickSlots.length - 1].getX() + BUTTON_DIMENSIONS + 10;
+            int y2 = buttonsQuickSlots[buttonsQuickSlots.length - 1].getY() + BUTTON_DIMENSIONS + 10;
+            int separationY = buttonStartPauseReplay.getY() + BUTTON_DIMENSIONS + 5;
+            int borderColor = 0xff_ff_ff_ff; // White
+            int fillColor   = 0xff_00_00_00;   // black
+
+            // Make background transparent
+            context.setShaderColor(1f, 1f, 1f, BACKGROUND_OUTLINE_ALPHA);
+            context.fill(x1, y1, x2, y2, borderColor); // Outer Border
+            context.fill(x1 + 1, y1 + 1, x2 - 1, separationY - 1, fillColor); // Upper fill
+            context.fill(x1, separationY, x2, separationY, borderColor); // Separation Line
+            context.fill(x1 + 1, separationY + 1, x2 - 1, y2 - 1, fillColor); // Lower fill
+
+            // Reverse transparent effect
+            context.setShaderColor(1f, 1f, 1f, 1f);
+
+        }
+
+        // Render here because of z-Layering
+        super.render(context, mouseX, mouseY, delta);
+
         // Draw loop count Text
-        Text toSet;
-        if (loopCount < 0)       toSet = INFINITY;
-        else if (loopCount == 0) toSet = Text.of("");
-        else /* loopCount > 0 */ toSet = Text.of("" + loopCount);
+        {
+            Text toSet;
+            if (loopCount < 0)       toSet = INFINITY;
+            else if (loopCount == 0) toSet = Text.of("");
+            else /* loopCount > 0 */ toSet = Text.of("" + loopCount);
 
-        loopCountText.setWidth(textRenderer.getWidth(toSet));
-        loopCountText.setMessage(toSet);
+            loopCountText.setWidth(textRenderer.getWidth(toSet));
+            loopCountText.setMessage(toSet);
 
-        // Draw current Tooltip
-        // Special case for quickslots. Tooltip should be shown over entire area. ignore default tooltip handling in this case
-        boolean xHit = buttonsQuickSlots[0].getX() <= mouseX && mouseX <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getX() + BUTTON_DIMENSIONS;
-        boolean yHit = buttonsQuickSlots[0].getY() <= mouseY && mouseY <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getY() + BUTTON_DIMENSIONS;
-        if (xHit && yHit) {
-            Text t = tooltips.getOrDefault(buttonsQuickSlots[0], Text.of(""));
-            updateTooltip(t);
-        } else {
-            ScreenAccessor screenAccessor = (ScreenAccessor) this;
-            boolean hasTooltip = false;
-            for (Drawable d : screenAccessor.getDrawables()) {
-                if (!(d instanceof ButtonWidget button)) continue;
-                if (button.isMouseOver(mouseX, mouseY)) {
-                    // Adjust position to still be centered by first retrieving center via old width/xPos
-                    Text t = tooltips.getOrDefault(button, Text.of(""));
+            // Draw current Tooltip in Actionbar
+            // Special case for quickslots. Tooltip should be shown over entire area. ignore default tooltip handling in this case
+            boolean xHit = buttonsQuickSlots[0].getX() <= mouseX && mouseX <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getX() + BUTTON_DIMENSIONS;
+            boolean yHit = buttonsQuickSlots[0].getY() <= mouseY && mouseY <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getY() + BUTTON_DIMENSIONS;
+            if (xHit && yHit) {
+                Text t = tooltips.getOrDefault(buttonsQuickSlots[0], Text.of(""));
+                updateTooltip(t);
+            } else {
+                ScreenAccessor screenAccessor = (ScreenAccessor) this;
+                boolean hasTooltip = false;
+                for (Drawable d : screenAccessor.getDrawables()) {
+                    if (!(d instanceof ButtonWidget button)) continue;
+                    if (button.isMouseOver(mouseX, mouseY)) {
+                        // Adjust position to still be centered by first retrieving center via old width/xPos
+                        Text t = tooltips.getOrDefault(button, Text.of(""));
 
-                    // Special ToolTip case for button who switch function on context
-                    {
-                        boolean split = button == this.buttonStartPauseRecord || button == this.buttonStartPauseReplay;
-                        int START_INDEX = 0; int PAUSE_INDEX = 1; int CONTINUE_INDEX = 2;
+                        // Special ToolTip case for button who switch function on context
+                        {
+                            boolean split = button == this.buttonStartPauseRecord || button == this.buttonStartPauseReplay;
+                            int START_INDEX = 0; int PAUSE_INDEX = 1; int CONTINUE_INDEX = 2;
 
-                        // Determine which tooltip to use. Tooltip are all for the same button as one big string seperated via ":"
-                        int splitIndex = START_INDEX;
-                        if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isReplaying()) splitIndex = PAUSE_INDEX;
-                        if (PlayerRecorder.state.isPausedRecording() || PlayerRecorder.state.isPausedReplaying()) splitIndex = CONTINUE_INDEX;
+                            // Determine which tooltip to use. Tooltip are all for the same button as one big string seperated via ":"
+                            int splitIndex = START_INDEX;
+                            if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isReplaying()) splitIndex = PAUSE_INDEX;
+                            if (PlayerRecorder.state.isPausedRecording() || PlayerRecorder.state.isPausedReplaying()) splitIndex = CONTINUE_INDEX;
 
-                        if (split) {
-                            String adjustedTooltip = t.getString().split(":")[splitIndex];
-                            t = Text.of(adjustedTooltip);
+                            if (split) {
+                                String adjustedTooltip = t.getString().split(":")[splitIndex];
+                                t = Text.of(adjustedTooltip);
+                            }
                         }
+                        updateTooltip(t);
+                        hasTooltip = true;
                     }
-                    updateTooltip(t);
-                    hasTooltip = true;
                 }
-            }
-            // Clear Tooltip if mouse not over any buttons
-            if (!hasTooltip) {
-                currentTooltip.setMessage(Text.of(""));
+                // Clear Tooltip if mouse not over any buttons
+                if (!hasTooltip) {
+                    currentTooltip.setMessage(Text.of(""));
+                }
             }
         }
 
@@ -388,7 +415,5 @@ public class QuickMenu extends Screen {
                 }
             }
         }
-
     }
-
 }
