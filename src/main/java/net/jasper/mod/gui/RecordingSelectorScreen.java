@@ -140,13 +140,15 @@ public class RecordingSelectorScreen extends Screen {
     private void onDelete() {
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
-            boolean deleteSuccess = recEntry.file.delete();
-            if (!deleteSuccess) {
-                PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
-                this.close();
-                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedRecording"));
-            }
-            this.recordingSelectionList.updateFiles();
+            client.execute(() -> {
+                boolean deleteSuccess = recEntry.file.delete();
+                if (!deleteSuccess) {
+                    PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
+                    this.close();
+                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedRecording"));
+                }
+                this.recordingSelectionList.updateFiles();
+            });
         }
     }
 
@@ -186,9 +188,9 @@ public class RecordingSelectorScreen extends Screen {
                     while ((line = reader.readLine()) != null) {
                         readFile.append(line);
                     }
-                    result = JsonHelpers.deserialize(readFile.toString());
                     reader.close();
                     fileReader.close();
+                    result = JsonHelpers.deserialize(readFile.toString());
                 } catch(Exception e) {
                     // Try rec file then
                     continue;
@@ -196,8 +198,9 @@ public class RecordingSelectorScreen extends Screen {
                 break;
             } else if (option.equals("rec")) {
                 ObjectInputStream objectInputStream = null;
+                FileInputStream fis = null;
                 try {
-                    FileInputStream fis = new FileInputStream(selected);
+                    fis = new FileInputStream(selected);
                     objectInputStream = new ObjectInputStream(fis);
                     // This can happen when a file is selected and then deleted via the file explorer
                     if (objectInputStream == null) throw new IOException("objectInputStream is null");
@@ -209,6 +212,7 @@ public class RecordingSelectorScreen extends Screen {
                     PlayerAutomaClient.LOGGER.warn(e.getMessage());
                     try {
                         if (objectInputStream != null) objectInputStream.close();
+                        if (fis != null) fis.close();
                     } catch (IOException closeFailed) {
                         PlayerAutomaClient.LOGGER.warn(closeFailed.getMessage());
                         PlayerAutomaClient.LOGGER.warn("Error closing file (loadRecord) in error handling!"); // This should not happen :(

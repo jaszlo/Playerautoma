@@ -503,9 +503,9 @@ public class PlayerRecorder {
                     while ((line = reader.readLine()) != null) {
                         readFile.append(line);
                     }
-                    record = JsonHelpers.deserialize(readFile.toString());
                     reader.close();
                     fileReader.close();
+                    record = JsonHelpers.deserialize(readFile.toString());
                     ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
                 } catch(Exception e) {
                     // success will stay on false and message will be printed after for loop
@@ -515,8 +515,9 @@ public class PlayerRecorder {
                 break;
             } else if (option.equals("rec")) {
                 ObjectInputStream objectInputStream = null;
+                FileInputStream fis = null;
                 try {
-                    FileInputStream fis = new FileInputStream(selected);
+                    fis = new FileInputStream(selected);
                     objectInputStream = new ObjectInputStream(fis);
                     // This can happen when a file is selected and then deleted via the file explorer
                     if (objectInputStream == null) throw new IOException("objectInputStream is null");
@@ -529,6 +530,7 @@ public class PlayerRecorder {
                     LOGGER.warn(e.getMessage());
                     try {
                         if (objectInputStream != null) objectInputStream.close();
+                        if (fis != null) fis.close();
                     } catch (IOException closeFailed) {
                         LOGGER.warn(closeFailed.getMessage());
                         LOGGER.warn("Error closing file (loadRecord) in error handling!"); // This should not happen :(

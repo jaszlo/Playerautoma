@@ -23,7 +23,7 @@
   "playerautoma.screens.menu.tooltip.startLoop": "Start a looped Replay",
   "playerautoma.screens.menu.tooltip.storeRecording": "Store your Recording to a file in your .minecraft/Recordings folder",
   "playerautoma.screens.menu.tooltip.loadRecording": "Load Recording from a file",
-  "playerautoma.screens.menu.tooltip.quickslotbutton": "Right click to load Recording\nLeft click to store Recording\nClick scroll to delete",
+  "playerautoma.screens.menu.tooltip.quickslotbutton": "Right click to load Recording\nLeft click to store Recording\nWheel click to delete",
 
   "playerautoma.screens.fileSelector.delete": "Delete",
   "playerautoma.screens.fileSelector.openFolder": "Open Recording Folder",
