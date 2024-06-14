@@ -426,7 +426,7 @@ public class QuickMenu extends Screen {
                 ButtonWidget b = buttonsQuickSlots[i];
 
                 // Thumbnail only available if not empty
-                if (!isEmpty) {
+                if (!isEmpty && PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue()) {
                     context.drawTexture(QuickSlots.THUMBNAIL_IDENTIFIER[i], b.getX() + 1, b.getY() + 1, 0, 0, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2);
                 }
             }

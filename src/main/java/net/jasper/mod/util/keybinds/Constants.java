@@ -31,7 +31,7 @@ public class Constants {
             "playerautoma.keys.startLoop",
             "playerautoma.keys.storeRecording",
             "playerautoma.keys.loadRecording",
-            "playerautoma.keys.pauseReplay",
+            "playerautoma.keys.pauseReplayOrRecord",
             "playerautoma.keys.openMenu",
             "playerautoma.keys.menuPrevention",
             "playerautoma.keys.quickMenu"
