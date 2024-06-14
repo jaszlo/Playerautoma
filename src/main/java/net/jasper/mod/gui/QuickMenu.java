@@ -2,6 +2,7 @@ package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.ScreenAccessor;
 import net.jasper.mod.util.Textures;
 import net.minecraft.client.MinecraftClient;
@@ -257,8 +258,10 @@ public class QuickMenu extends Screen {
         adder.add(this.buttonLoopReplay, 1);
         adder.add(EmptyWidget.ofHeight(4), 3);
 
-        for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
-            adder.add(this.buttonsQuickSlots[i]);
+        if (PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue()) {
+            for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
+                adder.add(this.buttonsQuickSlots[i]);
+            }
         }
 
         adder.add(EmptyWidget.ofHeight(24), 3);
@@ -303,6 +306,9 @@ public class QuickMenu extends Screen {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
+        boolean showQuickSlots = PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue();
+
+
         // Draw black rectangle as background with grey border
         {
             int x1 = buttonStartPauseRecord.getX() - 10;
@@ -311,14 +317,24 @@ public class QuickMenu extends Screen {
             int y2 = buttonsQuickSlots[buttonsQuickSlots.length - 1].getY() + BUTTON_DIMENSIONS + 10;
             int separationY = buttonStartPauseReplay.getY() + BUTTON_DIMENSIONS + 5;
             int borderColor = 0xff_ff_ff_ff; // White
-            int fillColor   = 0xff_00_00_00;   // black
+            int fillColor   = 0xff_00_00_00; // black
+
+            // Update background when quickslots are not shown
+            if (!showQuickSlots) {
+                x2 = buttonLoopReplay.getX() + BUTTON_DIMENSIONS + 10;
+                y2 = separationY + 5; // + 5 to be symmetrical. Bottom y2 set to separation line
+                separationY += 5;
+            }
 
             // Make background transparent
             context.setShaderColor(1f, 1f, 1f, BACKGROUND_OUTLINE_ALPHA);
             context.fill(x1, y1, x2, y2, borderColor); // Outer Border
             context.fill(x1 + 1, y1 + 1, x2 - 1, separationY - 1, fillColor); // Upper fill
-            context.fill(x1, separationY, x2, separationY, borderColor); // Separation Line
-            context.fill(x1 + 1, separationY + 1, x2 - 1, y2 - 1, fillColor); // Lower fill
+            // Only when quickslots are shown
+            if (showQuickSlots) {
+                context.fill(x1, separationY, x2, separationY, borderColor); // Separation Line
+                context.fill(x1 + 1, separationY + 1, x2 - 1, y2 - 1, fillColor); // Lower fill
+            }
 
             // Reverse transparent effect
             context.setShaderColor(1f, 1f, 1f, 1f);
@@ -342,7 +358,7 @@ public class QuickMenu extends Screen {
             // Special case for quickslots. Tooltip should be shown over entire area. ignore default tooltip handling in this case
             boolean xHit = buttonsQuickSlots[0].getX() <= mouseX && mouseX <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getX() + BUTTON_DIMENSIONS;
             boolean yHit = buttonsQuickSlots[0].getY() <= mouseY && mouseY <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getY() + BUTTON_DIMENSIONS;
-            if (xHit && yHit) {
+            if (xHit && yHit && showQuickSlots) {
                 Text t = tooltips.getOrDefault(buttonsQuickSlots[0], Text.of(""));
                 updateTooltip(t);
             } else {

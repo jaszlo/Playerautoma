@@ -122,6 +122,43 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
       (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
+    public static OptionButton<Boolean> useCTRLForQuickSlots = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.useCTRLForQuickSlots",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> useALTForQuickSlots = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.useALTForQuickSlots",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> preventSlotChanges = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.preventSlotChanges",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> showQuickSlotsInQuickMenu = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.showQuickSlotsInQuickMenu",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+
     public static ButtonWidget openCommandsToExclude = ButtonWidget.builder(
             Text.translatable("playerautoma.option.openCommandsToExclude"),
             (_b) -> {
@@ -209,6 +246,22 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         recordCommands.setButton(recordCommandosButton);
         openCommandsToExclude.active = recordCommands.getValue();
 
+        ButtonWidget useCTRLForQuickSlotsButton = useCTRLForQuickSlots.buttonOf();
+        useCTRLForQuickSlots.setButton(useCTRLForQuickSlotsButton);
+        useCTRLForQuickSlotsButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useCTRLForQuickSlots")));
+
+        ButtonWidget useALTForQuickSlotsButton = useALTForQuickSlots.buttonOf();
+        useALTForQuickSlots.setButton(useALTForQuickSlotsButton);
+        useALTForQuickSlotsButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useALTForQuickSlots")));
+
+        ButtonWidget preventSlotChangesButton = preventSlotChanges.buttonOf();
+        preventSlotChangesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.preventSlotChanges")));
+        preventSlotChanges.setButton(preventSlotChangesButton);
+
+        ButtonWidget showQuickSlotsInQuickMenuButton = showQuickSlotsInQuickMenu.buttonOf();
+        showQuickSlotsInQuickMenuButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.showQuickSlotsInQuickMenu")));
+        showQuickSlotsInQuickMenu.setButton(showQuickSlotsInQuickMenuButton);
+
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
@@ -228,6 +281,14 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
         adder.add(resetKeyBindingsOnRecordingButton);
+        adder.add(EmptyWidget.ofHeight(4), 2);
+
+        adder.add(useCTRLForQuickSlotsButton);
+        adder.add(useALTForQuickSlotsButton);
+        adder.add(preventSlotChangesButton);
+        adder.add(showQuickSlotsInQuickMenuButton);
+        adder.add(EmptyWidget.ofHeight(4), 2);
+
         adder.add(recordCommands.button);
         adder.add(openCommandsToExclude);
 

@@ -2,6 +2,7 @@ package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.Recording;
 import net.minecraft.client.MinecraftClient;
@@ -163,12 +164,12 @@ public class QuickSlots {
             long handle = client.getWindow().getHandle();
 
             // Check Store QuickSlot KeyBindings
-            if (CTRLPressed(handle)) {
+            if (PlayerAutomaOptionsScreen.useCTRLForQuickSlots.getValue() && CTRLPressed(handle)) {
                 handleQuickSlotKeyPress(handle, storeCooldowns, CTRLPressed);
             }
 
             // Check Load QuickSlot KeyBindings
-            if (ALTPressed(handle)) {
+            if (PlayerAutomaOptionsScreen.useALTForQuickSlots.getValue() && ALTPressed(handle)) {
                 handleQuickSlotKeyPress(handle, loadCooldowns, ALTPressed);
             }
 
@@ -176,13 +177,17 @@ public class QuickSlots {
                 // Store Recording to QuickSlot
                 if (CTRLPressed[i]) {
                     // Unset key to not change selectedSlot
-                    consumeKeyPress(client.options.hotbarKeys[i], 10);
+                    if (PlayerAutomaOptionsScreen.preventSlotChanges.getValue()) {
+                        consumeKeyPress(client.options.hotbarKeys[i], 10);
+                    }
                     storeRecording(i);
 
                 // Load Recording from QuickSlot
                 } else if (ALTPressed[i]) {
                     // Unset key to not change selectedSlot
-                    consumeKeyPress(client.options.hotbarKeys[i], 10);
+                    if (PlayerAutomaOptionsScreen.preventSlotChanges.getValue()) {
+                        consumeKeyPress(client.options.hotbarKeys[i], 10);
+                    }
                     loadRecording(i);
                 }
             }
