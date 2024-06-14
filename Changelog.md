@@ -7,7 +7,7 @@
     * Quickslot storing/loading via right- and left-clicking
   * Pausing the Recording is possible via Quickmenu or Hotkey (Same as Pausing Replay by default)
   * `/record quickslot clear <1..9>` and `/record quickslot clear` commands have been added to clear all or single quickslot
-  * Thumbnails as a preview for recordings are created and displayed when
+  * Thumbnails as a preview for recordings are created and displayed for
     * storing screen
     * loading screen
     * quickmenu quickslots
