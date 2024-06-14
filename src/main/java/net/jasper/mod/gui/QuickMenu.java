@@ -8,7 +8,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
@@ -42,7 +41,9 @@ public class QuickMenu extends Screen {
     private long lastWheelClick = 0;
     private long lastRightClick = 0;
     private long lastLeftClick = 0;
-    private boolean lastLeftClickState = false; // Flag to prevent double button click sound from happening
+    private boolean lastLeftClickState = false;  // Flag to prevent double button click sound from happening for loop button
+    private boolean lastRightClickState = false; // Flag to prevent holding clicked from acting more than once for quickslots
+    private boolean lastWheelClickState = false;
 
     public static int loopCount = 0;
 
@@ -110,7 +111,6 @@ public class QuickMenu extends Screen {
                     Text.of(""),
                     b -> QuickSlots.storeRecording(finalI))
                 .size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS)
-                .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.quickslotbutton")))
                 .build();
             float alpha = QuickSlots.quickSlots[i].isEmpty() ? EMPTY_QUICKSLOT_BUTTON_ALPHA : FULL_QUICKSLOT_BUTTON_ALPHA;
             buttonsQuickSlots[i].setAlpha(alpha);
@@ -184,13 +184,12 @@ public class QuickMenu extends Screen {
                     this.lastLeftClick = now;
                 }
             }
-            this.lastLeftClickState = leftClicked;
         }
 
         for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
             ButtonWidget button = buttonsQuickSlots[i];
             boolean mouseOver = button.isMouseOver(this.mouseX, this.mouseY);
-            if (mouseOver && rightClicked) {
+            if (mouseOver && rightClicked && !lastRightClickState) {
                 // Check cooldown. If not reached just return
                 if (now - this.lastRightClick >= CLICK_COOLDOWN) {
                     // Update successful right click
@@ -199,7 +198,7 @@ public class QuickMenu extends Screen {
                     QuickSlots.loadRecording(i);
                 }
             }
-            if (mouseOver && wheelClicked) {
+            if (mouseOver && wheelClicked && !lastWheelClickState) {
                 if (now - this.lastWheelClick >= CLICK_COOLDOWN) {
                     // Update successful wheel click
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
@@ -209,6 +208,10 @@ public class QuickMenu extends Screen {
             }
         }
 
+        // Update for next tick
+        this.lastLeftClickState = leftClicked;
+        this.lastRightClickState = rightClicked;
+        this.lastWheelClickState = wheelClicked;
     }
 
 
@@ -275,7 +278,24 @@ public class QuickMenu extends Screen {
         tooltips.put(this.buttonStartPauseReplay, Text.translatable("playerautoma.screens.menu.tooltip.startReplay").append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.pauseReplay")).append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.resumeReplay")));
         tooltips.put(this.buttonStopReplay, Text.translatable("playerautoma.screens.menu.tooltip.stopReplay"));
         tooltips.put(this.buttonLoopReplay, Text.translatable("playerautoma.screens.menu.tooltip.startLoop"));
+        for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
+            tooltips.put(this.buttonsQuickSlots[i], Text.translatable("playerautoma.screens.menu.tooltip.quickslotbutton"));
+        }
     }
+
+    private void updateTooltip(Text toSet) {
+        int currentX = currentTooltip.getX();
+        int oldWidth = currentTooltip.getWidth();
+        int center = currentX + oldWidth / 2;
+
+        // Now shift from center given newWidth
+        int newWidth = textRenderer.getWidth(toSet);
+        int newX = center - newWidth / 2;
+        currentTooltip.setWidth(newWidth);
+        currentTooltip.setX(newX);
+        currentTooltip.setMessage(toSet);
+    }
+
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -293,7 +313,13 @@ public class QuickMenu extends Screen {
         loopCountText.setMessage(toSet);
 
         // Draw current Tooltip
-        {
+        // Special case for quickslots. Tooltip should be shown over entire area. ignore default tooltip handling in this case
+        boolean xHit = buttonsQuickSlots[0].getX() <= mouseX && mouseX <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getX() + BUTTON_DIMENSIONS;
+        boolean yHit = buttonsQuickSlots[0].getY() <= mouseY && mouseY <= buttonsQuickSlots[buttonsQuickSlots.length - 1].getY() + BUTTON_DIMENSIONS;
+        if (xHit && yHit) {
+            Text t = tooltips.getOrDefault(buttonsQuickSlots[0], Text.of(""));
+            updateTooltip(t);
+        } else {
             ScreenAccessor screenAccessor = (ScreenAccessor) this;
             boolean hasTooltip = false;
             for (Drawable d : screenAccessor.getDrawables()) {
@@ -317,17 +343,7 @@ public class QuickMenu extends Screen {
                             t = Text.of(adjustedTooltip);
                         }
                     }
-
-                    int currentX = currentTooltip.getX();
-                    int oldWidth = currentTooltip.getWidth();
-                    int center = currentX + oldWidth / 2;
-
-                    // Now shift from center given newWidth
-                    int newWidth = textRenderer.getWidth(t);
-                    int newX = center - newWidth / 2;
-                    currentTooltip.setWidth(newWidth);
-                    currentTooltip.setX(newX);
-                    currentTooltip.setMessage(t);
+                    updateTooltip(t);
                     hasTooltip = true;
                 }
             }
