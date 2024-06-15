@@ -31,6 +31,8 @@ Other than that the default keybindings are as follows.
 - `U`  Store Recording
 - `I`   Load Recording
 - `0` Menu Prevention
+- `CTRL + [1..9]` Store to QuickSlot
+- `ALT + [1..9]` Store to QuickSlot
 
 ### Commands
 Commands allow you some control over the mod. 
@@ -39,7 +41,7 @@ The commands should be self-explanatory and are as follows. See [this](documenta
 /record <start|stop|clear>
 /record <store> <name> <json|rec>
 /record <load> <name>
-/record quickslot <store|load> <slot>
+/record quickslot <store|load|clear> <1..9>
 /replay <start|stop|loop|togglepause>
 ```
 

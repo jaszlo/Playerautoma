@@ -23,5 +23,4 @@ public interface KeyBindingAccessor {
         // Failed to apply mixin for 'KEYS_BY_ID' if null is returned
         return null;
     }
-
 }

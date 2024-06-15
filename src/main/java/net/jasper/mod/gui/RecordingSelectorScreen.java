@@ -4,6 +4,9 @@ package net.jasper.mod.gui;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.util.ClientHelpers;
+import net.jasper.mod.util.IOHelpers;
+import net.jasper.mod.util.data.Recording;
+import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,12 +15,20 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import java.io.File;
 
-import static net.jasper.mod.util.HUDTextures.REFRESH_ICON;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH;
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
+import static net.jasper.mod.util.Textures.DEFAULT_BUTTON_TEXTURES;
+import static net.jasper.mod.util.Textures.SelectorScreen.REFRESH_ICON;
 // TODO: this could be a general class listing files of a directory and letting you select one given a callback function
 
 /**
@@ -31,9 +42,34 @@ public class RecordingSelectorScreen extends Screen {
     private final Screen parent;
     private final MinecraftClient client;
 
+    // TODO: This should be cleaned up on update. However I can't be bothered right now as it is more a best practice than really necessary
+    // Use map to store thumbnails and only load new ones in the future in "updateFiles"
+    protected final static Map<String, RecordingThumbnail> thumbnails = new HashMap<>();
+
+    /**
+     * Initially load thumbnails on load to prevent lag when this screen is opened for the first time
+     */
+    public static void loadThumbnails() {
+        File recordingFolder = new File(PLAYERAUTOMA_FOLDER_PATH);
+        File[] fileList = recordingFolder.listFiles();
+        if (fileList == null) {
+            return;
+        }
+        for (File file : fileList) {
+            if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
+                // Only do this if the thumbnail is not yet registered
+                if (!thumbnails.containsKey(file.getName())) {
+                    IOHelpers.loadRecordingFileAsync(recordingFolder, file, (r) -> {
+                        if (r != null) thumbnails.put(file.getName(), r.thumbnail);
+                    });
+                }
+            }
+        }
+    }
+
     public RecordingSelectorScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.selector"));
-        this.directoryPath = PlayerAutomaClient.RECORDING_PATH;
+        this.directoryPath = PLAYERAUTOMA_RECORDING_PATH;
         this.parent = parent;
         this.client = MinecraftClient.getInstance();
         this.init();
@@ -107,13 +143,15 @@ public class RecordingSelectorScreen extends Screen {
     private void onDelete() {
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
-            boolean deleteSuccess = recEntry.file.delete();
-            if (!deleteSuccess) {
-                PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
-                this.close();
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailedRecording"));
-            }
-            this.recordingSelectionList.updateFiles();
+            client.execute(() -> {
+                boolean deleteSuccess = recEntry.file.delete();
+                if (!deleteSuccess) {
+                    PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
+                    this.close();
+                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedRecording"));
+                }
+                this.recordingSelectionList.updateFiles();
+            });
         }
     }
 
@@ -140,6 +178,7 @@ public class RecordingSelectorScreen extends Screen {
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
     }
 
+
     private class RecordingSelectionListWidget extends AlwaysSelectedEntryListWidget<RecordingSelectionListWidget.RecordingEntry> {
         final String directoryPath;
         public RecordingSelectionListWidget(MinecraftClient client, String directoryPath) {
@@ -155,13 +194,20 @@ public class RecordingSelectorScreen extends Screen {
 
         public void updateFiles() {
             this.clearEntries();
-            File[] fileList = new File(this.directoryPath).listFiles();
+            File recordingDirectory = new File(this.directoryPath);
+            File[] fileList = recordingDirectory.listFiles();
             if (fileList == null) {
                 return;
             }
             for (File file : fileList) {
                 if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
-                    RecordingEntry entry = new RecordingEntry(file.getName(), file);
+                    // Only do this if the thumbnail is not yet registered
+                    if (!thumbnails.containsKey(file.getName())) {
+                        // Do not load async or image will not be available for screen when first opened
+                        Recording r = IOHelpers.loadRecordingFile(recordingDirectory, file);
+                        if (r != null) thumbnails.put(file.getName(), r.thumbnail);
+                    }
+                    RecordingEntry entry = new RecordingEntry(file.getName(), file, thumbnails.get(file.getName()));
                     this.addEntry(entry);
                 }
             }
@@ -174,15 +220,31 @@ public class RecordingSelectorScreen extends Screen {
         public class RecordingEntry extends AlwaysSelectedEntryListWidget.Entry<RecordingSelectorScreen.RecordingSelectionListWidget.RecordingEntry> {
             final String fileName;
             final File file;
+            NativeImageBackedTexture texture = null;
+            Identifier textureIdentifier = null;
             private long clickTime;
 
-            public RecordingEntry(String fileName, File file) {
+
+            public RecordingEntry(String fileName, File file, RecordingThumbnail thumbnail) {
                 this.fileName = fileName;
                 this.file = file;
+                if (thumbnail != null) {
+                    this.texture = new NativeImageBackedTexture(thumbnail.toNativeImage());
+                    this.textureIdentifier = Identifier.of(PlayerAutomaClient.MOD_ID, fileName);
+                    MinecraftClient.getInstance().getTextureManager().registerTexture(textureIdentifier, texture);
+                }
             }
 
             public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
                 context.drawCenteredTextWithShadow(RecordingSelectorScreen.this.textRenderer, this.fileName, RecordingSelectorScreen.RecordingSelectionListWidget.this.width / 2, y + 1, 16777215);
+
+                // Only render if present to prevent exception or 'unknown texture' to be rendered
+                if (texture != null && textureIdentifier != null) {
+                    int thumbnailX = x - 25;
+                    int thumbnailSize = 20;
+                    context.drawGuiTexture(DEFAULT_BUTTON_TEXTURES.get(false, false), thumbnailX, y - 2, thumbnailSize, thumbnailSize);
+                    context.drawTexture(this.textureIdentifier, thumbnailX + 1 , y - 1, 0,0, thumbnailSize - 2, thumbnailSize - 2, thumbnailSize - 2, thumbnailSize - 2);
+                }
             }
 
             public boolean mouseClicked(double mouseX, double mouseY, int button) {

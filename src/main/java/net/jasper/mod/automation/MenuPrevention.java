@@ -9,7 +9,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
-import static net.jasper.mod.util.HUDTextures.BLOCK_MENU_ICON;
+import static net.jasper.mod.util.Textures.HUD.BLOCK_MENU_ICON;
 
 /**
  * Class to track state and implement menu prevention that allows for replays to work in background
@@ -55,8 +55,8 @@ public class MenuPrevention {
 
         preventToBackground = !preventToBackground;
 
-        if (PlayerAutomaOptionsScreen.writeStateToChatOption.getValue()) {
-            ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
+        if (PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue()) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
         }
 
         int mouseMode = preventToBackground ? InputUtil.GLFW_CURSOR_NORMAL : InputUtil.GLFW_CURSOR_DISABLED;

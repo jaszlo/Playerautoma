@@ -12,6 +12,8 @@
     "MinecraftClientMixin",
     "MouseMixin",
     "ScreenMixin",
-    "accessors.KeyBindingAccessor"
+    "accessors.KeyBindingAccessor",
+    "accessors.NativeImageAccessor",
+    "accessors.ScreenAccessor"
   ]
 }

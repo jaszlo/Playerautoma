@@ -1,8 +1,39 @@
+# Version v0.5.0
+* New Features:
+  * Quickmenu via (by default) holding F4 Key allows for
+    * Easy Control of the PlayerRecorder (Start/Stop/Pause/Loop Replay/Recording)
+    * Looping for n-times via left-clicking loop button n-times (or holding it down)
+    * Looping indefinitely via right-clicking loop button once
+    * Quickslot storing/loading/deletion via right-, left- or wheel-clicking  
+  * Pausing the Recording is now possible via Quickmenu or Hotkey (Same hotkey as Pausing Replay by default)
+  * `/record quickslot clear <1..9>` and `/record quickslot clear` commands have been added to clear single or all quickslot
+  * Thumbnails as a preview for recordings are created and displayed for
+    * storing screen
+    * loading screen
+    * quickmenu quickslots
+  * Thumbnails are serialized to files and will be kept when sending a recording to a friend
+  * Option to disable quickslot usage via `ctrl/alt + [1..9]` keybinds
+  * Option to allow slot changes when using quickslots e.g. Ctrl + 1 will select slot 1. Was previously prevented
+  * Option to disable quickslots from QuickMenu
+  * Quickslots are now persistent and will be kept even after minecraft is closed
+* Changes:
+  * Info no longer written to chat rather appears in the players action bar
+  * Drops spanish translation
+  * Updates PlayerRecorder state icons
+  * Many more descriptive error message (to action bar)
+  * Moves all playerautoma related files into one `playerautoma` folder in the `.minecraft` folder
+* Bugfix:
+  * Playerautoma Keybindings will no longer be recorded
+  * Now opening playerautoma main menu during replay is possible
+  * Adds missing translations to german
+  * `/record quickslot load|store` now work as intended
+  
+
 # Version v0.4.6
 * New Features:
   * Non-Communication commands are now recorded and can be replayed
   * Specific or all commands can also be ignored via a toggle and blacklist option
-  * New Option Screen fo manage blacklist of commands
+  * New Option screen fo manage blacklist of commands
 * Changes:
   * Recordings of older versions won't work with this version!
 

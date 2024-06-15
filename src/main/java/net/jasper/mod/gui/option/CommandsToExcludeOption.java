@@ -31,7 +31,7 @@ public class CommandsToExcludeOption extends Screen {
 
     // Should no longer use a singleton when used in general
     public static String FILE_NAME = "ignored_commands.txt";
-    public static String FILE_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), FILE_NAME).toString();
+    public static String FILE_PATH = Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, FILE_NAME).toString();
 
     public static final List<String> userCommandsToIgnore = new ArrayList<>();
 
@@ -107,7 +107,7 @@ public class CommandsToExcludeOption extends Screen {
             if (!deleteSuccess) {
                 PlayerAutomaClient.LOGGER.warn("Could not delete command to ignore {}", recEntry.command);
                 this.close();
-                ClientHelpers.writeToChat(Text.translatable("playerautoma.messages.deleteFailedCommandToExclude"));
+                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedCommandToExclude"));
             }
             this.commandSelectionList.writeCommands();
             this.commandSelectionList.updateCommands();

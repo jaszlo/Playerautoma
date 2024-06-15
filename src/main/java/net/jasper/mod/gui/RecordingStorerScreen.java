@@ -2,7 +2,9 @@ package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.OptionButton;
+import net.jasper.mod.util.IOHelpers;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -13,6 +15,8 @@ import net.minecraft.text.Text;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static net.jasper.mod.util.Textures.DEFAULT_BUTTON_TEXTURES;
+
 
 /**
  * 'Screen' (more of a pop-up) that allows to store a recording with a given name.
@@ -22,6 +26,7 @@ public class RecordingStorerScreen extends Screen {
 
     private final Screen parent;
     private TextFieldWidget input;
+
 
     protected RecordingStorerScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.storer"));
@@ -35,9 +40,8 @@ public class RecordingStorerScreen extends Screen {
             "playerautoma.option.exportAs",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? Text.of(".json") : Text.of(".rec"))
+            (bool) -> (bool ? Text.of(IOHelpers.RecordingFileTypes.JSON) : Text.of(IOHelpers.RecordingFileTypes.REC))
     );
-
 
     protected void init() {
         TextWidget text = new TextWidget(
@@ -101,6 +105,19 @@ public class RecordingStorerScreen extends Screen {
         Screen result = new RecordingStorerScreen(client.currentScreen);
         client.setScreen(result);
         return result;
+    }
+
+
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+
+        // Render border always and thumbnail if available
+        context.drawGuiTexture(DEFAULT_BUTTON_TEXTURES.get(false, false), this.width / 2 - 145, this.height / 2 - 10, 40, 40);
+        if (PlayerRecorder.record.thumbnail != null) {
+            context.drawTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, this.width / 2 - 144, this.height / 2 - 9, 0, 0,38, 38, 38, 38);
+        }
     }
 
     @Override

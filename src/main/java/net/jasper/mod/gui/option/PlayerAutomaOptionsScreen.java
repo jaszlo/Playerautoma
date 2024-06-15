@@ -1,6 +1,7 @@
 package net.jasper.mod.gui.option;
 
 import net.jasper.mod.gui.PlayerAutomaHUD;
+import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.LookingDirection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -75,10 +76,10 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> writeStateToChatOption = new OptionButton<>(
+    public static OptionButton<Boolean> writeStateToActionBarOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
-        "playerautoma.option.writeStateToChat",
+        "playerautoma.option.writeStateToActionBar",
         Object::toString,
         Boolean::parseBoolean,
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
@@ -121,6 +122,43 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
       Boolean::parseBoolean,
       (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
+
+    public static OptionButton<Boolean> useCTRLForQuickSlots = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.useCTRLForQuickSlots",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> useALTForQuickSlots = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.useALTForQuickSlots",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> preventSlotChanges = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.preventSlotChanges",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
+    public static OptionButton<Boolean> showQuickSlotsInQuickMenu = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.showQuickSlotsInQuickMenu",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
 
     public static ButtonWidget openCommandsToExclude = ButtonWidget.builder(
             Text.translatable("playerautoma.option.openCommandsToExclude"),
@@ -190,8 +228,8 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         ButtonWidget recordInventoryActivitiesButton = recordInventoryActivitiesOption.buttonOf();
         recordInventoryActivitiesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordInventoryActivities")));
 
-        ButtonWidget writeStateToChatButton = writeStateToChatOption.buttonOf();
-        writeStateToChatOption.setButton(writeStateToChatButton);
+        ButtonWidget writeStateToActionBarButton = writeStateToActionBarOption.buttonOf();
+        writeStateToActionBarOption.setButton(writeStateToActionBarButton);
 
         ButtonWidget alwaysPreventMenuButton = alwaysPreventMenuOption.buttonOf();
         alwaysPreventMenuButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.alwaysPreventMenu")));
@@ -209,6 +247,22 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         recordCommands.setButton(recordCommandosButton);
         openCommandsToExclude.active = recordCommands.getValue();
 
+        ButtonWidget useCTRLForQuickSlotsButton = useCTRLForQuickSlots.buttonOf();
+        useCTRLForQuickSlots.setButton(useCTRLForQuickSlotsButton);
+        useCTRLForQuickSlotsButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useCTRLForQuickSlots")));
+
+        ButtonWidget useALTForQuickSlotsButton = useALTForQuickSlots.buttonOf();
+        useALTForQuickSlots.setButton(useALTForQuickSlotsButton);
+        useALTForQuickSlotsButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useALTForQuickSlots")));
+
+        ButtonWidget preventSlotChangesButton = preventSlotChanges.buttonOf();
+        preventSlotChangesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.preventSlotChanges")));
+        preventSlotChanges.setButton(preventSlotChangesButton);
+
+        ButtonWidget showQuickSlotsInQuickMenuButton = showQuickSlotsInQuickMenu.buttonOf();
+        showQuickSlotsInQuickMenuButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.showQuickSlotsInQuickMenu")));
+        showQuickSlotsInQuickMenu.setButton(showQuickSlotsInQuickMenuButton);
+
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
@@ -220,7 +274,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         adder.add(showHudButton);
         adder.add(setHudPositionButton);
-        adder.add(writeStateToChatButton);
+        adder.add(writeStateToActionBarButton);
         adder.add(useDefaultDirectionButton);
         adder.add(setDefaultDirectionButton);
         adder.add(useRelativeLookingDirectionButton);
@@ -228,13 +282,27 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
         adder.add(resetKeyBindingsOnRecordingButton);
+        adder.add(EmptyWidget.ofHeight(4), 2);
+
+        adder.add(useCTRLForQuickSlotsButton);
+        adder.add(useALTForQuickSlotsButton);
+        adder.add(preventSlotChangesButton);
+        adder.add(showQuickSlotsInQuickMenuButton);
+        adder.add(EmptyWidget.ofHeight(4), 2);
+
         adder.add(recordCommands.button);
         adder.add(openCommandsToExclude);
 
-        adder.add(openKeyBindOptionsButton, 2);
+        // Quick and VERY dirty fix for most common desktop size
+        if (ClientHelpers.getGuiScale() <= 3) adder.add(openKeyBindOptionsButton, 2);
         adder.add(EmptyWidget.ofHeight(16), 2);
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);
+    }
+
+    @Override
+    protected void addOptions() {
+        // Added with 1.21 - Don't know what this does??
     }
 }
