@@ -188,7 +188,9 @@ public class QuickSlots {
             int finalI = i;
             IOHelpers.loadRecordingFileAsync(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(quickSlotFileNames[i]), (recording) -> {
                 quickSlots[finalI] = recording;
-                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[finalI], new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
+                if (recording.thumbnail != null) {
+                    MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[finalI], new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
+                }
             });
         }
 
