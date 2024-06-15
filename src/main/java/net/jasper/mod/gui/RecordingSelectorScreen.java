@@ -50,7 +50,7 @@ public class RecordingSelectorScreen extends Screen {
      * Initially load thumbnails on load to prevent lag when this screen is opened for the first time
      */
     public static void loadThumbnails() {
-        File recordingFolder = new File(PLAYERAUTOMA_FOLDER_PATH);
+        File recordingFolder = new File(PLAYERAUTOMA_RECORDING_PATH);
         File[] fileList = recordingFolder.listFiles();
         if (fileList == null) {
             return;
@@ -59,9 +59,11 @@ public class RecordingSelectorScreen extends Screen {
             if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
                 // Only do this if the thumbnail is not yet registered
                 if (!thumbnails.containsKey(file.getName())) {
-                    IOHelpers.loadRecordingFileAsync(recordingFolder, file, (r) -> {
-                        if (r != null) thumbnails.put(file.getName(), r.thumbnail);
-                    });
+                    Recording r = IOHelpers.loadRecordingFile(recordingFolder, file);
+                    if (r != null) {
+                        thumbnails.put(file.getName(), r.thumbnail);
+                        MinecraftClient.getInstance().getTextureManager().registerTexture(Identifier.of(PlayerAutomaClient.MOD_ID, file.getName()), new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
+                    }
                 }
             }
         }
