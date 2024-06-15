@@ -160,6 +160,12 @@ public class QuickSlots {
         }
 
         PlayerRecorder.record = r;
+        // Destroy old texture, register new one if present
+        MinecraftClient.getInstance().getTextureManager().destroyTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER);
+        if (r.thumbnail != null) {
+            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(r.thumbnail.toNativeImage());
+            MinecraftClient.getInstance().getTextureManager().registerTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, PlayerRecorder.thumbnailTexture);
+        }
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadQuickslot").append(Text.of("" + (slot + 1))));
     }
 
