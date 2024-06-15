@@ -35,8 +35,13 @@ public class PlayerAutomaClient implements ClientModInitializer {
 	// Will be executed in mixin after client has been fully initialized
 	public static void initializeAfterClient() {
 		// Loading textures required the texture manager to be created which is not the case when run in "onInitializeClient"
+
 		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
 		QuickSlots.register();
+
+
+		// Load thumbnails from stored recordings to prevent lag on first opening of load recording screen
+		RecordingSelectorScreen.loadThumbnails();
 	}
 
 
@@ -73,8 +78,5 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 		// Register MenuPrevention. That allows to run Recording with minecraft in the background.
 		MenuPrevention.register();
-
-		// Load thumbnails from stored recordings to prevent lag on first opening of load recording screen
-		RecordingSelectorScreen.loadThumbnails();
 	}
 }

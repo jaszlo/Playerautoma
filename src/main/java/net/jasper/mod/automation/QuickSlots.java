@@ -191,13 +191,11 @@ public class QuickSlots {
     public static void register() {
         // Load persistent quickslots.
         for (int i = 0; i < QUICKSLOTS_N; i++) {
-            int finalI = i;
-            IOHelpers.loadRecordingFileAsync(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(quickSlotFileNames[i]), (recording) -> {
-                quickSlots[finalI] = recording;
-                if (recording.thumbnail != null) {
-                    MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[finalI], new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
-                }
-            });
+            Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(quickSlotFileNames[i]));
+            quickSlots[i] = r;
+            if (r.thumbnail != null) {
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
+            }
         }
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
