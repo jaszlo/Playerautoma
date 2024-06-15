@@ -108,10 +108,6 @@ public class IOHelpers {
      * @return true on success
      */
     public static boolean storeRecordingFile(Recording record, File directory, String name, String storeAs, boolean overwrite) {
-        if (record.isEmpty()) {
-            return false;
-        }
-
         File selected = null;
         ObjectOutputStream objectOutputStream = null;
         try {

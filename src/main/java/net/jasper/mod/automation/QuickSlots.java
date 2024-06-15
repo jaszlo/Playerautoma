@@ -52,7 +52,8 @@ public class QuickSlots {
         }
 
         quickSlots[slot] = recording;
-        updateQuickSlotTexture(slot, new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
+        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(recording.thumbnail.toNativeImage()) : null;
+        updateQuickSlotTexture(slot, texture);
         // I assume that this doesn't fail, and therefore I don't check a return value i created to check this fails ...
         IOHelpers.storeRecordingFile(quickSlots[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), quickSlotFileNames[slot], IOHelpers.RecordingFileTypes.REC, true);
     }
@@ -88,13 +89,18 @@ public class QuickSlots {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedAllQuickSlot"));
         for (int i = 0; i < QUICKSLOTS_N; i++) {
             quickSlots[i].clear();
+            // Clear file and thumbnail texture
+            store(i, quickSlots[i]);
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedAllQuickSlot"));
         }
     }
 
     public static void clearQuickSlot(int slot) {
         if (slot >= 0 && slot <= QUICKSLOTS_N) {
-            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedOneQuickSlot").append(" " + (slot + 1)));
             quickSlots[slot].clear();
+            // Clear file and thumbnail texture
+            store(slot, quickSlots[slot]);
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedOneQuickSlot").append(" " + (slot + 1)));
         }
     }
 
@@ -130,9 +136,12 @@ public class QuickSlots {
             return;
         }
 
-        // Destroy old texture, register new one
+        // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_IDENTIFIER[slot]);
-        MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[slot], texture);
+        if (texture != null) {
+            MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[slot], texture);
+        }
+
     }
 
     public static void loadRecording(int slot) {

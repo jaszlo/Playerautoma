@@ -103,8 +103,8 @@
   "playerautoma.option.tooltip.useALTForQuickSlots": "Wenn aktiviert, kann ALT + [1..9] verwendet werden, um die Aufnahme aus dem Schnellzugriff zu laden",
   "playerautoma.option.preventSlotChanges": "Slot-Änderungen verhindern",
   "playerautoma.option.tooltip.preventSlotChanges": "Wenn aktiviert, werden durch die Verwendung von Schnellzugriffstasten keine Slots geändert",
-  "playerautoma.option.showQuickSlotsInQuickMenuButton": "Schnellzugriffe im Schnellmenü",
-  "playerautoma.option.tooltip.showQuickSlotsInQuickMenuButton": "Wenn aktiviert, zeigt Schnellzugriffe im Schnellmenü an und ermöglicht eine einfache Steuerung dieser",
+  "playerautoma.option.showQuickSlotsInQuickMenu": "Schnellzugriffe im Schnellmenü",
+  "playerautoma.option.tooltip.showQuickSlotsInQuickMenu": "Wenn aktiviert, zeigt Schnellzugriffe im Schnellmenü an und ermöglicht eine einfache Steuerung dieser",
 
   "playerautoma.messages.menuPreventionToggle": "Die Menüverhinderung wurde umgeschaltet auf",
   "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",
@@ -123,7 +123,7 @@
   "playerautoma.messages.storeQuickslot": "Aufnahme im Quickslot gespeichert",
   "playerautoma.messages.loadQuickslot": "Aufnahme im Quickslot geladen",
   "playerautoma.messages.clearedAllQuickSlot": "Alle Quickslots gelöscht",
-  "playerautoma.messages.clearedOneQuickSlot": "Einzelner Quickslot gelöscht",
+  "playerautoma.messages.clearedOneQuickSlot": "Löschte Quickslot",
 
   "playerautoma.messages.error.startEmptyRecording": "Nichts aufgenommen. Kann nicht 'Nichts' starten!",
   "playerautoma.messages.error.cannotStoreEmpty": "Kann leere Aufnahme nicht speichern",

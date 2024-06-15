@@ -123,7 +123,7 @@
   "playerautoma.messages.storeQuickslot": "Stored Recording to QuickSlot ",
   "playerautoma.messages.loadQuickslot": "Loaded Recording to QuickSlot ",
   "playerautoma.messages.clearedAllQuickSlot": "Cleared all QuickSlots",
-  "playerautoma.messages.clearedOneQuickSlot": "Cleared QuickSlots",
+  "playerautoma.messages.clearedOneQuickSlot": "Cleared QuickSlot",
 
   "playerautoma.messages.error.startEmptyRecording": "Nothing recorded. Can't start nothing!",
   "playerautoma.messages.error.cannotStoreEmpty": "Cannot store empty Recording",
