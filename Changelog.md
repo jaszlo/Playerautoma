@@ -1,25 +1,26 @@
 # Version v0.5.0
 * New Features:
   * Quickmenu via (by default) holding F4 Key allows for
-    * Easy Control of the Player Recorder (Start/Stop Replay/Recording)
-    * Looping for n-times via left-clicking loop button n-times
+    * Easy Control of the PlayerRecorder (Start/Stop/Pause/Loop Replay/Recording)
+    * Looping for n-times via left-clicking loop button n-times (or holding it down)
     * Looping indefinitely via right-clicking loop button once
-    * Quickslot storing/loading via right- and left-clicking
-  * Pausing the Recording is possible via Quickmenu or Hotkey (Same as Pausing Replay by default)
-  * `/record quickslot clear <1..9>` and `/record quickslot clear` commands have been added to clear all or single quickslot
+    * Quickslot storing/loading/deletion via right-, left- or wheel-clicking  
+  * Pausing the Recording is now possible via Quickmenu or Hotkey (Same hotkey as Pausing Replay by default)
+  * `/record quickslot clear <1..9>` and `/record quickslot clear` commands have been added to clear single or all quickslot
   * Thumbnails as a preview for recordings are created and displayed for
     * storing screen
     * loading screen
     * quickmenu quickslots
+  * Thumbnails are serialized to files and will be kept when sending a recording to a friend
   * Option to disable quickslot usage via `ctrl/alt + [1..9]` keybinds
   * Option to allow slot changes when using quickslots e.g. Ctrl + 1 will select slot 1. Was previously prevented
-  * Option to disable quickslots from quickmenu
+  * Option to disable quickslots from QuickMenu
   * Quickslots are now persistent and will be kept even after minecraft is closed
 * Changes:
   * Info no longer written to chat rather appears in the players action bar
   * Drops spanish translation
   * Updates PlayerRecorder state icons
-  * More and more descriptive error message (to action bar)
+  * Many more descriptive error message (to action bar)
   * Moves all playerautoma related files into one `playerautoma` folder in the `.minecraft` folder
 * Bugfix:
   * Playerautoma Keybindings will no longer be recorded
