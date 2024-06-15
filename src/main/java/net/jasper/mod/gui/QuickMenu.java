@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -307,8 +308,6 @@ public class QuickMenu extends Screen {
         this.mouseY = mouseY;
 
         boolean showQuickSlots = PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue();
-
-
         // Draw black rectangle as background with grey border
         {
             int x1 = buttonStartPauseRecord.getX() - 10;
@@ -418,7 +417,6 @@ public class QuickMenu extends Screen {
 
         // Draw quick slot thumbnails
         {
-            // Update button alpha and texture
             for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
                 boolean isEmpty = QuickSlots.quickSlots[i].isEmpty();
                 float alpha = isEmpty ? EMPTY_QUICKSLOT_BUTTON_ALPHA : FULL_QUICKSLOT_BUTTON_ALPHA;

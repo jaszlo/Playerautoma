@@ -20,15 +20,24 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 	public static final String MOD_ID = "playerautoma";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID + "::client");
-	public static final String RECORDING_FOLDER_NAME = "recordings";
 
 	public static final String PLAYERAUTOMA_FOLDER_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), MOD_ID).toString();
-	public static final String PLAYERAUTOMA_RECORDING_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, RECORDING_FOLDER_NAME).toString();
+	public static final String PLAYERAUTOMA_RECORDING_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, "recordings").toString();
+	public static final String PLAYERAUTOMA_QUICKSLOT_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, "quickslots").toString();
 
 	public static final String[] REQUIRED_FOLDERS = {
 			PLAYERAUTOMA_FOLDER_PATH,
 			PLAYERAUTOMA_RECORDING_PATH,
+			PLAYERAUTOMA_QUICKSLOT_PATH
 	};
+
+
+	// Will be executed in mixin after client has been fully initialized
+	public static void initializeAfterClient() {
+		// Loading textures required the texture manager to be created which is not the case when run in "onInitializeClient"
+		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
+		QuickSlots.register();
+	}
 
 
 	@Override
@@ -59,17 +68,13 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		// Register HUD element for state of Player-Recorder
 		PlayerAutomaHUD.register();
 
-		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
-		QuickSlots.register();
-
 		// Register Commands to control the Player-Recorder
 		Commands.register();
 
 		// Register MenuPrevention. That allows to run Recording with minecraft in the background.
 		MenuPrevention.register();
 
-		// Load thumbnails from stored recordings to prevent lag
+		// Load thumbnails from stored recordings to prevent lag on first opening of load recording screen
 		RecordingSelectorScreen.loadThumbnails();
-
 	}
 }

@@ -145,6 +145,7 @@ public class Commands {
         if (callNext) {
             RecordingStorerScreen.useJSON.next();
         }
+
         PlayerRecorder.storeRecord(fileName + "." + fileType);
 
         // Restore original filetype

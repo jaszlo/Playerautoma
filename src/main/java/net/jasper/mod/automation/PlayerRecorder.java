@@ -4,13 +4,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.PlayerAutomaMenuScreen;
 import net.jasper.mod.gui.QuickMenu;
-import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
-import net.jasper.mod.util.ClientHelpers;
-import net.jasper.mod.util.JsonHelpers;
-import net.jasper.mod.util.RecordingThumbnailRecorder;
-import net.jasper.mod.util.Textures;
+import net.jasper.mod.util.*;
 import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
@@ -23,10 +19,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import org.slf4j.Logger;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -37,8 +31,6 @@ import static net.jasper.mod.automation.PlayerRecorder.State.*;
  * Class records player input and allows to replay those
  */
 public class PlayerRecorder {
-
-    private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
 
     public static Recording record = new Recording(null);
     public static NativeImageBackedTexture thumbnailTexture = null;
@@ -420,18 +412,6 @@ public class PlayerRecorder {
     }
 
 
-    private static File createNewFileName(String name) {
-        File selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, name).toFile();
-        String fileType = RecordingStorerScreen.useJSON.getValue() ? ".json" : ".rec";
-        String newName = name;
-        while (selected.exists()) {
-            newName = newName.substring(0, newName.length() - fileType.length()) + "_new" + fileType;
-            selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, newName).toFile();
-        }
-        return selected;
-    }
-
-
     public static void storeRecord(String name) {
         if (record.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreEmpty"));
@@ -440,47 +420,14 @@ public class PlayerRecorder {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreDueToState"));
             return;
         }
-
-        File selected = null;
-        ObjectOutputStream objectOutputStream = null;
-        try {
-            // If file already exists create new file with "_new" before file type.
-            selected = createNewFileName(name);
-            FileOutputStream fos = new FileOutputStream(selected);
-            objectOutputStream = new ObjectOutputStream(fos);
-            if (objectOutputStream == null) throw new IOException("objectInputStream is null");
-            // Store as .json/.rec according to option
-            if (RecordingStorerScreen.useJSON.getValue()) {
-                String json = JsonHelpers.serialize(record);
-                FileWriter fileWriter = new FileWriter(selected);
-                BufferedWriter writer = new BufferedWriter(fileWriter);
-                writer.write(json);
-                writer.close();
-                fileWriter.close();
-            } else {
-                objectOutputStream.writeObject(record);
-            }
-            objectOutputStream.close();
-            fos.close();
-            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storedRecording"));
-
-        } catch(IOException e) {
-            LOGGER.warn(e.getMessage());
-            try {
-                if (objectOutputStream != null) objectOutputStream.close();
-                LOGGER.info("Deletion of failed file: {}", selected.delete());
-            } catch (IOException closeFailed) {
-                LOGGER.warn(closeFailed.getMessage());
-                LOGGER.warn("Error closing file (storeRecord) in error handling!"); // This should not happen :(
-            }
-            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.storeFailed"));
-            LOGGER.info("Failed to create output stream for selected file");
-        }
+        boolean success = IOHelpers.storeRecordingFile(record, new File(PLAYERAUTOMA_RECORDING_PATH), name);
+        Text feedback = success ? Text.translatable("playerautoma.messages.storedRecording") : Text.translatable("playerautoma.messages.error.storeFailed");
+        ClientHelpers.writeToActionBar(feedback);
     }
 
-    public static void loadRecord(String name) {
-        File selected = Path.of(PLAYERAUTOMA_RECORDING_PATH, name).toFile();
-        loadRecord(selected);
+
+    public static void loadRecord(String selected) {
+        loadRecord(new File(selected));
     }
 
     public static void loadRecord(File selected) {
@@ -489,61 +436,10 @@ public class PlayerRecorder {
             return;
         }
 
-        // Try to load file as .json and .rec which ever works use it
-        // TODO: When adding more file types add an enum for this and do not brute force
-        String[] options = { "json", "rec" };
-        boolean success = false;
-        for (String option : options) {
-            if (option.equals("json")) {
-                try {
-                    FileReader fileReader = new FileReader(selected);
-                    BufferedReader reader = new BufferedReader(fileReader);
-                    StringBuilder readFile = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        readFile.append(line);
-                    }
-                    reader.close();
-                    fileReader.close();
-                    record = JsonHelpers.deserialize(readFile.toString());
-                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
-                } catch(Exception e) {
-                    // success will stay on false and message will be printed after for loop
-                    continue;
-                }
-                success = true;
-                break;
-            } else if (option.equals("rec")) {
-                ObjectInputStream objectInputStream = null;
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(selected);
-                    objectInputStream = new ObjectInputStream(fis);
-                    // This can happen when a file is selected and then deleted via the file explorer
-                    if (objectInputStream == null) throw new IOException("objectInputStream is null");
-
-                    record = (Recording) objectInputStream.readObject();
-                    objectInputStream.close();
-                    fis.close();
-                    ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.loadedRecording"));
-                } catch (Exception e) {
-                    LOGGER.warn(e.getMessage());
-                    try {
-                        if (objectInputStream != null) objectInputStream.close();
-                        if (fis != null) fis.close();
-                    } catch (IOException closeFailed) {
-                        LOGGER.warn(closeFailed.getMessage());
-                        LOGGER.warn("Error closing file (loadRecord) in error handling!"); // This should not happen :(
-                    }
-                    continue;
-
-                }
-                success = true;
-                break;
-            }
-        }
-        if (!success) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
-
+        // Do not load async as we ant the result as fast as possible
+        Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_RECORDING_PATH), selected);
+        if (r.isEmpty()) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
+        else record = r;
     }
 
     public enum State {

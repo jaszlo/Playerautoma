@@ -2,16 +2,15 @@ package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.OptionButton;
+import net.jasper.mod.util.IOHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,7 +40,7 @@ public class RecordingStorerScreen extends Screen {
             "playerautoma.option.exportAs",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? Text.of(".json") : Text.of(".rec"))
+            (bool) -> (bool ? Text.of(IOHelpers.RecordingFileTypes.JSON) : Text.of(IOHelpers.RecordingFileTypes.REC))
     );
 
     protected void init() {

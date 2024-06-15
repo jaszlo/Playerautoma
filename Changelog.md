@@ -14,6 +14,7 @@
   * Option to disable quickslot usage via `ctrl/alt + [1..9]` keybinds
   * Option to allow slot changes when using quickslots e.g. Ctrl + 1 will select slot 1. Was previously prevented
   * Option to disable quickslots from quickmenu
+  * Quickslots are now persistent and will be kept even after minecraft is closed
 * Changes:
   * Info no longer written to chat rather appears in the players action bar
   * Drops spanish translation

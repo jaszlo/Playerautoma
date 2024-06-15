@@ -4,7 +4,7 @@ package net.jasper.mod.gui;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.util.ClientHelpers;
-import net.jasper.mod.util.JsonHelpers;
+import net.jasper.mod.util.IOHelpers;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
@@ -25,6 +25,8 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH;
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.util.Textures.DEFAULT_BUTTON_TEXTURES;
 import static net.jasper.mod.util.Textures.SelectorScreen.REFRESH_ICON;
 // TODO: this could be a general class listing files of a directory and letting you select one given a callback function
@@ -41,13 +43,15 @@ public class RecordingSelectorScreen extends Screen {
     private final MinecraftClient client;
 
     // TODO: This should be cleaned up on update. However I can't be bothered right now as it is more a best practice than really necessary
+    // Use map to store thumbnails and only load new ones in the future in "updateFiles"
     protected final static Map<String, RecordingThumbnail> thumbnails = new HashMap<>();
 
     /**
      * Initially load thumbnails on load to prevent lag when this screen is opened for the first time
      */
     public static void loadThumbnails() {
-        File[] fileList = new File(PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH).listFiles();
+        File recordingFolder = new File(PLAYERAUTOMA_FOLDER_PATH);
+        File[] fileList = recordingFolder.listFiles();
         if (fileList == null) {
             return;
         }
@@ -55,10 +59,9 @@ public class RecordingSelectorScreen extends Screen {
             if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
                 // Only do this if the thumbnail is not yet registered
                 if (!thumbnails.containsKey(file.getName())) {
-                    Recording r = getRecordFromFile(file);
-                    // Could not load recording - therefore disregard
-                    if (r == null) continue;
-                    thumbnails.put(file.getName(), r.thumbnail);
+                    IOHelpers.loadRecordingFileAsync(recordingFolder, file, (r) -> {
+                        if (r != null) thumbnails.put(file.getName(), r.thumbnail);
+                    });
                 }
             }
         }
@@ -66,7 +69,7 @@ public class RecordingSelectorScreen extends Screen {
 
     public RecordingSelectorScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.selector"));
-        this.directoryPath = PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
+        this.directoryPath = PLAYERAUTOMA_RECORDING_PATH;
         this.parent = parent;
         this.client = MinecraftClient.getInstance();
         this.init();
@@ -175,57 +178,6 @@ public class RecordingSelectorScreen extends Screen {
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
     }
 
-    public static Recording getRecordFromFile(File selected) {
-        String[] options = { "json", "rec" };
-        Recording result = null;
-        for (String option : options) {
-            if (option.equals("json")) {
-                try {
-                    FileReader fileReader = new FileReader(selected);
-                    BufferedReader reader = new BufferedReader(fileReader);
-                    StringBuilder readFile = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        readFile.append(line);
-                    }
-                    reader.close();
-                    fileReader.close();
-                    result = JsonHelpers.deserialize(readFile.toString());
-                } catch(Exception e) {
-                    // Try rec file then
-                    continue;
-                }
-                break;
-            } else if (option.equals("rec")) {
-                ObjectInputStream objectInputStream = null;
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(selected);
-                    objectInputStream = new ObjectInputStream(fis);
-                    // This can happen when a file is selected and then deleted via the file explorer
-                    if (objectInputStream == null) throw new IOException("objectInputStream is null");
-
-                    result = (Recording) objectInputStream.readObject();
-                    objectInputStream.close();
-                    fis.close();
-                } catch (Exception e) {
-                    PlayerAutomaClient.LOGGER.warn(e.getMessage());
-                    try {
-                        if (objectInputStream != null) objectInputStream.close();
-                        if (fis != null) fis.close();
-                    } catch (IOException closeFailed) {
-                        PlayerAutomaClient.LOGGER.warn(closeFailed.getMessage());
-                        PlayerAutomaClient.LOGGER.warn("Error closing file (loadRecord) in error handling!"); // This should not happen :(
-                    }
-                    continue;
-
-                }
-                break;
-            }
-        }
-        return result;
-    }
-
 
     private class RecordingSelectionListWidget extends AlwaysSelectedEntryListWidget<RecordingSelectionListWidget.RecordingEntry> {
         final String directoryPath;
@@ -242,7 +194,8 @@ public class RecordingSelectorScreen extends Screen {
 
         public void updateFiles() {
             this.clearEntries();
-            File[] fileList = new File(this.directoryPath).listFiles();
+            File recordingDirectory = new File(this.directoryPath);
+            File[] fileList = recordingDirectory.listFiles();
             if (fileList == null) {
                 return;
             }
@@ -250,10 +203,9 @@ public class RecordingSelectorScreen extends Screen {
                 if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
                     // Only do this if the thumbnail is not yet registered
                     if (!thumbnails.containsKey(file.getName())) {
-                        Recording r = getRecordFromFile(file);
-                        // Could not load recording - therefore disregard
-                        if (r == null) continue;
-                        thumbnails.put(file.getName(), r.thumbnail);
+                        // Do not load async or image will not be available for screen when first opened
+                        Recording r = IOHelpers.loadRecordingFile(recordingDirectory, file);
+                        if (r != null) thumbnails.put(file.getName(), r.thumbnail);
                     }
                     RecordingEntry entry = new RecordingEntry(file.getName(), file, thumbnails.get(file.getName()));
                     this.addEntry(entry);

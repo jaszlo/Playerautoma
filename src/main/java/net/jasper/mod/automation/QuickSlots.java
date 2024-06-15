@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
+import net.jasper.mod.util.IOHelpers;
 import net.jasper.mod.util.data.Recording;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -13,7 +14,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
 import java.util.Arrays;
+
+import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_QUICKSLOT_PATH;
 
 /**
  * QuickSlots for storing and loading Recordings for the PlayerRecorder
@@ -23,6 +27,17 @@ public class QuickSlots {
     public static final int QUICKSLOTS_N = 9;
 
     public static Recording[] quickSlots = new Recording[QUICKSLOTS_N];
+    public static String[] quickSlotFileNames = {
+            "quickslot_1.rec",
+            "quickslot_2.rec",
+            "quickslot_3.rec",
+            "quickslot_4.rec",
+            "quickslot_5.rec",
+            "quickslot_6.rec",
+            "quickslot_7.rec",
+            "quickslot_8.rec",
+            "quickslot_9.rec"
+    };
 
     // KeyBinding State
     private static final int[] storeCooldowns = new int[QUICKSLOTS_N];
@@ -36,8 +51,10 @@ public class QuickSlots {
             return;
         }
 
-        updateQuickSlotTexture(slot, new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
         quickSlots[slot] = recording;
+        updateQuickSlotTexture(slot, new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
+        // I assume that this doesn't fail, and therefore I don't check a return value i created to check this fails ...
+        IOHelpers.storeRecordingFile(quickSlots[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), quickSlotFileNames[slot], IOHelpers.RecordingFileTypes.REC, true);
     }
 
     private static Recording load(int slot) {
@@ -50,15 +67,15 @@ public class QuickSlots {
     // Initialize State
     static {
         THUMBNAIL_IDENTIFIER = new Identifier[] {
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_1"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_2"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_3"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_4"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_5"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_6"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_7"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_8"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quick_slot_9"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_1"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_2"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_3"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_4"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_5"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_6"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_7"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_8"),
+                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_9"),
         };
         Arrays.fill(quickSlots, new Recording(null));
         Arrays.fill(ALTPressed, false);
@@ -151,11 +168,21 @@ public class QuickSlots {
             return;
         }
 
+        // Store quickslots to file to be persistent in store
         store(slot, PlayerRecorder.record.copy());
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storeQuickslot").append(Text.of("" + (slot  + 1))));
     }
 
     public static void register() {
+        // Load persistent quickslots.
+        for (int i = 0; i < QUICKSLOTS_N; i++) {
+            int finalI = i;
+            IOHelpers.loadRecordingFileAsync(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(quickSlotFileNames[i]), (recording) -> {
+                quickSlots[finalI] = recording;
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[finalI], new NativeImageBackedTexture(recording.thumbnail.toNativeImage()));
+            });
+        }
+
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.player == null) {
                 return;

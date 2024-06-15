@@ -1,7 +1,9 @@
 package net.jasper.mod.mixins;
 
+import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.MenuPrevention;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
@@ -27,5 +29,10 @@ public class MinecraftClientMixin {
                 ci.cancel();
             }
         }
+    }
+
+    @Inject(method = "<init>", at=@At("TAIL"))
+    private void injected(RunArgs args, CallbackInfo ci) {
+        PlayerAutomaClient.initializeAfterClient();
     }
 }
