@@ -25,7 +25,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH;
 import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.util.Textures.DEFAULT_BUTTON_TEXTURES;
 import static net.jasper.mod.util.Textures.SelectorScreen.REFRESH_ICON;
