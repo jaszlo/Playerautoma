@@ -120,8 +120,9 @@ public class PlayerRecorder {
         if (screenshot != null) {
             record.thumbnail = screenshot;
             thumbnailTexture = new NativeImageBackedTexture(screenshot.toNativeImage());
+            // Destroy old texture and register new
+            MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
             MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
-
         }
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
@@ -441,8 +442,13 @@ public class PlayerRecorder {
         // This is not true, but we need to fail somehow ...
         if (r.isEmpty()) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
         else record = r;
-        // Register thumbnail
 
+        // Destroy old texture, register new one if present
+        MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
+        if (r.thumbnail != null) {
+            thumbnailTexture = new NativeImageBackedTexture(r.thumbnail.toNativeImage());
+            MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
+        }
     }
 
     public enum State {
