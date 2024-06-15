@@ -4,6 +4,7 @@ import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 
@@ -96,7 +97,7 @@ public class RecordingThumbnailRecorder {
             client.gameRenderer.setRenderingPanorama(true);
             client.worldRenderer.reloadTransparencyPostProcessor();
             framebuffer.beginWrite(true);
-            client.gameRenderer.renderWorld(1.0f, 0L);
+            client.gameRenderer.renderWorld(RenderTickCounter.ONE);
             screenshot =  ScreenshotRecorder.takeScreenshot(framebuffer);
         } catch (Exception exception) {
             PlayerAutomaClient.LOGGER.error("Couldn't save temporary screenshot image", exception);

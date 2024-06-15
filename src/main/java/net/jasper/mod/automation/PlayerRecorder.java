@@ -34,7 +34,7 @@ public class PlayerRecorder {
 
     public static Recording record = new Recording(null);
     public static NativeImageBackedTexture thumbnailTexture = null;
-    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = new Identifier(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
+    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = Identifier.of(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
 
     public static State state = IDLE;
 
@@ -438,8 +438,11 @@ public class PlayerRecorder {
 
         // Do not load async as we ant the result as fast as possible
         Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_RECORDING_PATH), selected);
+        // This is not true, but we need to fail somehow ...
         if (r.isEmpty()) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
         else record = r;
+        // Register thumbnail
+
     }
 
     public enum State {

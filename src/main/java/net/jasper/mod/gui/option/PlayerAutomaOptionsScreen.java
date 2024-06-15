@@ -300,4 +300,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);
     }
+
+    @Override
+    protected void addOptions() {
+        // Added with 1.21 - Don't know what this does??
+    }
 }

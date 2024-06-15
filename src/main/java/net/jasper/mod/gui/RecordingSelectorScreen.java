@@ -230,7 +230,7 @@ public class RecordingSelectorScreen extends Screen {
                 this.file = file;
                 if (thumbnail != null) {
                     this.texture = new NativeImageBackedTexture(thumbnail.toNativeImage());
-                    this.textureIdentifier = new Identifier(PlayerAutomaClient.MOD_ID, fileName);
+                    this.textureIdentifier = Identifier.of(PlayerAutomaClient.MOD_ID, fileName);
                     MinecraftClient.getInstance().getTextureManager().registerTexture(textureIdentifier, texture);
                 }
             }

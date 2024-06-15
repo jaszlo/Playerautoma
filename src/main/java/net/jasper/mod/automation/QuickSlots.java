@@ -68,15 +68,15 @@ public class QuickSlots {
     // Initialize State
     static {
         THUMBNAIL_IDENTIFIER = new Identifier[] {
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_1"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_2"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_3"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_4"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_5"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_6"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_7"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_8"),
-                new Identifier(PlayerAutomaClient.MOD_ID, "quickslot_9"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_1"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_2"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_3"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_4"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_5"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_6"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_7"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_8"),
+                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_9"),
         };
         Arrays.fill(quickSlots, new Recording(null));
         Arrays.fill(ALTPressed, false);
