@@ -1,3 +1,6 @@
+# Version v0.5.1
+* Bugfix:
+  * Hotfixes Keybinding for Menuprevention not working
 # Version v0.5.0
 * New Features:
   * Quickmenu via (by default) holding F4 Key allows for
