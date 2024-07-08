@@ -38,7 +38,7 @@ public class PlayerRecorder {
 
     public static Recording record = new Recording(null);
     public static NativeImageBackedTexture thumbnailTexture = null;
-    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = Identifier.of(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
+    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = new Identifier(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
 
     public static State state = IDLE;
 
@@ -131,6 +131,7 @@ public class PlayerRecorder {
             // Destroy old texture and register new
             MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
             MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
+
         }
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
@@ -308,12 +309,16 @@ public class PlayerRecorder {
 
                 // Click Villager trade if possible
                 if (villagerTrade != null && client.currentScreen != null) {
-                    MerchantScreen tradeScreen = (MerchantScreen) client.currentScreen;
-                    MerchantScreenAccessor accessor = (MerchantScreenAccessor) tradeScreen;
-                    accessor.setSelectedIndex(villagerTrade);
-                    accessor.setSyncRecipeIndexInvoker();
-                    // Button Sound not happening as button not clicked but immetate it
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    try {
+                        MerchantScreen tradeScreen = (MerchantScreen) client.currentScreen;
+                        MerchantScreenAccessor accessor = (MerchantScreenAccessor) tradeScreen;
+                        accessor.setSelectedIndex(villagerTrade);
+                        accessor.setSyncRecipeIndexInvoker();
+                        // Button Sound not happening as button not clicked but immediate it
+                        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    } catch (Exception e) {
+                        PlayerAutomaClient.LOGGER.warn("Villager Trade Click resulted in unexpected exception", e);
+                    }
                 }
             });
         }
@@ -458,7 +463,6 @@ public class PlayerRecorder {
 
         // Do not load async as we ant the result as fast as possible
         Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_RECORDING_PATH), selected);
-        // This is not true, but we need to fail somehow ...
         if (r.isEmpty()) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
         else record = r;
 
@@ -468,6 +472,7 @@ public class PlayerRecorder {
             thumbnailTexture = new NativeImageBackedTexture(r.thumbnail.toNativeImage());
             MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
         }
+
     }
 
     public enum State {
