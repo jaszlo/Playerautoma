@@ -309,12 +309,16 @@ public class PlayerRecorder {
 
                 // Click Villager trade if possible
                 if (villagerTrade != null && client.currentScreen != null) {
-                    MerchantScreen tradeScreen = (MerchantScreen) client.currentScreen;
-                    MerchantScreenAccessor accessor = (MerchantScreenAccessor) tradeScreen;
-                    accessor.setSelectedIndex(villagerTrade);
-                    accessor.setSyncRecipeIndexInvoker();
-                    // Button Sound not happening as button not clicked but immediate it
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    try {
+                        MerchantScreen tradeScreen = (MerchantScreen) client.currentScreen;
+                        MerchantScreenAccessor accessor = (MerchantScreenAccessor) tradeScreen;
+                        accessor.setSelectedIndex(villagerTrade);
+                        accessor.setSyncRecipeIndexInvoker();
+                        // Button Sound not happening as button not clicked but immediate it
+                        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    } catch (Exception e) {
+                        PlayerAutomaClient.LOGGER.warn("Villager Trade Click resulted in unexpected exception", e);
+                    }
                 }
             });
         }
