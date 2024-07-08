@@ -9,10 +9,12 @@
     "ClientPlayerNetworkHandlerMixin",
     "HandledScreenMixin",
     "KeyboardMixin",
+    "MerchantScreenMixin",
     "MinecraftClientMixin",
     "MouseMixin",
     "ScreenMixin",
     "accessors.KeyBindingAccessor",
+    "accessors.MerchantScreenAccessor",
     "accessors.NativeImageAccessor",
     "accessors.ScreenAccessor"
   ]

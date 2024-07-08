@@ -1,6 +1,7 @@
 package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
+import net.jasper.mod.gui.components.FilteredTextFieldWidget;
 import net.jasper.mod.gui.option.OptionButton;
 import net.jasper.mod.util.IOHelpers;
 import net.minecraft.client.MinecraftClient;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,13 +55,15 @@ public class RecordingStorerScreen extends Screen {
                 MinecraftClient.getInstance().textRenderer
         );
 
-        TextFieldWidget textField = new TextFieldWidget(
+        FilteredTextFieldWidget textField = new FilteredTextFieldWidget(
                 MinecraftClient.getInstance().textRenderer,
                 this.width / 2 - 100,
                 this.height / 2 - 10,
                 200,
                 20,
-                Text.of("")
+                Text.of(""),
+                "playerautoma.messages.error.cannotNameRecordingThatWay",
+                Identifier::isNamespaceValid
         );
 
         // Set Text Field Properties
@@ -72,7 +76,7 @@ public class RecordingStorerScreen extends Screen {
         textField.setText(datedName);
         this.input = textField;
 
-        ButtonWidget save = new ButtonWidget.Builder(
+        ButtonWidget saveButton = new ButtonWidget.Builder(
               Text.of("Save"),
               (button) -> {
                   String name = this.input.getText();
@@ -96,7 +100,7 @@ public class RecordingStorerScreen extends Screen {
 
         this.addDrawableChild(textField);
         this.addDrawableChild(text);
-        this.addDrawableChild(save);
+        this.addDrawableChild(saveButton);
         this.addDrawableChild(useJSONButton);
     }
 
@@ -119,6 +123,7 @@ public class RecordingStorerScreen extends Screen {
             context.drawTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, this.width / 2 - 144, this.height / 2 - 9, 0, 0,38, 38, 38, 38);
         }
     }
+
 
     @Override
     public void close() {

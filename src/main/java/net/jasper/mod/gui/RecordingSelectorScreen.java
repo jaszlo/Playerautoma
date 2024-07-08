@@ -19,6 +19,7 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.Util;
 
 import java.io.*;
@@ -61,7 +62,12 @@ public class RecordingSelectorScreen extends Screen {
                     Recording r = IOHelpers.loadRecordingFile(recordingFolder, file);
                     if (r != null) {
                         thumbnails.put(file.getName(), r.thumbnail);
-                        MinecraftClient.getInstance().getTextureManager().registerTexture(Identifier.of(PlayerAutomaClient.MOD_ID, file.getName()), new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
+                        try {
+                            Identifier id = new Identifier(PlayerAutomaClient.MOD_ID, String.valueOf(file.getName().hashCode()));
+                            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
+                        } catch(InvalidIdentifierException e) {
+                            PlayerAutomaClient.LOGGER.warn("Failed to load thumbnail for {}", file.getName());
+                        }
                     }
                 }
             }
@@ -231,8 +237,12 @@ public class RecordingSelectorScreen extends Screen {
                 this.file = file;
                 if (thumbnail != null) {
                     this.texture = new NativeImageBackedTexture(thumbnail.toNativeImage());
-                    this.textureIdentifier = new Identifier(PlayerAutomaClient.MOD_ID, fileName);
-                    MinecraftClient.getInstance().getTextureManager().registerTexture(textureIdentifier, texture);
+                    try {
+                        this.textureIdentifier = new Identifier(PlayerAutomaClient.MOD_ID, String.valueOf(fileName.hashCode()));
+                        MinecraftClient.getInstance().getTextureManager().registerTexture(textureIdentifier, texture);
+                    } catch (InvalidIdentifierException e) {
+                        PlayerAutomaClient.LOGGER.warn("Could not load thumbnail for file {}", fileName, e);
+                    }
                 }
             }
 

@@ -141,5 +141,6 @@
   "playerautoma.messages.error.cannotTogglePauseReplayWhileInvalidState": "Kann Wiedergabe nur pausieren oder fortsetzen, wenn diese gestartet wurde.",
   "playerautoma.messages.error.cannotTogglePauseRecordingWhileInvalidState": "Kann Aufnahme nur pausieren oder fortsetzen, wenn diese gestartet wurde.",
   "playerautoma.messages.error.cannotStopNotStartedReplay": "Kann keine Wiedergabe stoppen die nicht gestartet wurde",
-  "playerautoma.messages.error.cannotStopNotStartedRecording": "Kann keine Aufnahme stoppen die nicht gestartet wurde"
+  "playerautoma.messages.error.cannotStopNotStartedRecording": "Kann keine Aufnahme stoppen die nicht gestartet wurde",
+  "playerautoma.messages.error.cannotNameRecordingThatWay": "Aufnahmename darf nur [a-z0-9/._-] Zeichen enthalten"
 }

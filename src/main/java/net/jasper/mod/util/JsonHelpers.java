@@ -39,6 +39,7 @@ public class JsonHelpers {
     private static final String THUMBNAIL_COLORS = "colors";
     private static final String THUMBNAIL_WIDTH = "width";
     private static final String THUMBNAIL_HEIGHT = "height";
+    private static final String VILLAGER_TRADE = "villagerTrade";
 
 
     public static String serialize(Recording r) {
@@ -114,6 +115,12 @@ public class JsonHelpers {
                 if (entry.command() != null) {
                     jsonEntry.addProperty(COMMAND, entry.command());
                 }
+
+                // Villager trade
+                if (entry.villagerTrade() != null) {
+                    jsonEntry.addProperty(VILLAGER_TRADE, entry.villagerTrade());
+                }
+
             }
             entries.add(jsonEntry);
         }
@@ -203,6 +210,14 @@ public class JsonHelpers {
                 // PlayerAutomaClient.LOGGER.info(e.toString());
             }
 
+            Integer villagerTrade = null;
+            try {
+                villagerTrade = jsonEntry.get(VILLAGER_TRADE).getAsInt();
+            } catch (Exception e) {
+                // Do nothing. When this happens the value is null as it should be and is not present
+                // PlayerAutomaClient.LOGGER.info(e.toString());
+            }
+
             Recording.RecordEntry entry = new Recording.RecordEntry(
                 keysPressed,
                 timesPressed,
@@ -211,7 +226,8 @@ public class JsonHelpers {
                 selectedSlot,
                 slotclick,
                 currentScreen,
-                command
+                command,
+                villagerTrade
             );
             result.add(entry);
         }
