@@ -39,7 +39,6 @@ public class PlayerAutomaClient implements ClientModInitializer {
 		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
 		QuickSlots.register();
 
-
 		// Load thumbnails from stored recordings to prevent lag on first opening of load recording screen
 		RecordingSelectorScreen.loadThumbnails();
 	}

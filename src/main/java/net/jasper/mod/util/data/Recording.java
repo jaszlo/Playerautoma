@@ -17,7 +17,8 @@ public class Recording implements Serializable {
             int slotSelection,
             SlotClick slotClicked,
             Class<?> currentScreen,
-            String command
+            String command,
+            Integer villagerTrade
     ) implements Serializable {}
 
     public final List<RecordEntry> entries;
