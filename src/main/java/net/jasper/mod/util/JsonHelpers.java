@@ -182,40 +182,33 @@ public class JsonHelpers {
             int selectedSlot = jsonEntry.get(SELECTED_SLOT).getAsInt();
 
             SlotClick slotclick = null;
-            try {
+            if (jsonEntry.has(SLOT_CLICKED)) {
                 JsonObject jsonSlotClick = jsonEntry.get(SLOT_CLICKED).getAsJsonObject();
                     slotclick = new SlotClick(
                             jsonSlotClick.get(SLOT_ID).getAsInt(),
                             jsonSlotClick.get(BUTTON).getAsInt(),
                             SlotActionType.valueOf(jsonSlotClick.get(ACTION_TYPE).getAsString())
                     );
-            } catch (Exception e) {
-                // Do nothing. When this happens the value is null as it should be and is not present
-                // PlayerAutomaClient.LOGGER.info(e.toString());
             }
 
             Class<?> currentScreen = null;
-            try {
+            if (jsonEntry.has(CURRENT_SCREEN)) {
+                try {
                 currentScreen = Class.forName(jsonEntry.get(CURRENT_SCREEN).getAsString());
-            } catch (Exception e) {
-                // Do nothing. When this happens the value is null as it should be and is not present
-                //PlayerAutomaClient.LOGGER.info(e.toString());
+                } catch (Exception e) {
+                    // Do nothing. When this happens the value is null as it should be and is not present
+                    //PlayerAutomaClient.LOGGER.info(e.toString());
+                }
             }
 
             String command = null;
-            try {
+            if (jsonEntry.has(COMMAND)) {
                 command = jsonEntry.get(COMMAND).getAsString();
-            } catch (Exception e) {
-                // Do nothing. When this happens the value is null as it should be and is not present
-                // PlayerAutomaClient.LOGGER.info(e.toString());
             }
 
             Integer villagerTrade = null;
-            try {
+            if (jsonEntry.has(VILLAGER_TRADE)) {
                 villagerTrade = jsonEntry.get(VILLAGER_TRADE).getAsInt();
-            } catch (Exception e) {
-                // Do nothing. When this happens the value is null as it should be and is not present
-                // PlayerAutomaClient.LOGGER.info(e.toString());
             }
 
             Recording.RecordEntry entry = new Recording.RecordEntry(
