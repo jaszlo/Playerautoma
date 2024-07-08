@@ -38,7 +38,7 @@ public class PlayerRecorder {
 
     public static Recording record = new Recording(null);
     public static NativeImageBackedTexture thumbnailTexture = null;
-    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = new Identifier(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
+    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = Identifier.of(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
 
     public static State state = IDLE;
 
