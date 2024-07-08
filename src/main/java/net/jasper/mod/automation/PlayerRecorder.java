@@ -6,13 +6,17 @@ import net.jasper.mod.gui.PlayerAutomaMenuScreen;
 import net.jasper.mod.gui.QuickMenu;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
+import net.jasper.mod.mixins.accessors.MerchantScreenAccessor;
 import net.jasper.mod.util.*;
 import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -51,6 +55,9 @@ public class PlayerRecorder {
 
     // Keyboard Modifier State for current tick in replay
     public static final Queue<String> pressedModifiers = new ConcurrentLinkedDeque<>();
+
+    // Click on Trade in Villager Trading Screen (MerchantScreen)
+    public static final Queue<Integer> lastVillagerTradeMade = new ConcurrentLinkedDeque<>();
 
     public static void register() {
         // Register Task-Queues
@@ -95,7 +102,8 @@ public class PlayerRecorder {
                 client.player.getInventory().selectedSlot,
                 lastSlotClicked.poll(),
                 client.currentScreen == null ? null : client.currentScreen.getClass(),
-                lastCommandUsed.poll()
+                lastCommandUsed.poll(),
+                lastVillagerTradeMade.poll()
             );
             record.add(newEntry);
         });
@@ -238,6 +246,7 @@ public class PlayerRecorder {
             SlotClick clickedSlot = entry.slotClicked();
             Class<?> currentScreen = entry.currentScreen();
             String command = entry.command();
+            Integer villagerTrade = entry.villagerTrade();
 
             // Replay Ticks
             tasks.add(() -> {
@@ -296,6 +305,16 @@ public class PlayerRecorder {
 
                 // Execute command if possible
                 if (command != null) Objects.requireNonNull(client.getNetworkHandler()).sendChatCommand(command);
+
+                // Click Villager trade if possible
+                if (villagerTrade != null && client.currentScreen != null) {
+                    MerchantScreen tradeScreen = (MerchantScreen) client.currentScreen;
+                    MerchantScreenAccessor accessor = (MerchantScreenAccessor) tradeScreen;
+                    accessor.setSelectedIndex(villagerTrade);
+                    accessor.setSyncRecipeIndexInvoker();
+                    // Button Sound not happening as button not clicked but immetate it
+                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                }
             });
         }
 
