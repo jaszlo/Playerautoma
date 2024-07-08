@@ -1,6 +1,17 @@
+# Version v0.5.2
+* Bugfix:
+  * Storing or having a recording file with some special characters or capital letters no longer crashes the game when opening the load recording screen
+* Changes:
+  * Now only a-z ".-_" are allowed to use when creating a recording file via the designated screen
+  * Internal optimization for the JSON parsing
+* New Features:
+  * The TextField for the store record screen now only allows valid characters and invalid characters display an info message like the action bar 
+  * Villager trading via the buttons to select a trade now gets recorded
+
 # Version v0.5.1
 * Bugfix:
   * Hotfixes Keybinding for Menuprevention not working
+
 # Version v0.5.0
 * New Features:
   * Quickmenu via (by default) holding F4 Key allows for
