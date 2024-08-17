@@ -9,7 +9,7 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 
 
-public class RecordingThumbnailRecorder {
+public class ThumbnailHelpers {
 
     public static final int WIDTH = 64;
     public static final int HEIGHT = 64;
