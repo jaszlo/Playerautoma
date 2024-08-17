@@ -7,7 +7,11 @@ import net.jasper.mod.gui.QuickMenu;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.mixins.accessors.MerchantScreenAccessor;
-import net.jasper.mod.util.*;
+import net.jasper.mod.util.ClientHelpers;
+import net.jasper.mod.util.IOHelpers;
+import net.jasper.mod.util.Textures;
+import net.jasper.mod.util.ThumbnailHelpers;
+import net.jasper.mod.util.data.TaskQueue;
 import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
@@ -24,7 +28,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -124,7 +128,7 @@ public class PlayerRecorder {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
-        RecordingThumbnail screenshot = RecordingThumbnailRecorder.create();
+        RecordingThumbnail screenshot = ThumbnailHelpers.create();
         if (screenshot != null) {
             record.thumbnail = screenshot;
             thumbnailTexture = new NativeImageBackedTexture(screenshot.toNativeImage());
@@ -238,7 +242,13 @@ public class PlayerRecorder {
         float pitchDiff = isRelative ? l.pitch() - client.player.getPitch() : 0;
         float yawDiff = isRelative ? l.yaw() - client.player.getYaw() : 0;
 
-        for (Recording.RecordEntry entry : record.entries) {
+        CameraInterpolation.enable(); // Is disabled on last loop-iteration
+
+        for (int i = 0; i < record.entries.size(); i++) {
+            Recording.RecordEntry entry = record.entries.get(i);
+            // Only get next Entry if exists
+            Recording.RecordEntry nextEntry = (i + 1) == record.entries.size() ? null : record.entries.get(i + 1);
+
             // Get all data for current record tick (i) to replay
             List<String> keysPressed = entry.keysPressed();
             Map<String, Integer> timesPressed = entry.timesPressed();
@@ -251,10 +261,27 @@ public class PlayerRecorder {
 
             // Replay Ticks
             tasks.add(() -> {
+                // To ensure accuracy set the looking direction is set precisely on the tick and then interpolates towards the next position
+                client.player.setAngles(
+                    currentLookingDirection.yaw() - yawDiff,
+                    currentLookingDirection.pitch() - pitchDiff
+                );
 
-                // Update looking direction
-                client.player.setPitch(currentLookingDirection.pitch() - pitchDiff);
-                client.player.setYaw(currentLookingDirection.yaw() - yawDiff);
+                if (nextEntry != null) {
+                    CameraInterpolation.update(
+                    nextEntry.lookingDirection().pitch() - pitchDiff,
+                    nextEntry.lookingDirection().yaw() - yawDiff,
+                        client.getCurrentFps()
+                    );
+                    PlayerAutomaClient.LOGGER.info("({}, {}) -> ({}, {})",
+                            currentLookingDirection.pitch() - pitchDiff,
+                            currentLookingDirection.yaw() - yawDiff,
+                            nextEntry.lookingDirection().pitch() - pitchDiff,
+                            nextEntry.lookingDirection().yaw() - yawDiff
+                    );
+                } else {
+                    CameraInterpolation.disable();
+                }
 
                 // Update selected inventory slot
                 client.player.getInventory().selectedSlot = selectedSlot;

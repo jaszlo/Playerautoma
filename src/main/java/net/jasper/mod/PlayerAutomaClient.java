@@ -1,7 +1,6 @@
 package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
-
 import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.gui.RecordingSelectorScreen;
@@ -68,6 +67,7 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 		// Register Player-Recorder (Recording & Replaying)
 		PlayerRecorder.register();
+		CameraInterpolation.register();
 
 		// Register HUD element for state of Player-Recorder
 		PlayerAutomaHUD.register();
