@@ -48,8 +48,8 @@ public class MenuPrevention {
             return;
         }
 
-        // Do not allow background prevention to be toggled while in screen to prevent typing to toggle feature!
-        if (client.currentScreen instanceof ChatScreen) {
+        // Do not allow background prevention to be toggled while a screen is opened
+        if (client.currentScreen != null) {
             return;
         }
 
