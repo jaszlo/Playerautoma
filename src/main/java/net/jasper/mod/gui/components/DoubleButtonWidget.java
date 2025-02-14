@@ -26,7 +26,7 @@ public class DoubleButtonWidget extends ButtonWidget {
         }
 
 
-        if (this.isValidClickButton(button) && (this.clicked(mouseX, mouseY))) {
+        if (this.isValidClickButton(button)) {
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
             this.onClick(mouseX, mouseY);
             return true;
