@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -207,11 +208,11 @@ public class CommandsToExcludeOption extends Screen {
 
             public boolean mouseClicked(double mouseX, double mouseY, int button) {
                 this.onPressed();
-                if (System.currentTimeMillis() - this.clickTime < 250L) {
+                if (Util.getMeasuringTimeMs() - this.clickTime < 250L) {
                     CommandsToExcludeOption.this.onDone();
                 }
 
-                this.clickTime = System.currentTimeMillis();
+                this.clickTime = Util.getMeasuringTimeMs();
                 return true;
             }
 
