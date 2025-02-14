@@ -3,10 +3,11 @@ package net.jasper.mod.util;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.SimpleFramebuffer;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.util.math.ColorHelper;
 
 
 public class ThumbnailHelpers {
@@ -58,10 +59,10 @@ public class ThumbnailHelpers {
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 int color = originalImage.getColorArgb(x, y);
-                totalAlpha += (color >> 24) & 0xFF;
-                totalRed   += (color >> 16) & 0xFF;
-                totalGreen += (color >> 8)  & 0xFF;
-                totalBlue  += (color >> 0)  & 0xFF;
+                totalAlpha += ColorHelper.getAlpha(color);
+                totalRed   += ColorHelper.getRed(color);
+                totalGreen += ColorHelper.getGreen(color);
+                totalBlue  += ColorHelper.getBlue(color);
                 count++;
             }
         }
@@ -71,10 +72,7 @@ public class ThumbnailHelpers {
         int g = Math.min(totalGreen / count, 255);
         int b = Math.min(totalBlue  / count, 255);
 
-        return  ((a & 0xFF) << 24) |
-                ((r & 0xFF) << 16) |
-                ((g & 0xFF) << 8)  |
-                ((b & 0xFF) << 0);
+        return  ColorHelper.getArgb(a, r, g, b);
     }
 
 
@@ -86,28 +84,27 @@ public class ThumbnailHelpers {
         if (client.player == null) {
             return null;
         }
-
-        int width = client.getWindow().getFramebufferWidth();
-        int height = client.getWindow().getFramebufferHeight();
-
-        SimpleFramebuffer framebuffer = new SimpleFramebuffer(width, height, true);
+        Framebuffer framebuffer = client.getFramebuffer();
         NativeImage screenshot;
+
         try {
             client.gameRenderer.setBlockOutlineEnabled(false);
             client.gameRenderer.setRenderingPanorama(true);
-            client.worldRenderer.reload();
             framebuffer.beginWrite(true);
             client.gameRenderer.renderWorld(RenderTickCounter.ONE);
+            try {
+                Thread.sleep(10L);
+            } catch (InterruptedException var17) {
+
+            }
             screenshot =  ScreenshotRecorder.takeScreenshot(framebuffer);
         } catch (Exception exception) {
             PlayerAutomaClient.LOGGER.error("Couldn't save temporary screenshot image", exception);
             return null;
         } finally {
             client.gameRenderer.setBlockOutlineEnabled(true);
-            framebuffer.delete();
             client.gameRenderer.setRenderingPanorama(false);
-            client.worldRenderer.reload();
-            client.getFramebuffer().beginWrite(true);
+            framebuffer.beginWrite(true);
         }
 
         return RecordingThumbnail.createFromNativeImage(scaleDownImage(screenshot, WIDTH, HEIGHT));
