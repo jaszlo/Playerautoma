@@ -4,12 +4,14 @@ import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.ScreenAccessor;
+import net.jasper.mod.util.ColorHelpers;
 import net.jasper.mod.util.Textures;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -37,9 +39,9 @@ public class QuickMenu extends Screen {
     private final TextWidget loopCountText;
 
     private final ButtonWidget[] buttonsQuickSlots = new ButtonWidget[QuickSlots.QUICKSLOTS_N];
-    private final float EMPTY_QUICKSLOT_BUTTON_ALPHA = 0.6f;
-    private final float FULL_QUICKSLOT_BUTTON_ALPHA = 1f;
-    private final float BACKGROUND_OUTLINE_ALPHA = 0.3f;
+    private final int EMPTY_QUICKSLOT_BUTTON_ALPHA = 153;
+    private final int FULL_QUICKSLOT_BUTTON_ALPHA = 255;
+    private final int BACKGROUND_OUTLINE_ALPHA = 77;
 
     private final Text INFINITY = Text.of("∞");
 
@@ -327,18 +329,15 @@ public class QuickMenu extends Screen {
                 separationY += 5;
             }
 
-            // Make background transparent
-            context.setShaderColor(1f, 1f, 1f, BACKGROUND_OUTLINE_ALPHA);
-            context.fill(x1, y1, x2, y2, borderColor); // Outer Border
-            context.fill(x1 + 1, y1 + 1, x2 - 1, separationY - 1, fillColor); // Upper fill
+            // Make background transparent using ColorHelpers in each fill method
+            context.fill(x1, y1, x2, y2, ColorHelpers.getRgbWithAlpha(borderColor, BACKGROUND_OUTLINE_ALPHA)); // Outer Border
+            context.fill(x1 + 1, y1 + 1, x2 - 1, separationY - 1, ColorHelpers.getRgbWithAlpha(fillColor, BACKGROUND_OUTLINE_ALPHA)); // Upper fill
             // Only when quickslots are shown
             if (showQuickSlots) {
-                context.fill(x1, separationY, x2, separationY, borderColor); // Separation Line
-                context.fill(x1 + 1, separationY + 1, x2 - 1, y2 - 1, fillColor); // Lower fill
+                context.fill(x1, separationY, x2, separationY, ColorHelpers.getRgbWithAlpha(borderColor, BACKGROUND_OUTLINE_ALPHA)); // Separation Line
+                context.fill(x1 + 1, separationY + 1, x2 - 1, y2 - 1, ColorHelpers.getRgbWithAlpha(fillColor, BACKGROUND_OUTLINE_ALPHA)); // Lower fill
             }
 
-            // Reverse transparent effect
-            context.setShaderColor(1f, 1f, 1f, 1f);
 
         }
 
@@ -407,12 +406,12 @@ public class QuickMenu extends Screen {
             Identifier startPauseRecordTexture = PlayerRecorder.state.isRecording() ? Textures.QuickMenu.PAUSED_RECORDING : Textures.QuickMenu.START_RECORDING;
             Identifier startPauseReplayTexture = PlayerRecorder.state.isReplaying() ? Textures.QuickMenu.PAUSE_REPLAY : Textures.QuickMenu.START_REPLAY;
 
-            context.drawTexture(startPauseRecordTexture, this.buttonStartPauseRecord.getX(), this.buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX(), this.buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, startPauseRecordTexture, this.buttonStartPauseRecord.getX(), this.buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX(), this.buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
-            context.drawTexture(startPauseReplayTexture, this.buttonStartPauseReplay.getX(), this.buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX(), this.buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(Textures.QuickMenu.START_LOOP, this.buttonLoopReplay.getX(), this.buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, startPauseReplayTexture, this.buttonStartPauseReplay.getX(), this.buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX(), this.buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.START_LOOP, this.buttonLoopReplay.getX(), this.buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
             context.getMatrices().pop();
         }
@@ -427,7 +426,7 @@ public class QuickMenu extends Screen {
 
                 // Thumbnail only available if not empty
                 if (!isEmpty && PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue()) {
-                    context.drawTexture(QuickSlots.THUMBNAIL_IDENTIFIER[i], b.getX() + 1, b.getY() + 1, 0, 0, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2);
+                    context.drawTexture(RenderLayer::getGuiTextured, QuickSlots.THUMBNAIL_IDENTIFIER[i], b.getX() + 1, b.getY() + 1, 0, 0, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2);
                 }
             }
         }

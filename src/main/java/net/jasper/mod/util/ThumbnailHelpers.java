@@ -30,7 +30,7 @@ public class ThumbnailHelpers {
         for (int x = 0; x < newWidth; x++) {
             for (int y = 0; y < newHeight; y++) {
                 int avgColor = getAverageColor(originalImage, x, y, slidingWindowWidth, slidingWindowHeight, false);
-                scaledImage.setColor(x, y, avgColor);
+                scaledImage.setColorArgb(x, y, avgColor);
             }
         }
 
@@ -52,12 +52,12 @@ public class ThumbnailHelpers {
 
         // Just select the color of the startX, startY window
         if (!smooth) {
-            return originalImage.getColor(startX, startY);
+            return originalImage.getColorArgb(startX, startY);
         }
 
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
-                int color = originalImage.getColor(x, y);
+                int color = originalImage.getColorArgb(x, y);
                 totalAlpha += (color >> 24) & 0xFF;
                 totalRed   += (color >> 16) & 0xFF;
                 totalGreen += (color >> 8)  & 0xFF;
@@ -90,12 +90,12 @@ public class ThumbnailHelpers {
         int width = client.getWindow().getFramebufferWidth();
         int height = client.getWindow().getFramebufferHeight();
 
-        SimpleFramebuffer framebuffer = new SimpleFramebuffer(width, height, true, false);
+        SimpleFramebuffer framebuffer = new SimpleFramebuffer(width, height, true);
         NativeImage screenshot;
         try {
             client.gameRenderer.setBlockOutlineEnabled(false);
             client.gameRenderer.setRenderingPanorama(true);
-            client.worldRenderer.reloadTransparencyPostProcessor();
+            client.worldRenderer.reload();
             framebuffer.beginWrite(true);
             client.gameRenderer.renderWorld(RenderTickCounter.ONE);
             screenshot =  ScreenshotRecorder.takeScreenshot(framebuffer);
@@ -106,7 +106,7 @@ public class ThumbnailHelpers {
             client.gameRenderer.setBlockOutlineEnabled(true);
             framebuffer.delete();
             client.gameRenderer.setRenderingPanorama(false);
-            client.worldRenderer.reloadTransparencyPostProcessor();
+            client.worldRenderer.reload();
             client.getFramebuffer().beginWrite(true);
         }
 

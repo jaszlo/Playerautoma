@@ -4,7 +4,7 @@ import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -33,7 +33,7 @@ public class MenuPrevention {
             int scaledSizeBlockMenu = 24 * ClientHelpers.getGuiScale();
             int xBlockMenu = client.getWindow().getScaledWidth() / 2 - scaledSizeBlockMenu / 2;
             int yBlockMenu = client.getWindow().getScaledHeight() / 2 - scaledSizeBlockMenu / 2;
-            context.drawTexture(BLOCK_MENU_ICON, xBlockMenu, yBlockMenu, 0, 0, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu);
+            context.drawTexture(RenderLayer::getGuiTextured, BLOCK_MENU_ICON, xBlockMenu, yBlockMenu, 0, 0, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu);
             context.getMatrices().pop();
         }
     }

@@ -1,7 +1,6 @@
 package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
-
 import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.gui.RecordingSelectorScreen;

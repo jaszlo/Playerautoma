@@ -3,7 +3,6 @@ package net.jasper.mod.util;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.util.data.Recording;
-import net.minecraft.util.Util;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -17,17 +16,6 @@ public class IOHelpers {
         public static String[] types() {
             return new String[] { REC, JSON };
         }
-    }
-
-    public interface RecordingLoadCallback {
-        void execute(Recording r);
-    }
-
-    public static void loadRecordingFileAsync(File directory, File name, RecordingLoadCallback callback) {
-        Util.getIoWorkerExecutor().execute(() -> {
-            Recording r = loadRecordingFile(directory, name);
-            callback.execute(r);
-        });
     }
 
     public static Recording loadRecordingFile(File directory, File name) {

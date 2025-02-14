@@ -15,6 +15,7 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -179,7 +180,7 @@ public class RecordingSelectorScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
         // Render refresh texture over refresh button
         int scaledSize = 20;
-        context.drawTexture(REFRESH_ICON, refreshButton.getX(), refreshButton.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+        context.drawTexture(RenderLayer::getGuiTextured, REFRESH_ICON, refreshButton.getX(), refreshButton.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
         this.recordingSelectionList.render(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
@@ -253,8 +254,8 @@ public class RecordingSelectorScreen extends Screen {
                 if (texture != null && textureIdentifier != null) {
                     int thumbnailX = x - 25;
                     int thumbnailSize = 20;
-                    context.drawGuiTexture(DEFAULT_BUTTON_TEXTURES.get(false, false), thumbnailX, y - 2, thumbnailSize, thumbnailSize);
-                    context.drawTexture(this.textureIdentifier, thumbnailX + 1 , y - 1, 0,0, thumbnailSize - 2, thumbnailSize - 2, thumbnailSize - 2, thumbnailSize - 2);
+                    context.drawGuiTexture(RenderLayer::getGuiTextured, DEFAULT_BUTTON_TEXTURES.get(false, false), thumbnailX, y - 2, thumbnailSize, thumbnailSize);
+                    context.drawTexture(RenderLayer::getGuiTextured, this.textureIdentifier, thumbnailX + 1 , y - 1, 0,0, thumbnailSize - 2, thumbnailSize - 2, thumbnailSize - 2, thumbnailSize - 2);
                 }
             }
 

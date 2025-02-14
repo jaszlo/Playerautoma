@@ -12,7 +12,7 @@ public record RecordingThumbnail(List<Integer> colors, int width, int height) im
         List<Integer> colors = new ArrayList<>();
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
-                colors.add(image.getColor(x, y));
+                colors.add(image.getColorArgb(x, y));
             }
         }
         return new RecordingThumbnail(colors, image.getWidth(), image.getHeight());
@@ -23,7 +23,7 @@ public record RecordingThumbnail(List<Integer> colors, int width, int height) im
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 int index = x + y * width;
-                result.setColor(x, y, colors.get(index));
+                result.setColorArgb(x, y, colors.get(index));
             }
         }
         return result;

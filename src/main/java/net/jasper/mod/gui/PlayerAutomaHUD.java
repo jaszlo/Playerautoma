@@ -7,6 +7,7 @@ import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 
 /**
@@ -135,7 +136,7 @@ public class PlayerAutomaHUD {
             if (showOffHud == ShowHUDOption.ICON || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
                 context.getMatrices().push();
                 // Move x left to the text and create padding
-                context.drawTexture(PlayerRecorder.state.getIcon(), x, y, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+                context.drawTexture(RenderLayer::getGuiTextured, PlayerRecorder.state.getIcon(), x, y, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
                 context.getMatrices().pop();
             }
 
