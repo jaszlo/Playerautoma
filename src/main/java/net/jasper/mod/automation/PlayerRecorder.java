@@ -124,7 +124,7 @@ public class PlayerRecorder {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
-        RecordingThumbnail screenshot = RecordingThumbnailRecorder.create();
+        RecordingThumbnail screenshot = ThumbnailHelpers.create();
         if (screenshot != null) {
             record.thumbnail = screenshot;
             thumbnailTexture = new NativeImageBackedTexture(screenshot.toNativeImage());
