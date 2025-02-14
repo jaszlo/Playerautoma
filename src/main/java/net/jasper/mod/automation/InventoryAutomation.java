@@ -5,9 +5,11 @@ import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
@@ -27,12 +29,12 @@ public class InventoryAutomation {
             }
 
 
-            PlayerInventory inv = player.getInventory();
+            PlayerInventory inventory = player.getInventory();
             if (hand != Hand.MAIN_HAND) {
                 return ActionResult.PASS;
             }
 
-            ItemStack currentItem = inv.getStack(inv.selectedSlot);
+            ItemStack currentItem = inventory.getStack(inventory.selectedSlot);
             // Check if item is a placeable item in the world
             if (Block.getBlockFromItem(currentItem.getItem()) == Block.getBlockFromItem(Items.AIR)) {
                 return ActionResult.PASS;
@@ -48,31 +50,41 @@ public class InventoryAutomation {
             }
 
             // Check if another Stack of the item in mainHand is in the Inventory
-            int exceptedSlot = inv.selectedSlot;
-            for (int i = 0; i < inv.main.size(); i++) {
-                ItemStack item = inv.getStack(i);
+            int exceptedSlot = inventory.selectedSlot;
+            for (int i = 0; i < inventory.main.size(); i++) {
+                ItemStack item = inventory.getStack(i);
                 if (i == exceptedSlot || item.getItem() != currentItem.getItem()) {
                     continue;
                 }
 
-                final int from_slot = i;
-                if (player.getInventory().getStack(from_slot).getItem() == Items.AIR) {
+                final int fromSlot = i;
+                if (player.getInventory().getStack(fromSlot).getItem() == Items.AIR) {
                     break;
                 }
+
                 doAutomation = false;
+                MinecraftClient client = MinecraftClient.getInstance();
+                assert client.player != null;
+                assert client.interactionManager != null;
+                InventoryScreen screen = new InventoryScreen(client.player);
 
                 // Open Inventory & move Item in a later tick
                 inventoryTasks.add(() -> {
                     // Requesting to pick Item from Inventory into mainHand and Opening Inventory to allow this to happen on Servers
-                    MinecraftClient client = MinecraftClient.getInstance();
-                    assert client.interactionManager != null;
-                    client.interactionManager.pickFromInventory(from_slot);
+                    client.setScreen(screen);
+                    client.interactionManager.clickSlot(
+                            screen.getScreenHandler().syncId,
+                            fromSlot,
+                            inventory.selectedSlot,
+                            SlotActionType.SWAP,
+                            client.player
+                    );
                 });
 
                 // Close Inventory in a later tick
                 inventoryTasks.add(() -> {
                     // Closing Inventory and clearing flag so this automation can run again for other Blocks
-                    MinecraftClient.getInstance().setScreen(null);
+                    client.setScreen(null);
                     doAutomation = true;
                 });
                 break;
