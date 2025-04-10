@@ -1,6 +1,7 @@
 package net.jasper.mod.gui.option;
 
 import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -100,7 +101,7 @@ public class OptionButton<Value> {
                 lines.add(line);
             }
         } catch (IOException e) {
-            assert false : "Could not read playerautoma options";
+            PlayerAutomaExceptionHandler.handleException(e);
         }
 
         boolean keyFound = false;
@@ -127,7 +128,7 @@ public class OptionButton<Value> {
                 bw.newLine();
             }
         } catch (IOException e) {
-            assert false : "Could not write playerautoma options";
+            PlayerAutomaExceptionHandler.handleException(e);
         }
     }
 
@@ -144,7 +145,7 @@ public class OptionButton<Value> {
                 }
             }
         } catch (IOException e) {
-            assert false : "Could not read playerautoma options";
+            PlayerAutomaExceptionHandler.handleException(e);
         }
 
         // Value was not in option file therefore store default value

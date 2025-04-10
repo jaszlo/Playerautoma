@@ -52,7 +52,7 @@ public class QuickSlots {
         }
 
         quickSlots[slot] = recording;
-        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(recording.thumbnail.toNativeImage()) : null;
+        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(() -> quickSlotFileNames[slot], recording.thumbnail.toNativeImage()) : null;
         updateQuickSlotTexture(slot, texture);
         // I assume that this doesn't fail, and therefore I don't check a return value i created to check this fails ...
         IOHelpers.storeRecordingFile(quickSlots[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), quickSlotFileNames[slot], IOHelpers.RecordingFileTypes.REC, true);
@@ -162,7 +162,7 @@ public class QuickSlots {
         // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER);
         if (r.thumbnail != null) {
-            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(r.thumbnail.toNativeImage());
+            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(() -> quickSlotFileNames[slot], r.thumbnail.toNativeImage());
             MinecraftClient.getInstance().getTextureManager().registerTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, PlayerRecorder.thumbnailTexture);
         }
 
@@ -194,7 +194,8 @@ public class QuickSlots {
             Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(quickSlotFileNames[i]));
             quickSlots[i] = r;
             if (r.thumbnail != null) {
-                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
+                int finalI = i;
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(() -> quickSlotFileNames[finalI], r.thumbnail.toNativeImage()));
             }
         }
 

@@ -5,6 +5,7 @@ import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.IOHelpers;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
@@ -65,8 +66,8 @@ public class RecordingSelectorScreen extends Screen {
                         thumbnails.put(file.getName(), r.thumbnail);
                         try {
                             Identifier id = Identifier.of(PlayerAutomaClient.MOD_ID, String.valueOf(file.getName().hashCode()));
-                            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
-                        } catch(InvalidIdentifierException e) {
+                            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(file::getName, r.thumbnail.toNativeImage()));
+                        } catch (InvalidIdentifierException e) {
                             PlayerAutomaClient.LOGGER.warn("Failed to load thumbnail for {}", file.getName());
                         }
                     }
@@ -237,12 +238,13 @@ public class RecordingSelectorScreen extends Screen {
                 this.fileName = fileName;
                 this.file = file;
                 if (thumbnail != null) {
-                    this.texture = new NativeImageBackedTexture(thumbnail.toNativeImage());
                     try {
+                        this.texture = new NativeImageBackedTexture(file::getName, thumbnail.toNativeImage());
                         this.textureIdentifier = Identifier.of(PlayerAutomaClient.MOD_ID, String.valueOf(fileName.hashCode()));
                         MinecraftClient.getInstance().getTextureManager().registerTexture(textureIdentifier, texture);
-                    } catch (InvalidIdentifierException e) {
-                        PlayerAutomaClient.LOGGER.warn("Could not load thumbnail for file {}", fileName, e);
+                    } catch (Exception exception) {
+                        PlayerAutomaExceptionHandler.handleException(exception);
+                        PlayerAutomaClient.LOGGER.warn("Could not load thumbnail for file {}", fileName, exception);
                     }
                 }
             }

@@ -1,8 +1,11 @@
 package net.jasper.mod.util.data;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Simple Queue for Runnable objects
@@ -50,8 +53,8 @@ public class TaskQueue {
     }
 
     public Runnable poll() {
-        Runnable result = this.tasks.get(0);
-        this.tasks.remove(0);
+        Runnable result = this.tasks.getFirst();
+        this.tasks.removeFirst();
         return result;
     }
 
@@ -83,8 +86,11 @@ public class TaskQueue {
             if (this.paused) {
                 return;
             }
-
-            this.poll().run();
+            try {
+                this.poll().run();
+            } catch (Exception exception) {
+                PlayerAutomaExceptionHandler.handleException(exception);
+            }
             done = true;
         });
     }

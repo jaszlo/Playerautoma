@@ -6,6 +6,7 @@ import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.PlayerAutomaMenuScreen;
 import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.gui.RecordingStorerScreen;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -58,18 +59,29 @@ public class Constants {
     public static final KeyBinding STOP_REPLAY = BINDINGS[3];
     public static final KeyBinding PREVENT_MENU = BINDINGS[9];
     public static final KeyBinding QUICK_MENU = BINDINGS[10];
+    public static final KeyBinding START_REPLAY = BINDINGS[2];
+
+    private static Runnable exceptionSaveKeybindCallback(Runnable run) {
+        return () -> {
+            try {
+                run.run();
+            } catch (Exception exception) {
+                PlayerAutomaExceptionHandler.handleException(exception);
+            }
+        };
+    }
 
     private static final Runnable[] callbackMethods = {
-            PlayerRecorder::startRecord,
-            PlayerRecorder::stopRecord,
-            PlayerRecorder::startReplay,
-            PlayerRecorder::stopReplay,
-            PlayerRecorder::startLoop,
-            RecordingStorerScreen::open,
-            RecordingSelectorScreen::open,
-            PlayerRecorder::togglePause,
-            PlayerAutomaMenuScreen::open,
-            MenuPrevention::toggleBackgroundPrevention,
+            exceptionSaveKeybindCallback(PlayerRecorder::startRecord),
+            exceptionSaveKeybindCallback(PlayerRecorder::stopRecord),
+            exceptionSaveKeybindCallback(PlayerRecorder::startReplay),
+            exceptionSaveKeybindCallback(PlayerRecorder::stopReplay),
+            exceptionSaveKeybindCallback(PlayerRecorder::startLoop),
+            exceptionSaveKeybindCallback(RecordingStorerScreen::open),
+            exceptionSaveKeybindCallback(RecordingSelectorScreen::open),
+            exceptionSaveKeybindCallback(PlayerRecorder::togglePause),
+            exceptionSaveKeybindCallback(PlayerAutomaMenuScreen::open),
+            exceptionSaveKeybindCallback(MenuPrevention::toggleBackgroundPrevention),
             () -> {} // Do nothing! The quickMenu opens onPress and closes onRelease and needs to be handled differently
     };
 

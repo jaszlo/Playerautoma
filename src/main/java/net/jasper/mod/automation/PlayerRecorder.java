@@ -7,7 +7,11 @@ import net.jasper.mod.gui.QuickMenu;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.mixins.accessors.MerchantScreenAccessor;
-import net.jasper.mod.util.*;
+import net.jasper.mod.util.ClientHelpers;
+import net.jasper.mod.util.IOHelpers;
+import net.jasper.mod.util.Textures;
+import net.jasper.mod.util.ThumbnailHelpers;
+import net.jasper.mod.util.data.TaskQueue;
 import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
@@ -24,7 +28,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -60,6 +64,9 @@ public class PlayerRecorder {
     public static final Queue<Integer> lastVillagerTradeMade = new ConcurrentLinkedDeque<>();
 
     public static void register() {
+        // Always reset the PlayerRecorder if a Join event happens could be breaking the mod. Therefor leave it out now.
+        // ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PlayerRecorder.reset());
+
         // Register Task-Queues
         tasks.register("playerActions");
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
@@ -99,7 +106,7 @@ public class PlayerRecorder {
                 timesPressed,
                 modifiers,
                 new LookingDirection(client.player.getYaw(), client.player.getPitch()),
-                client.player.getInventory().selectedSlot,
+                client.player.getInventory().getSelectedSlot(),
                 lastSlotClicked.poll(),
                 client.currentScreen == null ? null : client.currentScreen.getClass(),
                 lastCommandUsed.poll(),
@@ -109,8 +116,20 @@ public class PlayerRecorder {
         });
     }
 
+    /**
+     * Resets the player recorder in to the idle state and clears all tasks
+     */
+    public static void reset() {
+        tasks.clear();
+        lastSlotClicked.clear();
+        lastCommandUsed.clear();pressedModifiers.clear();
+        lastVillagerTradeMade.clear();
+        state = IDLE;
+    }
 
     public static void startRecord() {
+        int i = 0;
+        System.out.println(10 / i);
         if (state.isReplaying() || state.isPausedReplaying()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartRecordingWhileReplaying"));
             return;
@@ -124,15 +143,16 @@ public class PlayerRecorder {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
-        RecordingThumbnail screenshot = ThumbnailHelpers.create();
-        if (screenshot != null) {
-            record.thumbnail = screenshot;
-            thumbnailTexture = new NativeImageBackedTexture(screenshot.toNativeImage());
-            // Destroy old texture and register new
-            MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
-            MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
+        ThumbnailHelpers.create((thumbnail, nativeImage) -> {
+            if (thumbnail != null) {
+                record.thumbnail = thumbnail;
+                thumbnailTexture = new NativeImageBackedTexture(() -> "test", nativeImage);
+                // Destroy old texture and register new
+                MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
 
-        }
+            }
+        });
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
             KeyBinding.unpressAll();
@@ -257,7 +277,7 @@ public class PlayerRecorder {
                 client.player.setYaw(currentLookingDirection.yaw() - yawDiff);
 
                 // Update selected inventory slot
-                client.player.getInventory().selectedSlot = selectedSlot;
+                client.player.getInventory().setSelectedSlot(selectedSlot);
 
                 // Update keys pressed
                 KeyBinding.unpressAll();
@@ -469,7 +489,7 @@ public class PlayerRecorder {
         // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
         if (r.thumbnail != null) {
-            thumbnailTexture = new NativeImageBackedTexture(r.thumbnail.toNativeImage());
+            thumbnailTexture = new NativeImageBackedTexture(selected::getName, r.thumbnail.toNativeImage());
             MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
         }
 

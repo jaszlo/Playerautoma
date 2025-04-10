@@ -1,6 +1,7 @@
 package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.gui.RecordingSelectorScreen;
@@ -30,11 +31,14 @@ public class PlayerAutomaClient implements ClientModInitializer {
 			PLAYERAUTOMA_QUICKSLOT_PATH
 	};
 
+	public static String getVersion() {
+		return FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getVersion().getFriendlyString();
+	}
+
 
 	// Will be executed in mixin after client has been fully initialized
 	public static void initializeAfterClient() {
 		// Loading textures required the texture manager to be created which is not the case when run in "onInitializeClient"
-
 		// Register Quick slots for Player-Recorder, requires KeyBindings to be registered first
 		QuickSlots.register();
 
@@ -45,7 +49,7 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-
+		LOGGER.info("Playerautoma {} is starting...", getVersion());
 		// Create all required folders
 		for (String path : REQUIRED_FOLDERS) {
 			File required = new File(path);

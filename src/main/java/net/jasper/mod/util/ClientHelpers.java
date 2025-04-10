@@ -62,4 +62,9 @@ public class ClientHelpers {
         assert client.interactionManager != null;
         client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), client.player);
     }
+
+    public static void writeToChat(Text message) {
+        assert MinecraftClient.getInstance().player != null;
+        MinecraftClient.getInstance().player.sendMessage(message, false);
+    }
 }

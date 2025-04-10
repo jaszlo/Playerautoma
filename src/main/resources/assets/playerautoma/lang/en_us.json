@@ -142,5 +142,6 @@
   "playerautoma.messages.error.cannotTogglePauseRecordingWhileInvalidState": "Cannot pause or resume recording while not recording",
   "playerautoma.messages.error.cannotStopNotStartedReplay": "Cannot stop replay that has not been started yet",
   "playerautoma.messages.error.cannotStopNotStartedRecording": "Cannot stop recording that has not been started yet",
-  "playerautoma.messages.error.cannotNameRecordingThatWay": "Recording names can only contain [a-z0-9/._-] characters"
+  "playerautoma.messages.error.cannotNameRecordingThatWay": "Recording names can only contain [a-z0-9/._-] characters",
+  "playerautoma.messages.error.unknownException": "An unknown Exception occurred. Please check %s for additional Information"
 }

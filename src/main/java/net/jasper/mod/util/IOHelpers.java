@@ -36,7 +36,7 @@ public class IOHelpers {
                     reader.close();
                     fileReader.close();
                     result = JsonHelpers.deserialize(readFile.toString());
-                } catch(Exception e) {
+                } catch (Exception e) {
                     // Try rec file then
                     continue;
                 }
@@ -118,7 +118,7 @@ public class IOHelpers {
             objectOutputStream.close();
             fos.close();
             return true;
-        } catch(IOException e) {
+        } catch (IOException e) {
             PlayerAutomaClient.LOGGER.warn(e.getMessage());
             try {
                 if (objectOutputStream != null) objectOutputStream.close();

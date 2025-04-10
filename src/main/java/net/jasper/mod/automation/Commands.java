@@ -5,7 +5,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.jasper.mod.gui.PlayerAutomaMenuScreen;
+import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.gui.RecordingStorerScreen;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -13,6 +16,7 @@ import java.io.File;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
+import static net.jasper.mod.PlayerAutomaClient.LOGGER;
 import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
 
 /**
@@ -129,6 +133,29 @@ public class Commands {
                     })
                 )
             )
+        );
+
+        // Register /playerautoma open <loadscreen|storescreen|menu>
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
+                dispatcher.register(literal("playerautoma")
+                        .then(literal("open")
+                                .then(literal("loadscreen").executes(context -> {
+                                    LOGGER.info("12341234");
+                                    MinecraftClient.getInstance().execute(RecordingSelectorScreen::open);
+                                    return 1;
+                                })
+                                ).then(literal("storescreen").executes(context -> {
+                                    LOGGER.info("qwerqwer");
+                                    MinecraftClient.getInstance().execute(RecordingStorerScreen::open);
+                                    return 1;
+                                })
+                                ).then(literal("menu").executes(context -> {
+                                    LOGGER.info("asdfasdf");
+                                    MinecraftClient.getInstance().execute(PlayerAutomaMenuScreen::open);
+                                    return 1;
+                                }))
+                        )
+                )
         );
     }
 

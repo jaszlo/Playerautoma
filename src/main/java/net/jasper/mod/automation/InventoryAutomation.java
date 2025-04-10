@@ -34,7 +34,7 @@ public class InventoryAutomation {
                 return ActionResult.PASS;
             }
 
-            ItemStack currentItem = inventory.getStack(inventory.selectedSlot);
+            ItemStack currentItem = inventory.getStack(inventory.getSelectedSlot());
             // Check if item is a placeable item in the world
             if (Block.getBlockFromItem(currentItem.getItem()) == Block.getBlockFromItem(Items.AIR)) {
                 return ActionResult.PASS;
@@ -50,8 +50,8 @@ public class InventoryAutomation {
             }
 
             // Check if another Stack of the item in mainHand is in the Inventory
-            int exceptedSlot = inventory.selectedSlot;
-            for (int i = 0; i < inventory.main.size(); i++) {
+            int exceptedSlot = inventory.getEmptySlot();
+            for (int i = 0; i < inventory.getMainStacks().size(); i++) {
                 ItemStack item = inventory.getStack(i);
                 if (i == exceptedSlot || item.getItem() != currentItem.getItem()) {
                     continue;
@@ -75,7 +75,7 @@ public class InventoryAutomation {
                     client.interactionManager.clickSlot(
                             screen.getScreenHandler().syncId,
                             fromSlot,
-                            inventory.selectedSlot,
+                            inventory.getSelectedSlot(),
                             SlotActionType.SWAP,
                             client.player
                     );

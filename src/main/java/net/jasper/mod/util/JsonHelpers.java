@@ -197,7 +197,7 @@ public class JsonHelpers {
                 currentScreen = Class.forName(jsonEntry.get(CURRENT_SCREEN).getAsString());
                 } catch (Exception e) {
                     // Do nothing. When this happens the value is null as it should be and is not present
-                    //PlayerAutomaClient.LOGGER.info(e.toString());
+                    // PlayerAutomaClient.LOGGER.info(e.toString());
                 }
             }
 

@@ -9,6 +9,8 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.util.math.ColorHelper;
 
+import java.util.function.BiConsumer;
+
 
 public class ThumbnailHelpers {
 
@@ -79,35 +81,34 @@ public class ThumbnailHelpers {
     /**
      * Mostly copied from MinecraftClient.takePanorama
      */
-    public static RecordingThumbnail create() {
+    public static void create(BiConsumer<RecordingThumbnail, NativeImage> thumbnailConsumer) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) {
-            return null;
+            return;
         }
         Framebuffer framebuffer = client.getFramebuffer();
-        NativeImage screenshot;
 
         try {
             client.gameRenderer.setBlockOutlineEnabled(false);
             client.gameRenderer.setRenderingPanorama(true);
-            framebuffer.beginWrite(true);
             client.gameRenderer.renderWorld(RenderTickCounter.ONE);
             try {
                 Thread.sleep(10L);
-            } catch (InterruptedException var17) {
-
+            } catch (InterruptedException exception) {
+                // Ignore
             }
-            screenshot =  ScreenshotRecorder.takeScreenshot(framebuffer);
+
+            ScreenshotRecorder.takeScreenshot(framebuffer, nativeImage -> {
+                RecordingThumbnail thumbnail = RecordingThumbnail.createFromNativeImage(scaleDownImage(nativeImage, WIDTH, HEIGHT));
+                thumbnailConsumer.accept(thumbnail, nativeImage);
+            });
         } catch (Exception exception) {
+            PlayerAutomaExceptionHandler.handleException(exception);
             PlayerAutomaClient.LOGGER.error("Couldn't save temporary screenshot image", exception);
-            return null;
         } finally {
             client.gameRenderer.setBlockOutlineEnabled(true);
             client.gameRenderer.setRenderingPanorama(false);
-            framebuffer.beginWrite(true);
         }
-
-        return RecordingThumbnail.createFromNativeImage(scaleDownImage(screenshot, WIDTH, HEIGHT));
     }
 
 }

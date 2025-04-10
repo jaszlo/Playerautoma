@@ -15,10 +15,27 @@ import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Playerautoma option screen to configure settings
  */
 public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
+
+    private final GridWidget gridWidget;
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        AtomicBoolean returnValue = new AtomicBoolean(false);
+
+        this.children().forEach(child -> {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                   returnValue.set(child.mouseClicked(mouseX, mouseY, button));
+               }
+        });
+        return returnValue.get();
+    }
+
 
     public static OptionButton<PlayerAutomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
         PlayerAutomaHUD.ShowHUDOption.TEXT_AND_ICON,
@@ -170,6 +187,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
     public PlayerAutomaOptionsScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.translatable("playerautoma.screens.title.modOptions"));
+        this.gridWidget = new GridWidget();
     }
 
     public static Screen open() {
@@ -190,7 +208,6 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         super.init();
         assert this.client != null;
 
-        GridWidget gridWidget = new GridWidget();
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
         GridWidget.Adder adder = gridWidget.createAdder(2);
 
@@ -299,6 +316,8 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);
+
+        this.layout.addBody(gridWidget);
     }
 
     @Override
