@@ -1,3 +1,10 @@
+# Version v0.5.3
+### Only supported for minecraft versions 1.21.5 and upwards
+* Bugfix:
+   * Button in the Playerautoma Option screen now work via mouse clicks again
+* New Feature:
+   * Most Exception based by playerautoma should now create an error dump and notify the player instead of crashing the game    
+
 # Version v0.5.2
 * Bugfix:
   * Storing or having a recording file with some special characters or capital letters no longer crashes the game when opening the load recording screen
