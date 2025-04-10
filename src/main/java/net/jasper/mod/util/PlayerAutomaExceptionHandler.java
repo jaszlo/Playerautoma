@@ -84,4 +84,23 @@ public class PlayerAutomaExceptionHandler {
         // Reset into functional state
         PlayerRecorder.reset();
     }
+
+    public static void callSafe(Runnable action) {
+        try {
+            action.run();
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public static Runnable produceSafeCall(Runnable run) {
+        return () -> {
+            try {
+                run.run();
+            } catch (Exception exception) {
+                handleException(exception);
+            }
+        };
+    }
+
 }

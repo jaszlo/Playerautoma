@@ -4,6 +4,7 @@ import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.Keyboard;
 import net.minecraft.text.Text;
@@ -27,7 +28,7 @@ public class KeyboardMixin {
 
         int startReplayKeyCode = ((KeyBindingAccessor) Constants.START_REPLAY).getBoundKey().getCode();
         if (PlayerRecorder.state.isReplaying() && key != startReplayKeyCode) {
-            PlayerRecorder.stopReplay();
+            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
             ClientHelpers.writeToActionBar(Text.literal("Replay stopped due to manual input"));
         }
     }

@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.jasper.mod.gui.PlayerAutomaMenuScreen;
 import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.gui.RecordingStorerScreen;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -31,19 +32,19 @@ public class Commands {
             literal("record")
                 .then(literal("start")
                     .executes(context -> {
-                        PlayerRecorder.startRecord();
+                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
                         return 1;
                     })
                 )
                 .then(literal("stop")
                     .executes(context -> {
-                        PlayerRecorder.stopRecord();
+                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
                         return 1;
                     })
                 )
                 .then(literal("clear")
                     .executes(context -> {
-                        PlayerRecorder.clearRecord();
+                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::clearRecord);
                         return 1;
                     })
                 )
@@ -98,7 +99,7 @@ public class Commands {
                         })
                         .executes(context -> {
                             String name = StringArgumentType.getString(context, "name");
-                            PlayerRecorder.loadRecord(name);
+                            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.loadRecord(name));
                             return 1;
                         })
                     )
@@ -111,24 +112,24 @@ public class Commands {
             dispatcher.register(literal("replay")
                 .then(literal("start")
                     .executes(context -> {
-                        PlayerRecorder.startReplay(false);
+                        PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
                         return 1;
                     })
                 )
                 .then(literal("stop")
                     .executes(context -> {
-                        PlayerRecorder.stopReplay();
+                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
                         return 1;
                     })
                 )
                 .then(literal("togglepause")
                     .executes(context -> {
-                        PlayerRecorder.togglePauseReplay();
+                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
                         return 1;
                     })
                 ).then(literal("loop")
                     .executes(context -> {
-                        PlayerRecorder.startReplay(true);
+                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startReplay);
                         return 1;
                     })
                 )

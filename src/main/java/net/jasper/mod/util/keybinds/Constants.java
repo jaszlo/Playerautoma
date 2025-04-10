@@ -61,27 +61,17 @@ public class Constants {
     public static final KeyBinding QUICK_MENU = BINDINGS[10];
     public static final KeyBinding START_REPLAY = BINDINGS[2];
 
-    private static Runnable exceptionSaveKeybindCallback(Runnable run) {
-        return () -> {
-            try {
-                run.run();
-            } catch (Exception exception) {
-                PlayerAutomaExceptionHandler.handleException(exception);
-            }
-        };
-    }
-
     private static final Runnable[] callbackMethods = {
-            exceptionSaveKeybindCallback(PlayerRecorder::startRecord),
-            exceptionSaveKeybindCallback(PlayerRecorder::stopRecord),
-            exceptionSaveKeybindCallback(PlayerRecorder::startReplay),
-            exceptionSaveKeybindCallback(PlayerRecorder::stopReplay),
-            exceptionSaveKeybindCallback(PlayerRecorder::startLoop),
-            exceptionSaveKeybindCallback(RecordingStorerScreen::open),
-            exceptionSaveKeybindCallback(RecordingSelectorScreen::open),
-            exceptionSaveKeybindCallback(PlayerRecorder::togglePause),
-            exceptionSaveKeybindCallback(PlayerAutomaMenuScreen::open),
-            exceptionSaveKeybindCallback(MenuPrevention::toggleBackgroundPrevention),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::startRecord),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::stopRecord),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::startReplay),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::stopReplay),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::startLoop),
+            PlayerAutomaExceptionHandler.produceSafeCall(RecordingStorerScreen::open),
+            PlayerAutomaExceptionHandler.produceSafeCall(RecordingSelectorScreen::open),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::togglePause),
+            PlayerAutomaExceptionHandler.produceSafeCall(PlayerAutomaMenuScreen::open),
+            PlayerAutomaExceptionHandler.produceSafeCall(MenuPrevention::toggleBackgroundPrevention),
             () -> {} // Do nothing! The quickMenu opens onPress and closes onRelease and needs to be handled differently
     };
 

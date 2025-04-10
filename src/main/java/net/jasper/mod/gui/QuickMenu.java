@@ -5,6 +5,7 @@ import net.jasper.mod.automation.QuickSlots;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.ScreenAccessor;
 import net.jasper.mod.util.ColorHelpers;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.jasper.mod.util.Textures;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -64,7 +65,7 @@ public class QuickMenu extends Screen {
                 if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isPausedRecording()) {
                     PlayerRecorder.togglePauseRecord();
                 } else {
-                    PlayerRecorder.startRecord();
+                    PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
                 }
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
@@ -73,7 +74,7 @@ public class QuickMenu extends Screen {
             Text.of(""),
             b -> {
                 loopCount = 0;
-                PlayerRecorder.stopRecord();
+                PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
@@ -83,9 +84,9 @@ public class QuickMenu extends Screen {
             b -> {
                 loopCount = 0;
                 if (PlayerRecorder.state.isReplaying() || PlayerRecorder.state.isPausedReplaying()) {
-                    PlayerRecorder.togglePauseReplay();
+                    PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
                 } else {
-                    PlayerRecorder.startReplay(false);
+                    PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
                 }
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
@@ -94,7 +95,7 @@ public class QuickMenu extends Screen {
             Text.of(""),
             b -> {
                 loopCount = 0;
-                PlayerRecorder.stopReplay();
+                PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
@@ -134,9 +135,9 @@ public class QuickMenu extends Screen {
         wasClosed = true;
         // -1 == Infinity
         if (loopCount < 0) {
-            PlayerRecorder.startLoop();
+            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
         } else if (loopCount > 0) {
-            PlayerRecorder.startReplay(loopCount);
+            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(loopCount));
         }
         loopCount = 0;
 

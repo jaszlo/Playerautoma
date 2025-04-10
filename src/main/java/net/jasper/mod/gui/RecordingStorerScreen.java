@@ -4,6 +4,7 @@ import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.components.FilteredTextFieldWidget;
 import net.jasper.mod.gui.option.OptionButton;
 import net.jasper.mod.util.IOHelpers;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -84,7 +85,8 @@ public class RecordingStorerScreen extends Screen {
                   // Append correct file ending if necessary
                   String file_ending = useJSON.getValue() ? ".json" : ".rec";
                   name += file_ending;
-                  PlayerRecorder.storeRecord(name);
+                  String finalName = name;
+                  PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.storeRecord(finalName));
                   this.close();
               }).dimensions(this.width / 2 - 100, this.height / 2 + 10, 150, 20)
                 .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.save")))

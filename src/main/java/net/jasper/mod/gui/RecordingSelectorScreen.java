@@ -144,7 +144,7 @@ public class RecordingSelectorScreen extends Screen {
     private void onDone() {
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
-            PlayerRecorder.loadRecord(recEntry.file);
+            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.loadRecord(recEntry.file));
         }
         this.client.setScreen(null);
     }

@@ -128,8 +128,6 @@ public class PlayerRecorder {
     }
 
     public static void startRecord() {
-        int i = 0;
-        System.out.println(10 / i);
         if (state.isReplaying() || state.isPausedReplaying()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartRecordingWhileReplaying"));
             return;

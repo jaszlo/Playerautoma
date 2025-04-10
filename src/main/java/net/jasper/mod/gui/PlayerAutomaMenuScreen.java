@@ -2,6 +2,7 @@ package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -30,22 +31,22 @@ public class PlayerAutomaMenuScreen extends Screen {
     // Player Recorder
     public ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerRecorder.startRecord();
+            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startRecording"))).build();
 
     public ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerRecorder.stopRecord();
+            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.stopRecording"))).build();
 
     public ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startReplay"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerRecorder.startReplay(false);
+            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startReplay"))).build();
 
     public ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startLoop"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerRecorder.startLoop();
+            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startLoop"))).build();
 
     public ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"),
