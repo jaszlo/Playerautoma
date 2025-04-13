@@ -2,6 +2,7 @@ package net.jasper.mod.mixins;
 
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
+import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.PlayerAutomaExceptionHandler;
@@ -27,9 +28,9 @@ public class KeyboardMixin {
 
 
         int startReplayKeyCode = ((KeyBindingAccessor) Constants.START_REPLAY).getBoundKey().getCode();
-        if (PlayerRecorder.state.isReplaying() && key != startReplayKeyCode) {
+        if (PlayerRecorder.state.isReplaying() && key != startReplayKeyCode && PlayerAutomaOptionsScreen.stopReplayOnManualInput.getValue()) {
             PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
-            ClientHelpers.writeToActionBar(Text.literal("Replay stopped due to manual input"));
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayStoppedOnManualInput"));
         }
     }
 }

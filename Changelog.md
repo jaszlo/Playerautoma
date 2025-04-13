@@ -4,6 +4,8 @@
    * Button in the Playerautoma Option screen now work via mouse clicks again
 * New Feature:
    * Most Exception based by playerautoma should now create an error dump and notify the player instead of crashing the game    
+   * New option (which is active by default) to stop replay when manual keyboard or mouse input occurs
+   * It is now allowed to leave out the thumbnail for Recordings in the .json file format
 
 # Version v0.5.2
 * Bugfix:

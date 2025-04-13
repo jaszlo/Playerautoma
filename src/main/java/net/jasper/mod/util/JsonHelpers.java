@@ -1,6 +1,7 @@
 package net.jasper.mod.util;
 
 import com.google.gson.*;
+import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.RecordingThumbnail;
@@ -137,13 +138,18 @@ public class JsonHelpers {
         JsonObject parsed = JsonParser.parseString(s).getAsJsonObject();
 
         // Read Thumbnail and set for recording
-        JsonObject jsonThumbnail = parsed.get(THUMBNAIL).getAsJsonObject();
-        List<Integer> colors = new ArrayList<>();
-        int width = jsonThumbnail.get(THUMBNAIL_WIDTH).getAsInt();
-        int height = jsonThumbnail.get(THUMBNAIL_HEIGHT).getAsInt();
-        JsonArray jsonColors = jsonThumbnail.get(THUMBNAIL_COLORS).getAsJsonArray();
-        for (JsonElement color : jsonColors) {
-            colors.add(color.getAsInt());
+        List<Integer> colors = List.of(0x0);
+        int width = 1;
+        int height = 1;
+        if (parsed.has(THUMBNAIL)) {
+            JsonObject jsonThumbnail = parsed.get(THUMBNAIL).getAsJsonObject();
+            colors = new ArrayList<>();
+            width = jsonThumbnail.get(THUMBNAIL_WIDTH).getAsInt();
+            height = jsonThumbnail.get(THUMBNAIL_HEIGHT).getAsInt();
+            JsonArray jsonColors = jsonThumbnail.get(THUMBNAIL_COLORS).getAsJsonArray();
+            for (JsonElement color : jsonColors) {
+                colors.add(color.getAsInt());
+            }
         }
         result.thumbnail = new RecordingThumbnail(colors, width, height);
 
@@ -193,11 +199,12 @@ public class JsonHelpers {
 
             Class<?> currentScreen = null;
             if (jsonEntry.has(CURRENT_SCREEN)) {
+
+
                 try {
                 currentScreen = Class.forName(jsonEntry.get(CURRENT_SCREEN).getAsString());
                 } catch (Exception e) {
-                    // Do nothing. When this happens the value is null as it should be and is not present
-                    // PlayerAutomaClient.LOGGER.info(e.toString());
+                    PlayerAutomaClient.LOGGER.error("Cloud not find Screen class {}", jsonEntry.get(CURRENT_SCREEN).getAsString(), e);
                 }
             }
 

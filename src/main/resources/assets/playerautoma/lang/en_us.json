@@ -105,6 +105,10 @@
   "playerautoma.option.tooltip.preventSlotChanges": "When On Using QuickSlot Keybinds will not change select slot",
   "playerautoma.option.showQuickSlotsInQuickMenu": "QuickSlots in QuickMenu",
   "playerautoma.option.tooltip.showQuickSlotsInQuickMenu": "When On shows quickslot in QuickMenu and allows for easy control of them",
+  "playerautoma.option.stopReplayOnManualInput": "Stop Replay on Input",
+  "playerautoma.option.tooltip.stopReplayOnManualInput": "When clicking a button or moving the mouse while Replaying stop that replay",
+
+
 
   "playerautoma.messages.menuPreventionToggle": "Menu prevention has been turned ",
   "playerautoma.messages.fileDeletionError": "Failed to delete file",
@@ -124,6 +128,7 @@
   "playerautoma.messages.loadQuickslot": "Loaded Recording to QuickSlot ",
   "playerautoma.messages.clearedAllQuickSlot": "Cleared all QuickSlots",
   "playerautoma.messages.clearedOneQuickSlot": "Cleared QuickSlot",
+  "playerautoma.messages.replayStoppedOnManualInput": "Replay stopped due to manual Input",
 
   "playerautoma.messages.error.startEmptyRecording": "Nothing recorded. Can't start nothing!",
   "playerautoma.messages.error.cannotStoreEmpty": "Cannot store empty Recording",
