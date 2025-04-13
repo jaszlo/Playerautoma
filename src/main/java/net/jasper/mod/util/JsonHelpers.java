@@ -48,14 +48,16 @@ public class JsonHelpers {
         result.addProperty(LENGTH, r.entries.size());
 
         // Add Thumbnail
-        JsonObject jsonThumbnail = new JsonObject();
-        jsonThumbnail.addProperty(THUMBNAIL_WIDTH, r.thumbnail.width());
-        jsonThumbnail.addProperty(THUMBNAIL_HEIGHT, r.thumbnail.height());
-        JsonArray colors = new JsonArray();
-        r.thumbnail.colors().forEach(colors::add);
-        jsonThumbnail.add(THUMBNAIL_COLORS, colors);
+        if (r.thumbnail != null) {
+            JsonObject jsonThumbnail = new JsonObject();
+            jsonThumbnail.addProperty(THUMBNAIL_WIDTH, r.thumbnail.width());
+            jsonThumbnail.addProperty(THUMBNAIL_HEIGHT, r.thumbnail.height());
+            JsonArray colors = new JsonArray();
+            r.thumbnail.colors().forEach(colors::add);
+            jsonThumbnail.add(THUMBNAIL_COLORS, colors);
 
-        result.add(THUMBNAIL, jsonThumbnail);
+            result.add(THUMBNAIL, jsonThumbnail);
+        }
 
         JsonArray entries = new JsonArray();
         for (Recording.RecordEntry entry : r.entries) {

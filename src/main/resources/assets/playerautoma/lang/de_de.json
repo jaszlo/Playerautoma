@@ -107,7 +107,8 @@
   "playerautoma.option.tooltip.showQuickSlotsInQuickMenu": "Wenn aktiviert, zeigt Schnellzugriffe im Schnellmenü an und ermöglicht eine einfache Steuerung dieser",
   "playerautoma.option.stopReplayOnManualInput": "Wiedergabestop bei Eingabe",
   "playerautoma.option.tooltip.stopReplayOnManualInput": "Wenn während einer Wiedergabe die Tastatur oder Maus benutzt wird, stoppt die Wiedergabe",
-
+  "playerautoma.option.saveThumbnailsWithRecording": "Benutze Thumbnails",
+  "playerautoma.option.tooltip.saveThumbnailsWithRecording": "Wenn eine Wiedergabe gepsiechert wird, soll ein Thubnail dazu erstellt werden.",
 
   "playerautoma.messages.menuPreventionToggle": "Die Menüverhinderung wurde umgeschaltet auf",
   "playerautoma.messages.fileDeletionError": "Datei konnte nicht gelöscht werden",

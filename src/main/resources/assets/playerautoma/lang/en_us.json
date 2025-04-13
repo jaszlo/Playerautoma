@@ -107,8 +107,8 @@
   "playerautoma.option.tooltip.showQuickSlotsInQuickMenu": "When On shows quickslot in QuickMenu and allows for easy control of them",
   "playerautoma.option.stopReplayOnManualInput": "Stop Replay on Input",
   "playerautoma.option.tooltip.stopReplayOnManualInput": "When clicking a button or moving the mouse while Replaying stop that replay",
-
-
+  "playerautoma.option.saveThumbnailsWithRecording": "Use thumbnails",
+  "playerautoma.option.tooltip.saveThumbnailsWithRecording": "When saving a recording a thumbnail is stored with it",
 
   "playerautoma.messages.menuPreventionToggle": "Menu prevention has been turned ",
   "playerautoma.messages.fileDeletionError": "Failed to delete file",

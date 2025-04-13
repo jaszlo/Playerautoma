@@ -62,7 +62,7 @@ public class RecordingSelectorScreen extends Screen {
                 // Only do this if the thumbnail is not yet registered
                 if (!thumbnails.containsKey(file.getName())) {
                     Recording r = IOHelpers.loadRecordingFile(recordingFolder, file);
-                    if (r != null) {
+                    if (r != null && r.thumbnail != null) {
                         thumbnails.put(file.getName(), r.thumbnail);
                         try {
                             Identifier id = Identifier.of(PlayerAutomaClient.MOD_ID, String.valueOf(file.getName().hashCode()));

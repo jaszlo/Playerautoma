@@ -185,6 +185,15 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
             (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
+    public static OptionButton<Boolean> saveThumbnailsWithRecording = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.saveThumbnailsWithRecording",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+    );
+
 
     public static ButtonWidget openCommandsToExclude = ButtonWidget.builder(
             Text.translatable("playerautoma.option.openCommandsToExclude"),
@@ -293,6 +302,11 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         stopReplayOnManualInputButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.stopReplayOnManualInput")));
         stopReplayOnManualInput.setButton(stopReplayOnManualInputButton);
 
+        ButtonWidget saveThumbnailsWithRecordingButton = saveThumbnailsWithRecording.buttonOf();
+        saveThumbnailsWithRecordingButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.saveThumbnailsWithRecording")));
+        saveThumbnailsWithRecording.setButton(saveThumbnailsWithRecordingButton);
+
+
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
                 (_b) -> {
@@ -311,13 +325,14 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
         adder.add(resetKeyBindingsOnRecordingButton);
-        adder.add(showQuickSlotsInQuickMenuButton);
+        adder.add(stopReplayOnManualInputButton);
+        adder.add(saveThumbnailsWithRecordingButton);
         adder.add(EmptyWidget.ofHeight(4), 2);
 
         adder.add(useCTRLForQuickSlotsButton);
         adder.add(useALTForQuickSlotsButton);
+        adder.add(showQuickSlotsInQuickMenuButton);
         adder.add(preventSlotChangesButton);
-        adder.add(stopReplayOnManualInputButton);
         adder.add(EmptyWidget.ofHeight(4), 2);
 
         adder.add(recordCommands.button);

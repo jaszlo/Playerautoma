@@ -141,16 +141,18 @@ public class PlayerRecorder {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
-        ThumbnailHelpers.create((thumbnail, nativeImage) -> {
-            if (thumbnail != null) {
-                record.thumbnail = thumbnail;
-                thumbnailTexture = new NativeImageBackedTexture(() -> "test", nativeImage);
-                // Destroy old texture and register new
-                MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
-                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
+        if (PlayerAutomaOptionsScreen.saveThumbnailsWithRecording.getValue()) {
+            ThumbnailHelpers.create((thumbnail, nativeImage) -> {
+                if (thumbnail != null) {
+                    record.thumbnail = thumbnail;
+                    thumbnailTexture = new NativeImageBackedTexture(() -> "test", nativeImage);
+                    // Destroy old texture and register new
+                    MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
+                    MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
 
-            }
-        });
+                }
+            });
+        }
 
         if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
             KeyBinding.unpressAll();
