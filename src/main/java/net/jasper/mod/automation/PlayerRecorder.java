@@ -11,11 +11,14 @@ import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.IOHelpers;
 import net.jasper.mod.util.Textures;
 import net.jasper.mod.util.ThumbnailHelpers;
+import net.jasper.mod.util.data.LookingDirection;
+import net.jasper.mod.util.data.Recording;
+import net.jasper.mod.util.data.SlotClick;
 import net.jasper.mod.util.data.TaskQueue;
-import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -62,6 +65,9 @@ public class PlayerRecorder {
 
     // Click on Trade in Villager Trading Screen (MerchantScreen)
     public static final Queue<Integer> lastVillagerTradeMade = new ConcurrentLinkedDeque<>();
+
+    // Click on Enchantment (EnchantmentScreen)
+    public static final Queue<Integer> lastEnchantmentMade = new ConcurrentLinkedDeque<>();
 
     public static void register() {
         // Always reset the PlayerRecorder if a Join event happens could be breaking the mod. Therefor leave it out now.
@@ -110,7 +116,8 @@ public class PlayerRecorder {
                 lastSlotClicked.poll(),
                 client.currentScreen == null ? null : client.currentScreen.getClass(),
                 lastCommandUsed.poll(),
-                lastVillagerTradeMade.poll()
+                lastVillagerTradeMade.poll(),
+                lastEnchantmentMade.poll()
             );
             record.add(newEntry);
         });
@@ -124,6 +131,7 @@ public class PlayerRecorder {
         lastSlotClicked.clear();
         lastCommandUsed.clear();pressedModifiers.clear();
         lastVillagerTradeMade.clear();
+        lastEnchantmentMade.clear();
         state = IDLE;
     }
 
@@ -268,6 +276,7 @@ public class PlayerRecorder {
             Class<?> currentScreen = entry.currentScreen();
             String command = entry.command();
             Integer villagerTrade = entry.villagerTrade();
+            Integer enchantmentMade = entry.enchantment();
 
             // Replay Ticks
             tasks.add(() -> {
@@ -332,12 +341,27 @@ public class PlayerRecorder {
                     try {
                         MerchantScreen tradeScreen = (MerchantScreen) client.currentScreen;
                         MerchantScreenAccessor accessor = (MerchantScreenAccessor) tradeScreen;
-                        accessor.setSelectedIndex(villagerTrade);
-                        accessor.setSyncRecipeIndexInvoker();
-                        // Button Sound not happening as button not clicked but immediate it
-                        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                        if (villagerTrade < tradeScreen.getScreenHandler().getRecipes().size()) {
+                            accessor.setSelectedIndex(villagerTrade);
+                            accessor.setSyncRecipeIndexInvoker();
+                            // Button Sound not happening as button not clicked but immediate it
+                            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                        } else {
+                            client.currentScreen = null;
+                            PlayerRecorder.stopReplay();
+                            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.clickSlotError"));
+                        }
                     } catch (Exception e) {
                         PlayerAutomaClient.LOGGER.warn("Villager Trade Click resulted in unexpected exception", e);
+                    }
+                }
+
+                // Click enchantment if possible
+                if (enchantmentMade != null && client.currentScreen instanceof EnchantmentScreen) {
+                    try {
+                        client.interactionManager.clickButton(((EnchantmentScreen) client.currentScreen).getScreenHandler().syncId, enchantmentMade);
+                    } catch (Exception e) {
+                        PlayerAutomaClient.LOGGER.warn("Enchantment Click resulted in unexpected exception", e);
                     }
                 }
             });

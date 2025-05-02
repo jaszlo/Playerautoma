@@ -1,5 +1,6 @@
 package net.jasper.mod.util;
 
+import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.SlotClick;
@@ -60,7 +61,13 @@ public class ClientHelpers {
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.player != null;
         assert client.interactionManager != null;
-        client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), client.player);
+        try {
+            client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), client.player);
+        } catch(Exception e) {
+            client.currentScreen = null;
+            PlayerRecorder.stopReplay();
+            writeToActionBar(Text.translatable("playerautoma.messages.error.clickSlotError"));
+        }
     }
 
     public static void writeToChat(Text message) {

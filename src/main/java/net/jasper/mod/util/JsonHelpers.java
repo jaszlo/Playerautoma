@@ -41,6 +41,7 @@ public class JsonHelpers {
     private static final String THUMBNAIL_WIDTH = "width";
     private static final String THUMBNAIL_HEIGHT = "height";
     private static final String VILLAGER_TRADE = "villagerTrade";
+    private static final String ENCHANTMENT_MADE = "enchantmentMade";
 
 
     public static String serialize(Recording r) {
@@ -122,6 +123,11 @@ public class JsonHelpers {
                 // Villager trade
                 if (entry.villagerTrade() != null) {
                     jsonEntry.addProperty(VILLAGER_TRADE, entry.villagerTrade());
+                }
+
+                // Enchantment made
+                if (entry.enchantment() != null) {
+                    jsonEntry.addProperty(ENCHANTMENT_MADE, entry.enchantment());
                 }
 
             }
@@ -220,6 +226,11 @@ public class JsonHelpers {
                 villagerTrade = jsonEntry.get(VILLAGER_TRADE).getAsInt();
             }
 
+            Integer enchantmentMade = null;
+            if (jsonEntry.has(ENCHANTMENT_MADE)) {
+                enchantmentMade = jsonEntry.get(ENCHANTMENT_MADE).getAsInt();
+            }
+
             Recording.RecordEntry entry = new Recording.RecordEntry(
                 keysPressed,
                 timesPressed,
@@ -229,7 +240,8 @@ public class JsonHelpers {
                 slotclick,
                 currentScreen,
                 command,
-                villagerTrade
+                villagerTrade,
+                enchantmentMade
             );
             result.add(entry);
         }

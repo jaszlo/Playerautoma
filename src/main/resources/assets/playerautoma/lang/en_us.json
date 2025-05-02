@@ -148,5 +148,6 @@
   "playerautoma.messages.error.cannotStopNotStartedReplay": "Cannot stop replay that has not been started yet",
   "playerautoma.messages.error.cannotStopNotStartedRecording": "Cannot stop recording that has not been started yet",
   "playerautoma.messages.error.cannotNameRecordingThatWay": "Recording names can only contain [a-z0-9/._-] characters",
-  "playerautoma.messages.error.unknownException": "An unknown Exception occurred. Please check %s for additional Information"
+  "playerautoma.messages.error.unknownException": "An unknown Exception occurred. Please check %s for additional Information",
+  "playerautoma.messages.error.clickSlotError": "Stopped replay due to an error while trying to click a slot"
 }

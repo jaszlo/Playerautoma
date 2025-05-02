@@ -1,3 +1,11 @@
+# Version v1.0.0
+* Bugfix:
+  * Creative-Mode prevents restocking of items which could sometime be faulty due to creative inventory
+  * Trading with an invalid villager no longer crashes instead logs error and stops replay
+* New Feature:
+  * Enchanting now works in replays. **This however changes recording-file which makes old one unusable!**
+* 
+
 # Version v0.5.3
 ### Only supported for minecraft versions 1.21.5 and upwards
 * Bugfix:

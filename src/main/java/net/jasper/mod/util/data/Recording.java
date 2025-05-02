@@ -18,7 +18,8 @@ public class Recording implements Serializable {
             SlotClick slotClicked,
             Class<?> currentScreen,
             String command,
-            Integer villagerTrade
+            Integer villagerTrade,
+            Integer enchantment
     ) implements Serializable {}
 
     public final List<RecordEntry> entries;

@@ -12,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.world.GameMode;
 
 /**
  * This class is responsible for re-stacking items in the inventory when replaying
@@ -23,6 +24,10 @@ public class InventoryAutomation {
     public static void register() {
         inventoryTasks.register("inventoryTasks");
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            if (GameMode.CREATIVE.equals(player.getGameMode())) {
+                return ActionResult.PASS;
+            }
+
             // If is disabled in settings do nothing
             if (!PlayerAutomaOptionsScreen.restackBlocksOption.getValue()) {
                 return ActionResult.PASS;
