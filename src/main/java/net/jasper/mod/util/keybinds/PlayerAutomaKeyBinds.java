@@ -36,7 +36,11 @@ public class PlayerAutomaKeyBinds {
             long handle = client.getWindow().getHandle();
             KeyBindingAccessor keyBindingAccessor = (KeyBindingAccessor)Constants.QUICK_MENU;
 
-            // Handle quickMenu
+            // Handle quickMenu if bound. Unbound mean code is -1
+            if (keyBindingAccessor.getBoundKey().getCode() == -1) {
+                return;
+            }
+
             boolean menuOpenPressed = InputUtil.isKeyPressed(handle, keyBindingAccessor.getBoundKey().getCode());
             if (!(client.currentScreen instanceof QuickMenu || client.currentScreen instanceof GameMenuScreen) && menuOpenPressed && !QuickMenu.wasClosed) {
                 QuickMenu.open();
