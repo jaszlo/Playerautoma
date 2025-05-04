@@ -1,12 +1,16 @@
 package net.jasper.mod;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerAutomaHUD;
 import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.util.keybinds.PlayerAutomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,5 +84,59 @@ public class PlayerAutomaClient implements ClientModInitializer {
 
 		// Register MenuPrevention. That allows to run Recording with minecraft in the background.
 		MenuPrevention.register();
+		WorldRenderEvents.END.register(context -> {
+			var client = MinecraftClient.getInstance();
+			var matrices = context.matrixStack();
+			var camera = client.getCameraEntity();
+			if (client.world == null || client.player == null || matrices == null || camera == null) return;
+
+			matrices.push();
+			PlayerEntityRenderer renderer = (PlayerEntityRenderer) client.getEntityRenderDispatcher().getRenderer(client.player);
+			var renderState = renderer.createRenderState();
+			renderState.x = 1000;
+			// Rotation play around
+			double degree = 45;
+			float cosDegree = (float) Math.cos(degree);
+			float sinDegree = (float) Math.sin(degree);
+			// X Rotation
+			Matrix4f rotationMatrixX = new Matrix4f(
+					new Vector4f(1f, 0f, 0f, 0f),
+					new Vector4f(0f, cosDegree, sinDegree, 0f),
+					new Vector4f(0f, -sinDegree, cosDegree, 0f),
+					new Vector4f(0f, 0f, 0f, 1f)
+			);
+
+			// Y Rotation
+			Matrix4f rotationMatrixY = new Matrix4f(
+					new Vector4f(cosDegree, 0f, -sinDegree, 0f),
+					new Vector4f(0f, 1, 0, 0f),
+					new Vector4f(sinDegree, 0, cosDegree, 0f),
+					new Vector4f(0f, 0f, 0f, 1f)
+			);
+
+			// Z Rotation
+			Matrix4f rotationMatrixZ = new Matrix4f(
+					new Vector4f(cosDegree, -sinDegree, 0, 0f),
+					new Vector4f(sinDegree, cosDegree, 0, 0f),
+					new Vector4f(0, 0, 1, 0f),
+					new Vector4f(0f, 0f, 0f, 1f)
+			);
+
+			//matrices.multiplyPositionMatrix(rotationMatrixX);
+			//matrices.multiplyPositionMatrix(rotationMatrixY);
+			//matrices.multiplyPositionMatrix(rotationMatrixZ);
+			System.out.println(client.player.getX() + ", " + camera.getX() + " => " + (client.player.getX() == camera.getX()));
+			System.out.println(client.player.getY() + ", " + camera.getY() + " => " + (client.player.getY() == camera.getY()));
+			System.out.println(client.player.getZ() + ", " + camera.getZ() + " => " + (client.player.getZ() == camera.getZ()));
+
+			matrices.translate(100.0 - camera.getX(), 100.0 - camera.getY(), 100.0 - camera.getZ());
+			renderState.x = 100.0;
+			renderState.y = 100.0;
+			renderState.z = 100.0;
+			renderState.bodyYaw = 45;
+			renderState.pitch = 45;
+			renderer.render(renderState, context.matrixStack(), context.consumers(), 150);
+			matrices.pop();
+		});
 	}
 }
