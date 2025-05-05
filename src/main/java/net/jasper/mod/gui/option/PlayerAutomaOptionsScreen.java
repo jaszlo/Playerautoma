@@ -1,8 +1,8 @@
 package net.jasper.mod.gui.option;
 
 import net.jasper.mod.gui.PlayerAutomaHUD;
-import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.data.LookingDirection;
+import net.jasper.mod.util.data.StartingPositionOffset;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
@@ -70,9 +70,26 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         "playerautoma.option.useRelativeLookingDirection",
         Object::toString,
         Boolean::parseBoolean,
-        (bool) -> (bool ? Text.translatable("playerautoma.option.relativeLookingDirection") : Text.translatable("playerautoma.option.absoluteLookingDirection"))
+        (bool) -> (bool ? Text.translatable("playerautoma.option.relative") : Text.translatable("playerautoma.option.absolute"))
     );
 
+    public static OptionButton<StartingPositionOffset.Name> setDefaultStartingPositionOption = new OptionButton<>(
+            StartingPositionOffset.Name.CENTER,
+            StartingPositionOffset.Name.values(),
+            "playerautoma.option.setDefaultStartingPosition",
+            StartingPositionOffset.Name::toString,
+            StartingPositionOffset.Name::fromString,
+            StartingPositionOffset.Name::toText
+    );
+
+    public static OptionButton<Boolean> useDefaultStartingPositionOption = new OptionButton<>(
+            true,
+            OptionButton.BOOLEAN_VALUES,
+            "playerautoma.option.useDefaultStartingPosition",
+            Object::toString,
+            Boolean::parseBoolean,
+            (bool) -> (bool ? Text.translatable("playerautoma.option.absolute") : Text.translatable("playerautoma.option.relative"))
+    );
 
     public static OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
         true,
@@ -82,7 +99,6 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         Boolean::parseBoolean,
         (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
-
 
     public static OptionButton<Boolean> recordInventoryActivitiesOption = new OptionButton<>(
         true,
@@ -203,6 +219,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
             }
     ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.openCommandsToExclude"))).build();
 
+
     public PlayerAutomaOptionsScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.translatable("playerautoma.screens.title.modOptions"));
         this.gridWidget = new GridWidget();
@@ -227,7 +244,8 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         assert this.client != null;
 
         gridWidget.getMainPositioner().marginX(5).marginBottom(4).alignHorizontalCenter();
-        GridWidget.Adder adder = gridWidget.createAdder(2);
+        GridWidget.Adder adder = gridWidget.createAdder(3);
+
 
         ButtonWidget setHudPositionButton = setHudPositionOption.buttonOf();
         setHudPositionOption.setButton(setHudPositionButton);
@@ -253,6 +271,19 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
                     useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
                 }).build();
+
+
+        ButtonWidget setDefaultStartingPositionButton = setDefaultStartingPositionOption.buttonOf();
+        setDefaultStartingPositionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.setDefaultStartingPosition")));
+        ButtonWidget useDefaultStartingPositionButton = ButtonWidget.builder(
+                Text.translatable(useDefaultStartingPositionOption.key).append(": ").append(useDefaultStartingPositionOption.textProvider.provide(useDefaultStartingPositionOption.getValue())),
+                (_b) -> {
+                    useDefaultStartingPositionOption.next();
+                    setDefaultStartingPositionButton.active = useDefaultStartingPositionOption.getValue();
+                }).build();
+        useDefaultStartingPositionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useDefaultStartingPosition")));
+        useDefaultStartingPositionOption.setButton(useDefaultStartingPositionButton);
+        setDefaultStartingPositionButton.active = useDefaultStartingPositionOption.getValue();
 
         // Set initial active state
         setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
@@ -318,29 +349,36 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         adder.add(showHudButton);
         adder.add(setHudPositionButton);
         adder.add(writeStateToActionBarButton);
+        adder.add(EmptyWidget.ofHeight(4), 3);
+
         adder.add(useDefaultDirectionButton);
         adder.add(setDefaultDirectionButton);
         adder.add(useRelativeLookingDirectionButton);
+        adder.add(setDefaultStartingPositionButton);
+        adder.add(useDefaultStartingPositionButton);
+        adder.add(EmptyWidget.ofHeight(4));
+        adder.add(EmptyWidget.ofHeight(4), 3);
+
         adder.add(restackBlocksButton);
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
         adder.add(resetKeyBindingsOnRecordingButton);
         adder.add(stopReplayOnManualInputButton);
         adder.add(saveThumbnailsWithRecordingButton);
-        adder.add(EmptyWidget.ofHeight(4), 2);
+        adder.add(EmptyWidget.ofHeight(4), 3);
 
         adder.add(useCTRLForQuickSlotsButton);
         adder.add(useALTForQuickSlotsButton);
+        adder.add(EmptyWidget.ofHeight(4));
         adder.add(showQuickSlotsInQuickMenuButton);
         adder.add(preventSlotChangesButton);
-        adder.add(EmptyWidget.ofHeight(4), 2);
+        adder.add(EmptyWidget.ofHeight(4));
+        adder.add(EmptyWidget.ofHeight(4), 3);
 
         adder.add(recordCommands.button);
         adder.add(openCommandsToExclude);
+        adder.add(openKeyBindOptionsButton);
 
-        // Quick and VERY dirty fix for most common desktop size
-        if (ClientHelpers.getGuiScale() <= 3) adder.add(openKeyBindOptionsButton, 2);
-        adder.add(EmptyWidget.ofHeight(16), 2);
         gridWidget.refreshPositions();
         SimplePositioningWidget.setPos(gridWidget, 0, this.height / 6 - 12, this.width, this.height, 0.5f, 0.0f);
         gridWidget.forEachChild(this::addDrawableChild);

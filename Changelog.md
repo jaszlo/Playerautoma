@@ -5,7 +5,7 @@
   * Unbound quick menu key bind would throw exception
 * New Feature:
   * Enchanting now works in replays. **This however changes recording-file which makes old one unusable!**
-* 
+  * Add option to make starting position at recording relative or absolut like looking direction 
 
 # Version v0.5.3
 ### Only supported for minecraft versions 1.21.5 and upwards

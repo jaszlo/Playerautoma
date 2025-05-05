@@ -166,7 +166,7 @@ public class PlayerRecorder {
             KeyBinding.unpressAll();
         }
 
-        ClientHelpers.centerPlayer();
+        ClientHelpers.positionPlayer();
         lastSlotClicked.clear();
         lastCommandUsed.clear();
         state = RECORDING;
@@ -252,7 +252,7 @@ public class PlayerRecorder {
         state = REPLAYING;
         if (!looped) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startReplay"));
 
-        ClientHelpers.centerPlayer();
+        ClientHelpers.positionPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
         assert client.player != null;
         assert client.interactionManager != null;
