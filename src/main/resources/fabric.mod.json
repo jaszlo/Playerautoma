@@ -17,7 +17,7 @@
 	"environment": "client",
 	"entrypoints": {
 		"client":[
-			"net.jasper.mod.PlayerAutomaClient"
+          "net.jasper.mod.PlayerautomaClient"
 		],
 		"modmenu":[
 			"net.jasper.mod.ModMenuApiImpl"

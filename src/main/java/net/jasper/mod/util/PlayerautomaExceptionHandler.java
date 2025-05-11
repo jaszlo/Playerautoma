@@ -2,7 +2,7 @@ package net.jasper.mod.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PlayerAutomaExceptionHandler {
+public class PlayerautomaExceptionHandler {
 
     private static final DateTimeFormatter errorDateTimeFormat = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");
 
@@ -59,7 +59,7 @@ public class PlayerAutomaExceptionHandler {
      */
     public static void handleException(Exception exception)  {
         String fileName = "%s_error_dumb.txt".formatted(LocalDateTime.now().format(errorDateTimeFormat));
-        File errorFile = Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, fileName).toFile();
+        File errorFile = Path.of(PlayerautomaClient.PLAYERAUTOMA_FOLDER_PATH, fileName).toFile();
         Text fileNameText = Text.literal(fileName)
                 .formatted(Formatting.UNDERLINE)
                 .styled(style -> style.withClickEvent(new ClickEvent.OpenFile(errorFile.getAbsolutePath())));
@@ -74,7 +74,7 @@ public class PlayerAutomaExceptionHandler {
 
             writer.write(ERROR_DUMP_TEMPLATE.formatted(
                     ERROR_MESSAGE_HEADER[random.nextInt(ERROR_MESSAGE_HEADER.length)],
-                    PlayerAutomaClient.getVersion(),
+                    PlayerautomaClient.getVersion(),
                     stringWriter.toString()
             ));
 

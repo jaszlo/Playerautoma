@@ -2,7 +2,7 @@ package net.jasper.mod.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.util.data.Recording;
 
@@ -30,48 +30,27 @@ public class IOHelpers {
         Recording result = new Recording(null);
         for (String option : RecordingFileTypes.types()) {
             if (option.equals(RecordingFileTypes.JSON)) {
-                try {
-                    FileReader fileReader = new FileReader(toLoad);
-                    BufferedReader reader = new BufferedReader(fileReader);
+                try (BufferedReader reader = new BufferedReader(new FileReader(toLoad))) {
                     StringBuilder readFile = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
                         readFile.append(line);
                     }
-                    reader.close();
-                    fileReader.close();
                     result = JsonHelpers.deserialize(readFile.toString());
                 } catch (Exception e) {
                     // Try rec file then
                     continue;
                 }
-                break;
+                return result;
             } else if (option.equals(RecordingFileTypes.REC)) {
-                ObjectInputStream objectInputStream = null;
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(toLoad);
-                    objectInputStream = new ObjectInputStream(fis);
+                try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(toLoad))) {
                     // This can happen when a file is selected and then deleted via the file explorer
                     if (objectInputStream == null) throw new IOException("objectInputStream is null");
 
                     result = (Recording) objectInputStream.readObject();
-                    objectInputStream.close();
-                    fis.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    PlayerAutomaClient.LOGGER.warn(e.getMessage());
-                    try {
-                        if (objectInputStream != null) objectInputStream.close();
-                        if (fis != null) fis.close();
-                    } catch (IOException closeFailed) {
-                        PlayerAutomaClient.LOGGER.warn(closeFailed.getMessage());
-                        PlayerAutomaClient.LOGGER.warn("Error closing file (loadRecord) in error handling!"); // This should not happen :(
-                    }
-                    continue;
-
+                    PlayerautomaClient.LOGGER.warn(e.getMessage());
                 }
-                break;
             }
         }
         return result;
@@ -93,7 +72,7 @@ public class IOHelpers {
 
     /**
      * Stores a recording to a file with a given name to a given directory and as a given type. Can overwrite existing file
-     * @param record to store to file
+     * @param recording to store to file
      * @param directory where to locate file
      * @param name of the file created
      * @param storeAs file type
@@ -101,38 +80,23 @@ public class IOHelpers {
      * @return true on success
      */
     public static boolean storeRecordingFile(Recording recording, File directory, String name, String storeAs, boolean overwrite) {
-        File selected = null;
-        ObjectOutputStream objectOutputStream = null;
-        try {
-            // If file already exists create new file with "_new" before file type.
-            selected = createNewFileName(directory, name, storeAs, overwrite);
-            FileOutputStream fos = new FileOutputStream(selected);
-            objectOutputStream = new ObjectOutputStream(fos);
-            if (objectOutputStream == null) throw new IOException("objectInputStream is null");
-            // Store as .json/.rec according to option
-            if (storeAs.equals(RecordingFileTypes.JSON)) {
+        // If file already exists create new file with "_new" before file type.
+        File selected = createNewFileName(directory, name, storeAs, overwrite);
+        // Store as .json/.rec according to option
+        if (storeAs.equals(RecordingFileTypes.JSON)) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selected))) {
                 String json = JsonHelpers.serialize(recording);
-                FileWriter fileWriter = new FileWriter(selected);
-                BufferedWriter writer = new BufferedWriter(fileWriter);
-                writer.write(json);
-                writer.close();
-                fileWriter.close();
-            } else {
+                bufferedWriter.write(json);
+            } catch (IOException e) {
+                PlayerautomaClient.LOGGER.info("Failed to create BufferedWriter stream for selected file: {}", e.getMessage());
+            }
+        } else {
+            try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(selected))) {
                 objectOutputStream.writeObject(recording);
+                return true;
+            } catch (IOException e) {
+                PlayerautomaClient.LOGGER.info("Failed to create ObjectOutputStream for selected file: {}", e.getMessage());
             }
-            objectOutputStream.close();
-            fos.close();
-            return true;
-        } catch (IOException e) {
-            PlayerAutomaClient.LOGGER.warn(e.getMessage());
-            try {
-                if (objectOutputStream != null) objectOutputStream.close();
-                PlayerAutomaClient.LOGGER.info("Deletion of failed file: {}", selected.delete());
-            } catch (IOException closeFailed) {
-                PlayerAutomaClient.LOGGER.warn(closeFailed.getMessage());
-                PlayerAutomaClient.LOGGER.warn("Error closing file (storeRecord) in error handling!"); // This should not happen :(
-            }
-            PlayerAutomaClient.LOGGER.info("Failed to create output stream for selected file");
         }
         return false;
     }

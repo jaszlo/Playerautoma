@@ -2,9 +2,9 @@ package net.jasper.mod.mixins;
 
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.text.Text;
@@ -37,12 +37,13 @@ public class MouseMixin {
         double newX = client.mouse.getX();
         double newY = client.mouse.getY();
 
-        if (PlayerRecorder.state.isReplaying() && Boolean.TRUE.equals(PlayerAutomaOptionsScreen.stopReplayOnManualInput.getValue())) {
-
-            if (previousX != newX || previousY != newY) {
-                PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
-                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayStoppedOnManualInput"));
-            }
+        boolean lookingDirectionChanged = previousX != newX || previousY != newY;
+        if (PlayerRecorder.state.isReplaying() &&
+                Boolean.TRUE.equals(PlayerautomaOptionsScreen.stopReplayOnManualInput.getValue()) &&
+                lookingDirectionChanged
+        ) {
+            PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayStoppedOnManualInput"));
         }
 
         previousX = newX;

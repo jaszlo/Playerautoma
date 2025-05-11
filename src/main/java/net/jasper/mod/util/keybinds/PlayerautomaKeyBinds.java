@@ -17,7 +17,7 @@ import java.util.List;
  * Class to initialize and handle all keybinds
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PlayerAutomaKeyBinds {
+public class PlayerautomaKeyBinds {
 
     private static final List<KeyBind> keyBinds = new ArrayList<>();
 

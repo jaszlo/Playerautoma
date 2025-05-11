@@ -2,7 +2,7 @@ package net.jasper.mod.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
@@ -109,8 +109,8 @@ public class ThumbnailHelpers {
                 thumbnailConsumer.accept(thumbnail, nativeImage);
             });
         } catch (Exception exception) {
-            PlayerAutomaExceptionHandler.handleException(exception);
-            PlayerAutomaClient.LOGGER.error("Couldn't save temporary screenshot image", exception);
+            PlayerautomaExceptionHandler.handleException(exception);
+            PlayerautomaClient.LOGGER.error("Couldn't save temporary screenshot image", exception);
         } finally {
             client.gameRenderer.setBlockOutlineEnabled(true);
             client.gameRenderer.setRenderingPanorama(false);

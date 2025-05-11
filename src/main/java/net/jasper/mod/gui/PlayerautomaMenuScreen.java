@@ -1,8 +1,8 @@
 package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -18,10 +18,10 @@ import java.util.Objects;
 /**
  * Main-Menu if you like that allows for control of the InputRecorder via buttons.
  */
-public class PlayerAutomaMenuScreen extends Screen {
+public class PlayerautomaMenuScreen extends Screen {
     private final Screen parent;
 
-    public PlayerAutomaMenuScreen(Screen parent) {
+    public PlayerautomaMenuScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.modMenu"));
         this.parent = parent;
         this.client = MinecraftClient.getInstance();
@@ -30,22 +30,22 @@ public class PlayerAutomaMenuScreen extends Screen {
     // Player Recorder
     private static final ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
+            PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startRecording"))).build();
 
     private static final ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
+            PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.stopRecording"))).build();
 
     private static final ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startReplay"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
+            PlayerautomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startReplay"))).build();
 
     private static final ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startLoop"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
-            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
+            PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startLoop"))).build();
 
     private static final ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"),
@@ -55,11 +55,11 @@ public class PlayerAutomaMenuScreen extends Screen {
             button -> RecordingSelectorScreen.open()).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.loadRecording"))).build();
 
     private static final ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"),
-            button -> PlayerAutomaOptionsScreen.open()).width(200).build();
+            button -> PlayerautomaOptionsScreen.open()).width(200).build();
 
     public static Screen open() {
         MinecraftClient client = MinecraftClient.getInstance();
-        Screen result = new PlayerAutomaMenuScreen(client.currentScreen);
+        Screen result = new PlayerautomaMenuScreen(client.currentScreen);
         client.setScreen(result);
         return result;
     }

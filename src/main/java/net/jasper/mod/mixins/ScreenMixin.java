@@ -3,7 +3,7 @@ package net.jasper.mod.mixins;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -39,7 +39,7 @@ public class ScreenMixin {
     @Inject(method="keyPressed", at=@At("HEAD"))
     private void stopReplay(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (STOP_REPLAY.matchesKey(keyCode, scanCode)) {
-            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
+            PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
         }
     }
 

@@ -3,7 +3,7 @@ package net.jasper.mod.automation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.data.TaskQueue;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -34,7 +34,7 @@ public class InventoryAutomation {
             }
 
             // If is disabled in settings do nothing
-            if (Boolean.FALSE.equals(PlayerAutomaOptionsScreen.restackBlocksOption.getValue())) {
+            if (Boolean.FALSE.equals(PlayerautomaOptionsScreen.restackBlocksOption.getValue())) {
                 return ActionResult.PASS;
             }
 
@@ -61,7 +61,7 @@ public class InventoryAutomation {
 
             // Check if another Stack of the item in mainHand is in the Inventory
             int exceptedSlot = inventory.getEmptySlot();
-            for (int i = 0; i < inventory.getMainStacks().size(); i++) {
+            for (int i = 0; i < inventory.getMainStacks().size(); i++) { //NOSONAR
                 ItemStack item = inventory.getStack(i);
                 if (i == exceptedSlot || item.getItem() != currentItem.getItem()) {
                     continue;

@@ -1,8 +1,8 @@
 package net.jasper.mod.gui.option;
 
 import lombok.Setter;
-import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.PlayerautomaClient;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class OptionButton<V> {
     private static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::options");
 
     public static final Boolean[] BOOLEAN_VALUES = { true, false };
-    public static final File OPTION_FILE = new File(String.valueOf(Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, OPTION_FILE_NAME)));
+    public static final File OPTION_FILE = new File(String.valueOf(Path.of(PlayerautomaClient.PLAYERAUTOMA_FOLDER_PATH, OPTION_FILE_NAME)));
 
     public final String key;
     @Setter
@@ -99,7 +99,7 @@ public class OptionButton<V> {
                 lines.add(line);
             }
         } catch (IOException e) {
-            PlayerAutomaExceptionHandler.handleException(e);
+            PlayerautomaExceptionHandler.handleException(e);
         }
 
         boolean keyFound = false;
@@ -126,7 +126,7 @@ public class OptionButton<V> {
                 bw.newLine();
             }
         } catch (IOException e) {
-            PlayerAutomaExceptionHandler.handleException(e);
+            PlayerautomaExceptionHandler.handleException(e);
         }
     }
 
@@ -143,7 +143,7 @@ public class OptionButton<V> {
                 }
             }
         } catch (IOException e) {
-            PlayerAutomaExceptionHandler.handleException(e);
+            PlayerautomaExceptionHandler.handleException(e);
         }
 
         // Value was not in option file therefore store default value

@@ -3,7 +3,7 @@ package net.jasper.mod.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.SlotClick;
 import net.jasper.mod.util.data.StartingPositionOffset;
@@ -33,8 +33,8 @@ public class ClientHelpers {
         assert player != null;
 
         // Only change looking direction if set in options
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue())) {
-            LookingDirection.Name dirName = PlayerAutomaOptionsScreen.setDefaultDirectionOption.getValue();
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue())) {
+            LookingDirection.Name dirName = PlayerautomaOptionsScreen.setDefaultDirectionOption.getValue();
             // If the looking direction is to be used from the replay nothing needs to be set here
             if (!dirName.equals(LookingDirection.Name.FROM_REPLAY)) {
                 LookingDirection dir = dirName.getYawPitch();
@@ -45,8 +45,8 @@ public class ClientHelpers {
         }
 
         // Center player on current block only if enabled in options
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useDefaultStartingPositionOption.getValue())) {
-            StartingPositionOffset offset = PlayerAutomaOptionsScreen.setDefaultStartingPositionOption.getValue().getOffset();
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useDefaultStartingPositionOption.getValue())) {
+            StartingPositionOffset offset = PlayerautomaOptionsScreen.setDefaultStartingPositionOption.getValue().getOffset();
 
             Vec3d playerPos = player.getPos();
             BlockPos blockPos = new BlockPos((int) Math.floor(playerPos.x), (int) Math.floor(playerPos.y), (int) Math.floor(playerPos.z));
@@ -57,7 +57,7 @@ public class ClientHelpers {
 
     public static void writeToActionBar(Text message, boolean tinted) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || client.inGameHud == null || Boolean.FALSE.equals(PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue())) {
+        if (client.player == null || client.inGameHud == null || Boolean.FALSE.equals(PlayerautomaOptionsScreen.writeStateToActionBarOption.getValue())) {
             return;
         }
 

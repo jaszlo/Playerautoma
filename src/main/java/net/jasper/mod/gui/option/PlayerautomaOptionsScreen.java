@@ -1,6 +1,6 @@
 package net.jasper.mod.gui.option;
 
-import net.jasper.mod.gui.PlayerAutomaHUD;
+import net.jasper.mod.gui.PlayerautomaHUD;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.StartingPositionOffset;
 import net.minecraft.client.MinecraftClient;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Playerautoma option screen to configure settings
  */
-public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
+public class PlayerautomaOptionsScreen extends GameOptionsScreen {
 
     private final GridWidget gridWidget;
 
@@ -37,13 +37,13 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
     }
 
 
-    public static final OptionButton<PlayerAutomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
-        PlayerAutomaHUD.ShowHUDOption.TEXT_AND_ICON,
-        PlayerAutomaHUD.ShowHUDOption.values(),
+    public static final OptionButton<PlayerautomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
+        PlayerautomaHUD.ShowHUDOption.TEXT_AND_ICON,
+        PlayerautomaHUD.ShowHUDOption.values(),
         "playerautoma.option.showHud",
-        PlayerAutomaHUD.ShowHUDOption::toString,
-        PlayerAutomaHUD.ShowHUDOption::fromString,
-        PlayerAutomaHUD.ShowHUDOption::toText
+        PlayerautomaHUD.ShowHUDOption::toString,
+        PlayerautomaHUD.ShowHUDOption::fromString,
+        PlayerautomaHUD.ShowHUDOption::toText
     );
 
     public static final OptionButton<Boolean> useDefaultDirectionOption = new OptionButton<>(
@@ -109,13 +109,13 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static final OptionButton<PlayerAutomaHUD.Position> setHudPositionOption = new OptionButton<>(
-        PlayerAutomaHUD.Position.BOTTOM_LEFT,
-        PlayerAutomaHUD.Position.values(),
+    public static final OptionButton<PlayerautomaHUD.Position> setHudPositionOption = new OptionButton<>(
+        PlayerautomaHUD.Position.BOTTOM_LEFT,
+        PlayerautomaHUD.Position.values(),
         "playerautoma.option.setHudPosition",
-        PlayerAutomaHUD.Position::toString,
-        PlayerAutomaHUD.Position::fromString,
-        PlayerAutomaHUD.Position::toText
+        PlayerautomaHUD.Position::toString,
+        PlayerautomaHUD.Position::fromString,
+        PlayerautomaHUD.Position::toText
     );
 
 
@@ -211,14 +211,14 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
     ).tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.openCommandsToExclude"))).build();
 
 
-    public PlayerAutomaOptionsScreen(Screen parent) {
+    public PlayerautomaOptionsScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.translatable("playerautoma.screens.title.modOptions"));
         this.gridWidget = new GridWidget();
     }
 
     public static Screen open() {
         MinecraftClient client = MinecraftClient.getInstance();
-        Screen result = new PlayerAutomaOptionsScreen(client.currentScreen);
+        Screen result = new PlayerautomaOptionsScreen(client.currentScreen);
         client.setScreen(result);
         return result;
     }
@@ -246,9 +246,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                 Text.translatable(showHudOption.key).append(": ").append(showHudOption.textProvider.provide(showHudOption.getValue())),
                 b -> {
                     showHudOption.next();
-                    setHudPositionButton.active = showHudOption.getValue() != PlayerAutomaHUD.ShowHUDOption.NOTHING;
+                    setHudPositionButton.active = showHudOption.getValue() != PlayerautomaHUD.ShowHUDOption.NOTHING;
                 }).build();
-        setHudPositionButton.active = showHudOption.getValue() != PlayerAutomaHUD.ShowHUDOption.NOTHING;
+        setHudPositionButton.active = showHudOption.getValue() != PlayerautomaHUD.ShowHUDOption.NOTHING;
         showHudOption.setButton(showHudButton);
 
         ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();

@@ -2,7 +2,7 @@ package net.jasper.mod.mixins;
 
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.CommandsToExcludeOption;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,12 +34,12 @@ public class ClientPlayerNetworkHandlerMixin {
     @Inject(method="sendChatCommand", at=@At("HEAD"))
     private void recordCommand(String message, CallbackInfo ci) {
         // If not enabled never track commands
-        if (Boolean.FALSE.equals(PlayerAutomaOptionsScreen.recordCommands.getValue()))           {
+        if (Boolean.FALSE.equals(PlayerautomaOptionsScreen.recordCommands.getValue()))           {
             return;
         }
 
         // When '/' is there remove it if not just check if it starts with current command to ignore
-        boolean noMatchWithUserIgnoreList = CommandsToExcludeOption.userCommandsToIgnore.stream().noneMatch(e -> e.startsWith("/") && message.startsWith(e.substring(1)) || message.startsWith(e));
+        boolean noMatchWithUserIgnoreList = CommandsToExcludeOption.getUserCommandsToIgnore().stream().noneMatch(e -> e.startsWith("/") && message.startsWith(e.substring(1)) || message.startsWith(e));
         boolean noMatchWithForbiddenList = Arrays.stream(userCommandsForbidden).noneMatch(message::startsWith);
         if (noMatchWithUserIgnoreList && noMatchWithForbiddenList) {
             PlayerRecorder.lastCommandUsed.add(message);

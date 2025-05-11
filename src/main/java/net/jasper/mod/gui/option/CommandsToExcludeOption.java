@@ -1,7 +1,8 @@
 package net.jasper.mod.gui.option;
 
 
-import net.jasper.mod.PlayerAutomaClient;
+import lombok.Getter;
+import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -30,9 +31,10 @@ public class CommandsToExcludeOption extends Screen {
 
     // Should no longer use a singleton when used in general
     public static final String FILE_NAME = "ignored_commands.txt";
-    public static final String FILE_PATH = Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, FILE_NAME).toString();
+    public static final String FILE_PATH = Path.of(PlayerautomaClient.PLAYERAUTOMA_FOLDER_PATH, FILE_NAME).toString();
 
-    public static final List<String> userCommandsToIgnore = new ArrayList<>();
+    @Getter
+    private static final List<String> userCommandsToIgnore = new ArrayList<>();
 
     public CommandsToExcludeOption(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.excludeCommands"));
@@ -102,7 +104,7 @@ public class CommandsToExcludeOption extends Screen {
         if (recEntry != null) {
             boolean deleteSuccess = this.commandSelectionList.remove(recEntry);
             if (!deleteSuccess) {
-                PlayerAutomaClient.LOGGER.warn("Could not delete command to ignore {}", recEntry.command);
+                PlayerautomaClient.LOGGER.warn("Could not delete command to ignore {}", recEntry.command);
                 this.close();
                 ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedCommandToExclude"));
             }
@@ -132,6 +134,7 @@ public class CommandsToExcludeOption extends Screen {
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
     }
 
+    @SuppressWarnings("java:S110")
     private class CommandsToExcludeListWidget extends AlwaysSelectedEntryListWidget<CommandsToExcludeListWidget.CommandEntry> {
         final String filePath;
         public CommandsToExcludeListWidget(MinecraftClient client, String filePath) {
@@ -158,7 +161,7 @@ public class CommandsToExcludeOption extends Screen {
                 }
             } catch (IOException e) {
                 // Don't know when this should happen
-                PlayerAutomaClient.LOGGER.info(e.toString());
+                PlayerautomaClient.LOGGER.info(e.toString());
             }
         }
 
@@ -170,7 +173,7 @@ public class CommandsToExcludeOption extends Screen {
                 }
             } catch (IOException e) {
                 // Don't know when this should happen
-                PlayerAutomaClient.LOGGER.info(e.toString());
+                PlayerautomaClient.LOGGER.info(e.toString());
             }
         }
 

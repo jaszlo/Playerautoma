@@ -3,7 +3,7 @@ package net.jasper.mod.util;
 import com.google.gson.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.RecordingThumbnail;
@@ -68,7 +68,7 @@ public class JsonHelpers {
         for (Recording.RecordEntry entry : r.entries) {
             JsonObject jsonEntry = new JsonObject();
             // Fill the entry with the actual values
-            {
+            {   // NOSONAR
                 // Keys pressed
                 JsonArray keysPressed = new JsonArray();
                 for (String pressed : entry.keysPressed()) {
@@ -217,7 +217,7 @@ public class JsonHelpers {
                 try {
                 currentScreen = Class.forName(jsonEntry.get(CURRENT_SCREEN).getAsString());
                 } catch (Exception e) {
-                    PlayerAutomaClient.LOGGER.error("Cloud not find Screen class {}", jsonEntry.get(CURRENT_SCREEN).getAsString(), e);
+                    PlayerautomaClient.LOGGER.error("Cloud not find Screen class {}", jsonEntry.get(CURRENT_SCREEN).getAsString(), e);
                 }
             }
 

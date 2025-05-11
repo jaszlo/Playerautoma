@@ -2,10 +2,10 @@ package net.jasper.mod.gui;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 /**
  * Little HUD for Playerautoma to display current state of player recorder
  */
-public class PlayerAutomaHUD {
+public class PlayerautomaHUD {
 
     public enum ShowHUDOption {
         NOTHING,
@@ -36,11 +36,11 @@ public class PlayerAutomaHUD {
             };
         }
 
-        public static PlayerAutomaHUD.ShowHUDOption fromString(String s) {
-            return PlayerAutomaHUD.ShowHUDOption.valueOf(s.toUpperCase());
+        public static PlayerautomaHUD.ShowHUDOption fromString(String s) {
+            return PlayerautomaHUD.ShowHUDOption.valueOf(s.toUpperCase());
         }
 
-        public static Text toText(PlayerAutomaHUD.ShowHUDOption opt) {
+        public static Text toText(PlayerautomaHUD.ShowHUDOption opt) {
             return switch(opt) {
                 case NOTHING -> Text.translatable("playerautoma.option.hudShow.nothing");
                 case TEXT -> Text.translatable("playerautoma.option.hudShow.text");
@@ -69,11 +69,11 @@ public class PlayerAutomaHUD {
             };
         }
 
-        public static PlayerAutomaHUD.Position fromString(String s) {
-            return PlayerAutomaHUD.Position.valueOf(s.toUpperCase());
+        public static PlayerautomaHUD.Position fromString(String s) {
+            return PlayerautomaHUD.Position.valueOf(s.toUpperCase());
         }
 
-        public static Text toText(PlayerAutomaHUD.Position opt) {
+        public static Text toText(PlayerautomaHUD.Position opt) {
             return switch (opt) {
                 case TOP_LEFT -> Text.translatable("playerautoma.option.hudPosition.topLeft");
                 case TOP_RIGHT -> Text.translatable("playerautoma.option.hudPosition.topRight");
@@ -93,7 +93,7 @@ public class PlayerAutomaHUD {
             // Get the longest text offset of the state if text is displayed
             TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
             int textOffset = 0;
-            PlayerAutomaHUD.ShowHUDOption opt = PlayerAutomaOptionsScreen.showHudOption.getValue();
+            PlayerautomaHUD.ShowHUDOption opt = PlayerautomaOptionsScreen.showHudOption.getValue();
             if (opt == ShowHUDOption.TEXT || opt == ShowHUDOption.TEXT_AND_ICON) {
                 for (PlayerRecorder.State s : PlayerRecorder.State.values()) {
                     textOffset = Math.max(textOffset, textRenderer.getWidth(s.getText()));
@@ -111,7 +111,7 @@ public class PlayerAutomaHUD {
         }
     }
 
-    private static final Identifier PLAYERAUTOMA_HUD_LAYER = Identifier.of(PlayerAutomaClient.MOD_ID, "hud.state");
+    private static final Identifier PLAYERAUTOMA_HUD_LAYER = Identifier.of(PlayerautomaClient.MOD_ID, "hud.state");
 
 
     private static void render(DrawContext context, RenderTickCounter tickCounter) {
@@ -120,7 +120,7 @@ public class PlayerAutomaHUD {
         // Renders only if active
         MenuPrevention.renderIcon(context);
 
-        ShowHUDOption showOffHud = PlayerAutomaOptionsScreen.showHudOption.getValue();
+        ShowHUDOption showOffHud = PlayerautomaOptionsScreen.showHudOption.getValue();
         if (showOffHud == ShowHUDOption.NOTHING) {
             return;
         }
@@ -135,7 +135,7 @@ public class PlayerAutomaHUD {
         int scaledSize = scale * size;
 
         // Calculate position
-        int[] pos = PlayerAutomaOptionsScreen.setHudPositionOption.getValue().getPosition(scaledSize);
+        int[] pos = PlayerautomaOptionsScreen.setHudPositionOption.getValue().getPosition(scaledSize);
         int x = pos[0];
         int y = pos[1];
 
@@ -167,6 +167,6 @@ public class PlayerAutomaHUD {
 
     public static void register() {
         HudLayerRegistrationCallback.EVENT.register(layeredDrawerWrapper ->
-            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerAutomaHUD::render)); ;
+            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerautomaHUD::render)); ;
     }
 }

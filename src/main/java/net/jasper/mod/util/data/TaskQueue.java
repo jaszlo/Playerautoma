@@ -2,7 +2,7 @@ package net.jasper.mod.util.data;
 
 import lombok.Getter;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +89,7 @@ public class TaskQueue {
             try {
                 this.poll().run();
             } catch (Exception exception) {
-                PlayerAutomaExceptionHandler.handleException(exception);
+                PlayerautomaExceptionHandler.handleException(exception);
             }
             done = true;
         });

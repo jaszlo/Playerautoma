@@ -1,10 +1,10 @@
 package net.jasper.mod.automation;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.gui.PlayerAutomaMenuScreen;
+import net.jasper.mod.PlayerautomaClient;
+import net.jasper.mod.gui.PlayerautomaMenuScreen;
 import net.jasper.mod.gui.QuickMenu;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.jasper.mod.mixins.accessors.MerchantScreenAccessor;
 import net.jasper.mod.util.ClientHelpers;
@@ -35,7 +35,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
+import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
 
 /**
@@ -45,7 +45,7 @@ public class PlayerRecorder {
 
     public static Recording record = new Recording(null);
     public static NativeImageBackedTexture thumbnailTexture = null;
-    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = Identifier.of(PlayerAutomaClient.MOD_ID, "current_recording_thumbnail");
+    public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = Identifier.of(PlayerautomaClient.MOD_ID, "current_recording_thumbnail");
 
     public static State state = IDLE;
 
@@ -150,7 +150,7 @@ public class PlayerRecorder {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.saveThumbnailsWithRecording.getValue())) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.saveThumbnailsWithRecording.getValue())) {
             ThumbnailHelpers.create((thumbnail, nativeImage) -> {
                 if (thumbnail != null) {
                     record.thumbnail = thumbnail;
@@ -163,7 +163,7 @@ public class PlayerRecorder {
             });
         }
 
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue())) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue())) {
             KeyBinding.unpressAll();
         }
 
@@ -244,7 +244,7 @@ public class PlayerRecorder {
         }
 
         // If menu prevention is activated enable it by default if not already enabled
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue()) && !MenuPrevention.preventToBackground) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.alwaysPreventMenuOption.getValue()) && !MenuPrevention.preventToBackground) {
             MenuPrevention.toggleBackgroundPrevention();
         }
 
@@ -260,7 +260,7 @@ public class PlayerRecorder {
         assert client.interactionManager != null;
 
         // relative is w
-        boolean isRelative = !PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue();
+        boolean isRelative = !PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue();
 
         // Get first RecordEntry Looking direction to calculate difference
         LookingDirection l = record.entries.getFirst().lookingDirection();
@@ -326,13 +326,13 @@ public class PlayerRecorder {
                 // KeyStrokes are consumed by screens and not recorded therefore track screen
                 // If there is a screen opened and the next currentScreen is null close the current one
                 // Also never close the quickMenu or modmenu
-                if (client.currentScreen != null && currentScreen == null && !((client.currentScreen instanceof QuickMenu) || (client.currentScreen instanceof PlayerAutomaMenuScreen))) {
+                if (client.currentScreen != null && currentScreen == null && !((client.currentScreen instanceof QuickMenu) || (client.currentScreen instanceof PlayerautomaMenuScreen))) {
                     client.currentScreen.close();
                     client.setScreen(null);
                 }
 
                 // Click Slot in inventory if possible
-                if (clickedSlot != null && PlayerAutomaOptionsScreen.recordInventoryActivitiesOption.getValue()) ClientHelpers.clickSlot(clickedSlot);
+                if (clickedSlot != null && PlayerautomaOptionsScreen.recordInventoryActivitiesOption.getValue()) ClientHelpers.clickSlot(clickedSlot);
 
                 // Execute command if possible
                 if (command != null) Objects.requireNonNull(client.getNetworkHandler()).sendChatCommand(command);
@@ -353,7 +353,7 @@ public class PlayerRecorder {
                             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.clickSlotError"));
                         }
                     } catch (Exception e) {
-                        PlayerAutomaClient.LOGGER.warn("Villager Trade Click resulted in unexpected exception", e);
+                        PlayerautomaClient.LOGGER.warn("Villager Trade Click resulted in unexpected exception", e);
                     }
                 }
 
@@ -362,7 +362,7 @@ public class PlayerRecorder {
                     try {
                         client.interactionManager.clickButton(enchantmentScreen.getScreenHandler().syncId, enchantmentMade);
                     } catch (Exception e) {
-                        PlayerAutomaClient.LOGGER.warn("Enchantment Click resulted in unexpected exception", e);
+                        PlayerautomaClient.LOGGER.warn("Enchantment Click resulted in unexpected exception", e);
                     }
                 }
             });
@@ -475,7 +475,7 @@ public class PlayerRecorder {
         KeyBinding.unpressAll();
 
         // If default menu prevention is enabled it needs to be disabled here if enabled
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue()) && MenuPrevention.preventToBackground) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.alwaysPreventMenuOption.getValue()) && MenuPrevention.preventToBackground) {
             MenuPrevention.toggleBackgroundPrevention();
         }
 

@@ -2,10 +2,10 @@ package net.jasper.mod.gui;
 
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.automation.QuickSlots;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.mixins.accessors.ScreenAccessor;
 import net.jasper.mod.util.ColorHelpers;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.jasper.mod.util.Textures;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -64,7 +64,7 @@ public class QuickMenu extends Screen {
                 if (PlayerRecorder.state.isRecording() || PlayerRecorder.state.isPausedRecording()) {
                     PlayerRecorder.togglePauseRecord();
                 } else {
-                    PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
+                    PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
                 }
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
@@ -73,7 +73,7 @@ public class QuickMenu extends Screen {
             Text.of(""),
             b -> {
                 loopCount = 0;
-                PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
+                PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
@@ -83,9 +83,9 @@ public class QuickMenu extends Screen {
             b -> {
                 loopCount = 0;
                 if (PlayerRecorder.state.isReplaying() || PlayerRecorder.state.isPausedReplaying()) {
-                    PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
+                    PlayerautomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
                 } else {
-                    PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
+                    PlayerautomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
                 }
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
@@ -94,7 +94,7 @@ public class QuickMenu extends Screen {
             Text.of(""),
             b -> {
                 loopCount = 0;
-                PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
+                PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
@@ -134,9 +134,9 @@ public class QuickMenu extends Screen {
         wasClosed = true;
         // -1 == Infinity
         if (loopCount < 0) {
-            PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
+            PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
         } else if (loopCount > 0) {
-            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(loopCount));
+            PlayerautomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(loopCount));
         }
         loopCount = 0;
 
@@ -265,7 +265,7 @@ public class QuickMenu extends Screen {
         adder.add(this.buttonLoopReplay, 1);
         adder.add(EmptyWidget.ofHeight(4), 3);
 
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue())) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.showQuickSlotsInQuickMenu.getValue())) {
             for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
                 adder.add(this.buttonsQuickSlots[i]);
             }
@@ -314,7 +314,7 @@ public class QuickMenu extends Screen {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
-        boolean showQuickSlots = PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue();
+        boolean showQuickSlots = PlayerautomaOptionsScreen.showQuickSlotsInQuickMenu.getValue();
         // Draw black rectangle as background with grey border
         {
             int x1 = buttonStartPauseRecord.getX() - 10;
@@ -430,7 +430,7 @@ public class QuickMenu extends Screen {
                 ButtonWidget b = buttonsQuickSlots[i];
 
                 // Thumbnail only available if not empty
-                if (!isEmpty && Boolean.TRUE.equals(PlayerAutomaOptionsScreen.showQuickSlotsInQuickMenu.getValue())) {
+                if (!isEmpty && Boolean.TRUE.equals(PlayerautomaOptionsScreen.showQuickSlotsInQuickMenu.getValue())) {
                     context.drawTexture(RenderLayer::getGuiTextured, QuickSlots.THUMBNAIL_IDENTIFIER[i], b.getX() + 1, b.getY() + 1, 0, 0, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2);
                 }
             }

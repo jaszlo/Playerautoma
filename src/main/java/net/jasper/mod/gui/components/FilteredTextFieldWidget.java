@@ -15,13 +15,12 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
         boolean accept(String text);
     }
 
-
-
     public final Filter filter;
-    public String errorMessageTranslationKey;
-    private long errorRemaining = 0;
+    private String errorMessageTranslationKey;
+    private Long errorRemaining = 0L;
 
 
+    @SuppressWarnings("java:S107")
     public FilteredTextFieldWidget(TextRenderer textRenderer, int width, int height, int x, int y, Text text, String errorMessageTranslationKey, Filter filter) {
         super(textRenderer, width, height, x, y, text);
         this.filter = filter;

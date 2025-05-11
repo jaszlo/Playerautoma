@@ -1,6 +1,6 @@
 package net.jasper.mod.util.keybinds;
 
-import net.jasper.mod.PlayerAutomaClient;
+import net.jasper.mod.PlayerautomaClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -10,7 +10,7 @@ import org.slf4j.Logger;
  */
 public class KeyBind {
 
-    private static final Logger LOGGER = PlayerAutomaClient.LOGGER;
+    private static final Logger LOGGER = PlayerautomaClient.LOGGER;
 
     protected String name;
     protected KeyBinding bind;

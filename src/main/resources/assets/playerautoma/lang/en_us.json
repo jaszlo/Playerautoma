@@ -56,7 +56,7 @@
   "playerautoma.keys.quickMenu": "Quick menu",
   "playerautoma.keys.menuPrevention": "Toggle Menu Prevention",
 
-  "playerautoma.options": "PlayerAutoma Options...",
+  "playerautoma.options": "Playerautoma Options...",
   "playerautoma.option.recordCommands": "Record Commands",
   "playerautoma.option.openCommandsToExclude": "Ignore Commands...",
   "playerautoma.option.tooltip.recordCommands": "When enabled will track commands for recordings",

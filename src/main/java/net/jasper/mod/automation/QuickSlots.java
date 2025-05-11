@@ -3,8 +3,8 @@ package net.jasper.mod.automation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.jasper.mod.PlayerAutomaClient;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.PlayerautomaClient;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.IOHelpers;
 import net.jasper.mod.util.data.Recording;
@@ -19,7 +19,7 @@ import org.lwjgl.glfw.GLFW;
 import java.io.File;
 import java.util.Arrays;
 
-import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_QUICKSLOT_PATH;
+import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_QUICKSLOT_PATH;
 
 /**
  * QuickSlots for storing and loading Recordings for the PlayerRecorder
@@ -71,15 +71,15 @@ public class QuickSlots {
     // Initialize State
     static {
         THUMBNAIL_IDENTIFIER = new Identifier[] {
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_1"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_2"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_3"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_4"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_5"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_6"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_7"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_8"),
-                Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_9"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_1"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_2"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_3"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_4"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_5"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_6"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_7"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_8"),
+                Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_9"),
         };
         Arrays.fill(QUICKSLOTS, new Recording(null));
         Arrays.fill(ALTPressed, false);
@@ -128,7 +128,7 @@ public class QuickSlots {
         while (key.wasPressed()) {
             key.setPressed(false);
             if (error++ > limit) {
-                PlayerAutomaClient.LOGGER.warn("Could not unset keybinding for QuickSlot");
+                PlayerautomaClient.LOGGER.warn("Could not unset keybinding for QuickSlot");
                 break;
             }
         }
@@ -211,12 +211,12 @@ public class QuickSlots {
             long handle = client.getWindow().getHandle();
 
             // Check Store QuickSlot KeyBindings
-            if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useCTRLForQuickSlots.getValue()) && CTRLPressed(handle)) {
+            if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useCTRLForQuickSlots.getValue()) && CTRLPressed(handle)) {
                 handleQuickSlotKeyPress(handle, storeCooldowns, CTRLPressed);
             }
 
             // Check Load QuickSlot KeyBindings
-            if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useALTForQuickSlots.getValue()) && ALTPressed(handle)) {
+            if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useALTForQuickSlots.getValue()) && ALTPressed(handle)) {
                 handleQuickSlotKeyPress(handle, loadCooldowns, ALTPressed);
             }
 
@@ -224,7 +224,7 @@ public class QuickSlots {
                 // Store Recording to QuickSlot
                 if (CTRLPressed[i]) {
                     // Unset key to not change selectedSlot
-                    if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.preventSlotChanges.getValue())) {
+                    if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.preventSlotChanges.getValue())) {
                         consumeKeyPress(client.options.hotbarKeys[i], 10);
                     }
                     storeRecording(i);
@@ -232,7 +232,7 @@ public class QuickSlots {
                 // Load Recording from QuickSlot
                 } else if (ALTPressed[i]) {
                     // Unset key to not change selectedSlot
-                    if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.preventSlotChanges.getValue())) {
+                    if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.preventSlotChanges.getValue())) {
                         consumeKeyPress(client.options.hotbarKeys[i], 10);
                     }
                     loadRecording(i);

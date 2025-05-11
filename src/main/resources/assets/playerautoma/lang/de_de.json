@@ -56,7 +56,7 @@
   "playerautoma.keys.quickMenu": "Schnell menu",
   "playerautoma.keys.menuPrevention": "Menüverhinderung umschalten",
 
-  "playerautoma.options": "PlayerAutoma Optionen... ",
+  "playerautoma.options": "Playerautoma Optionen... ",
   "playerautoma.option.recordCommands": "Nehme Kommandos auf",
   "playerautoma.option.openCommandsToExclude": "Ignoriere Kommando...",
   "playerautoma.option.tooltip.recordCommands": "Wenn aktiviert, werden Befehle aufgenommen",

@@ -5,10 +5,10 @@ import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
-import net.jasper.mod.gui.PlayerAutomaMenuScreen;
+import net.jasper.mod.gui.PlayerautomaMenuScreen;
 import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.gui.RecordingStorerScreen;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
@@ -25,7 +25,7 @@ public class Constants {
     public static final String SHIFT = "shift";
     public static final String ALT = "alt";
 
-    private static final String KEYBINDING_CATEGORY = "PlayerAutoma";
+    private static final String KEYBINDING_CATEGORY = "Playerautoma";
 
     private static final String[] translations = {
             "playerautoma.keys.startRecording",
@@ -65,16 +65,16 @@ public class Constants {
     public static final KeyBinding START_REPLAY = BINDINGS[2];
 
     private static final Runnable[] callbackMethods = {
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::startRecord),
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::stopRecord),
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::startReplay),
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::stopReplay),
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::startLoop),
-            PlayerAutomaExceptionHandler.produceSafeCall(RecordingStorerScreen::open),
-            PlayerAutomaExceptionHandler.produceSafeCall(RecordingSelectorScreen::open),
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerRecorder::togglePause),
-            PlayerAutomaExceptionHandler.produceSafeCall(PlayerAutomaMenuScreen::open),
-            PlayerAutomaExceptionHandler.produceSafeCall(MenuPrevention::toggleBackgroundPrevention),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::startRecord),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::stopRecord),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::startReplay),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::stopReplay),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::startLoop),
+            PlayerautomaExceptionHandler.produceSafeCall(RecordingStorerScreen::open),
+            PlayerautomaExceptionHandler.produceSafeCall(RecordingSelectorScreen::open),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::togglePause),
+            PlayerautomaExceptionHandler.produceSafeCall(PlayerautomaMenuScreen::open),
+            PlayerautomaExceptionHandler.produceSafeCall(MenuPrevention::toggleBackgroundPrevention),
             () -> {} // Do nothing! The quickMenu opens onPress and closes onRelease and needs to be handled differently
     };
 

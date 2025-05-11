@@ -7,10 +7,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.jasper.mod.gui.PlayerAutomaMenuScreen;
+import net.jasper.mod.gui.PlayerautomaMenuScreen;
 import net.jasper.mod.gui.RecordingSelectorScreen;
 import net.jasper.mod.gui.RecordingStorerScreen;
-import net.jasper.mod.util.PlayerAutomaExceptionHandler;
+import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -19,7 +19,7 @@ import java.io.File;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
+import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_RECORDING_PATH;
 
 /**
  * Class to register all commands associated with playerautoma
@@ -56,19 +56,19 @@ public class Commands {
             literal(RECORD)
                 .then(literal(START)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
+                        PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
                         return 1;
                     })
                 )
                 .then(literal(STOP)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
+                        PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
                         return 1;
                     })
                 )
                 .then(literal(CLEAR)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::clearRecord);
+                        PlayerautomaExceptionHandler.callSafe(PlayerRecorder::clearRecord);
                         return 1;
                     })
                 )
@@ -123,7 +123,7 @@ public class Commands {
                         })
                         .executes(context -> {
                             String name = StringArgumentType.getString(context, NAME);
-                            PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.loadRecord(name));
+                            PlayerautomaExceptionHandler.callSafe(() -> PlayerRecorder.loadRecord(name));
                             return 1;
                         })
                     )
@@ -136,24 +136,24 @@ public class Commands {
             dispatcher.register(literal(REPLAY)
                 .then(literal(START)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
+                        PlayerautomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
                         return 1;
                     })
                 )
                 .then(literal(STOP)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
+                        PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
                         return 1;
                     })
                 )
                 .then(literal(TOGGLEPAUSE)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
+                        PlayerautomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
                         return 1;
                     })
                 ).then(literal(LOOP)
                     .executes(context -> {
-                        PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startReplay);
+                        PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startReplay);
                         return 1;
                     })
                 )
@@ -173,7 +173,7 @@ public class Commands {
                                     return 1;
                                 })
                                 ).then(literal(MENU).executes(context -> {
-                                    MinecraftClient.getInstance().execute(PlayerAutomaMenuScreen::open);
+                                    MinecraftClient.getInstance().execute(PlayerautomaMenuScreen::open);
                                     return 1;
                                 }))
                         )
@@ -211,16 +211,20 @@ public class Commands {
             context.getSource().sendFeedback(Text.literal("Slot Index out of range"));
             return 0;
         }
-        switch (command) {
-            case LOAD:
+        return switch (command) {
+            case LOAD -> {
                 QuickSlots.loadRecording(slot - 1);
-                break;
-            case STORE:
+                yield 1;
+            }
+            case STORE -> {
                 QuickSlots.storeRecording(slot - 1);
-                break;
-            case CLEAR:
+                yield 1;
+            }
+            case CLEAR -> {
                 QuickSlots.clearQuickSlot(slot - 1);
-        }
-        return 1;
+                yield 1;
+            }
+            default -> 1;
+        };
     }
 }

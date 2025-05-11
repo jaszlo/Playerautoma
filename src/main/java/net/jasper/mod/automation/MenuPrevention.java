@@ -2,7 +2,7 @@ package net.jasper.mod.automation;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -20,7 +20,7 @@ import static net.jasper.mod.util.Textures.HUD.BLOCK_MENU_ICON;
 public class MenuPrevention {
 
     public static boolean preventToBackground = false;
-    private static boolean registered = false;
+    public static boolean registered = false;
 
     public static void register() {
         registered = true;
@@ -58,12 +58,12 @@ public class MenuPrevention {
 
         preventToBackground = !preventToBackground;
 
-        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue())) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.writeStateToActionBarOption.getValue())) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
         }
 
         int mouseMode = preventToBackground ? InputUtil.GLFW_CURSOR_NORMAL : InputUtil.GLFW_CURSOR_DISABLED;
         InputUtil.setCursorParameters(client.getWindow().getHandle(), mouseMode, client.mouse.getX(), client.mouse.getY());
-        // The icon is rendered accordingly in mod.gui.PlayerAutomaHUD
+        // The icon is rendered accordingly in mod.gui.PlayerautomaHUD
     }
 }
