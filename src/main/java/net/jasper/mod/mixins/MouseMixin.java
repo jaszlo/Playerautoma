@@ -37,7 +37,7 @@ public class MouseMixin {
         double newX = client.mouse.getX();
         double newY = client.mouse.getY();
 
-        if (PlayerRecorder.state.isReplaying() && PlayerAutomaOptionsScreen.stopReplayOnManualInput.getValue()) {
+        if (PlayerRecorder.state.isReplaying() && Boolean.TRUE.equals(PlayerAutomaOptionsScreen.stopReplayOnManualInput.getValue())) {
 
             if (previousX != newX || previousY != newY) {
                 PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);

@@ -1,5 +1,7 @@
 package net.jasper.mod.util.keybinds;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
@@ -16,6 +18,7 @@ import java.util.Set;
 /**
  * Class storing all KeyBinding-Constants
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
     public static final String CTRL = "ctrl";

@@ -28,7 +28,7 @@ public class KeyboardMixin {
 
 
         int startReplayKeyCode = ((KeyBindingAccessor) Constants.START_REPLAY).getBoundKey().getCode();
-        if (PlayerRecorder.state.isReplaying() && key != startReplayKeyCode && PlayerAutomaOptionsScreen.stopReplayOnManualInput.getValue()) {
+        if (PlayerRecorder.state.isReplaying() && key != startReplayKeyCode && Boolean.TRUE.equals(PlayerAutomaOptionsScreen.stopReplayOnManualInput.getValue())) {
             PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayStoppedOnManualInput"));
         }

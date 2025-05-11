@@ -1,5 +1,7 @@
 package net.jasper.mod.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.data.LookingDirection;
@@ -14,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 /**
  * Utility class for controlling minor aspects of the player and client
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientHelpers {
 
 
@@ -30,7 +33,7 @@ public class ClientHelpers {
         assert player != null;
 
         // Only change looking direction if set in options
-        if (PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue()) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue())) {
             LookingDirection.Name dirName = PlayerAutomaOptionsScreen.setDefaultDirectionOption.getValue();
             // If the looking direction is to be used from the replay nothing needs to be set here
             if (!dirName.equals(LookingDirection.Name.FROM_REPLAY)) {
@@ -42,7 +45,7 @@ public class ClientHelpers {
         }
 
         // Center player on current block only if enabled in options
-        if (PlayerAutomaOptionsScreen.useDefaultStartingPositionOption.getValue()) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useDefaultStartingPositionOption.getValue())) {
             StartingPositionOffset offset = PlayerAutomaOptionsScreen.setDefaultStartingPositionOption.getValue().getOffset();
 
             Vec3d playerPos = player.getPos();
@@ -54,7 +57,7 @@ public class ClientHelpers {
 
     public static void writeToActionBar(Text message, boolean tinted) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null || client.inGameHud == null || !PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue()) {
+        if (client.player == null || client.inGameHud == null || Boolean.FALSE.equals(PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue())) {
             return;
         }
 

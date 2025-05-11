@@ -69,6 +69,7 @@ public class PlayerRecorder {
     // Click on Enchantment (EnchantmentScreen)
     public static final Queue<Integer> lastEnchantmentMade = new ConcurrentLinkedDeque<>();
 
+    @SuppressWarnings("java:S3776")
     public static void register() {
         // Always reset the PlayerRecorder if a Join event happens could be breaking the mod. Therefor leave it out now.
         // ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PlayerRecorder.reset());
@@ -149,7 +150,7 @@ public class PlayerRecorder {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.startRecording"));
         clearRecord();
 
-        if (PlayerAutomaOptionsScreen.saveThumbnailsWithRecording.getValue()) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.saveThumbnailsWithRecording.getValue())) {
             ThumbnailHelpers.create((thumbnail, nativeImage) -> {
                 if (thumbnail != null) {
                     record.thumbnail = thumbnail;
@@ -162,7 +163,7 @@ public class PlayerRecorder {
             });
         }
 
-        if (PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue()) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue())) {
             KeyBinding.unpressAll();
         }
 
@@ -222,6 +223,7 @@ public class PlayerRecorder {
      *              if looped is true and count is negative loop indefinitely
      *              if looped is true and count is positive loop for that amount
      */
+    @SuppressWarnings("java:S3776")
     private static void startReplay(boolean looped, int loopCount) {
         if (state.isRecording() || state.isPausedRecording()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileRecording"));
@@ -242,7 +244,7 @@ public class PlayerRecorder {
         }
 
         // If menu prevention is activated enable it by default if not already enabled
-        if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && !MenuPrevention.preventToBackground) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue()) && !MenuPrevention.preventToBackground) {
             MenuPrevention.toggleBackgroundPrevention();
         }
 
@@ -297,8 +299,8 @@ public class PlayerRecorder {
                 }
 
                 // Update keys pressed count
-                for (String translationKey : timesPressed.keySet()) {
-                    ((KeyBindingAccessor) keysByID.get(translationKey)).setTimesPressed(timesPressed.get(translationKey));
+                for (Map.Entry<String, Integer> keyPressed : timesPressed.entrySet()) {
+                    ((KeyBindingAccessor) keysByID.get(keyPressed.getKey())).setTimesPressed(keyPressed.getValue());
                 }
 
                 // Toggle modifiers accordingly
@@ -356,9 +358,9 @@ public class PlayerRecorder {
                 }
 
                 // Click enchantment if possible
-                if (enchantmentMade != null && client.currentScreen instanceof EnchantmentScreen) {
+                if (enchantmentMade != null && client.currentScreen instanceof EnchantmentScreen enchantmentScreen) {
                     try {
-                        client.interactionManager.clickButton(((EnchantmentScreen) client.currentScreen).getScreenHandler().syncId, enchantmentMade);
+                        client.interactionManager.clickButton(enchantmentScreen.getScreenHandler().syncId, enchantmentMade);
                     } catch (Exception e) {
                         PlayerAutomaClient.LOGGER.warn("Enchantment Click resulted in unexpected exception", e);
                     }
@@ -473,7 +475,7 @@ public class PlayerRecorder {
         KeyBinding.unpressAll();
 
         // If default menu prevention is enabled it needs to be disabled here if enabled
-        if (PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue() && MenuPrevention.preventToBackground) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.alwaysPreventMenuOption.getValue()) && MenuPrevention.preventToBackground) {
             MenuPrevention.toggleBackgroundPrevention();
         }
 

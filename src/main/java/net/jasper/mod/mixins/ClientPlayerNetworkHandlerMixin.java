@@ -34,7 +34,7 @@ public class ClientPlayerNetworkHandlerMixin {
     @Inject(method="sendChatCommand", at=@At("HEAD"))
     private void recordCommand(String message, CallbackInfo ci) {
         // If not enabled never track commands
-        if (!PlayerAutomaOptionsScreen.recordCommands.getValue()) {
+        if (Boolean.FALSE.equals(PlayerAutomaOptionsScreen.recordCommands.getValue()))           {
             return;
         }
 

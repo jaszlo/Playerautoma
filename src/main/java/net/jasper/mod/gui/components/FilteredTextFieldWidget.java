@@ -17,7 +17,7 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
 
 
 
-    public Filter filter;
+    public final Filter filter;
     public String errorMessageTranslationKey;
     private long errorRemaining = 0;
 
@@ -41,14 +41,14 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
             return;
         }
 
-        float f = (float) this.errorRemaining - tickCounter.getTickProgress(false);
+        float f = this.errorRemaining - tickCounter.getTickProgress(false);
         int i = (int) (f * 255.0f / 20.0f);
         if (i > 255) {
             i = 255;
         }
         if (i > 8) {
             context.getMatrices().push();
-            context.getMatrices().translate(context.getScaledWindowWidth() / 2.0f, context.getScaledWindowHeight() - 68, 0.0f);
+            context.getMatrices().translate(context.getScaledWindowWidth() / 2.0f, context.getScaledWindowHeight() - 68.0f, 0.0f);
             int j = tinted ? MathHelper.hsvToArgb(f / 50.0f, 0.7f, 0.6f, i) : ColorHelpers.getRgbWithAlpha(i, -1);
             int k = textRenderer.getWidth(Text.translatable(this.errorMessageTranslationKey));
             context.drawTextWithBackground(textRenderer, Text.translatable(this.errorMessageTranslationKey), -k / 2, -4, k, j);

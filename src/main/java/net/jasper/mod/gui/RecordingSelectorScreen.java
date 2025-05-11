@@ -25,6 +25,8 @@ import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.Util;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +44,6 @@ public class RecordingSelectorScreen extends Screen {
     private final String directoryPath;
 
     private final Screen parent;
-    private final MinecraftClient client;
 
     // TODO: This should be cleaned up on update. However I can't be bothered right now as it is more a best practice than really necessary
     // Use map to store thumbnails and only load new ones in the future in "updateFiles"
@@ -51,6 +52,7 @@ public class RecordingSelectorScreen extends Screen {
     /**
      * Initially load thumbnails on load to prevent lag when this screen is opened for the first time
      */
+    @SuppressWarnings("java:3776")
     public static void loadThumbnails() {
         File recordingFolder = new File(PLAYERAUTOMA_RECORDING_PATH);
         File[] fileList = recordingFolder.listFiles();
@@ -98,6 +100,7 @@ public class RecordingSelectorScreen extends Screen {
 
     private ButtonWidget refreshButton;
 
+    @Override
     protected void init() {
         this.recordingSelectionList = new RecordingSelectionListWidget(this.client, this.directoryPath);
         this.addSelectableChild(this.recordingSelectionList);
@@ -106,7 +109,7 @@ public class RecordingSelectorScreen extends Screen {
         //   [Refresh] [Delete] [Open Recording Folder] [Done]
         refreshButton = TexturedButtonWidget.builder(
                     Text.of(""),
-                    (button) -> this.onRefresh()
+                    button -> this.onRefresh()
             )
             .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.fileSelector.tooltip.refresh")))
             .dimensions(this.width / 2 - 65 - 170, this.height - 38, 20, 20)
@@ -115,21 +118,21 @@ public class RecordingSelectorScreen extends Screen {
 
         this.addDrawableChild(ButtonWidget.builder(
                 Text.translatable("playerautoma.screens.fileSelector.delete"),
-                (button) -> this.onDelete()
+                button -> this.onDelete()
         )
         .dimensions(this.width / 2 - 65 - 140, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
                 Text.translatable("playerautoma.screens.fileSelector.openFolder"),
-                (button) -> Util.getOperatingSystem().open(new File(this.directoryPath).toURI())
+                button -> Util.getOperatingSystem().open(new File(this.directoryPath).toURI())
         )
         .dimensions(this.width / 2 - 65, this.height - 38, 130, 20)
         .build());
 
         this.addDrawableChild(ButtonWidget.builder(
                 ScreenTexts.DONE,
-                (button) -> this.onDone()
+                button -> this.onDone()
         )
         .dimensions(this.width / 2 - 65 + 140, this.height - 38, 130, 20)
         .build());
@@ -153,8 +156,9 @@ public class RecordingSelectorScreen extends Screen {
         RecordingSelectionListWidget.RecordingEntry recEntry = this.recordingSelectionList.getSelectedOrNull();
         if (recEntry != null) {
             client.execute(() -> {
-                boolean deleteSuccess = recEntry.file.delete();
-                if (!deleteSuccess) {
+                try {
+                    Files.delete(Path.of(recEntry.file.getAbsolutePath()));
+                } catch(IOException exception) {
                     PlayerAutomaClient.LOGGER.warn("Could not delete recording file {}", recEntry.fileName);
                     this.close();
                     ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.deleteFailedRecording"));
@@ -164,6 +168,7 @@ public class RecordingSelectorScreen extends Screen {
         }
     }
 
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (KeyCodes.isToggle(keyCode)) {
             RecordingSelectionListWidget.RecordingEntry languageEntry = this.recordingSelectionList.getSelectedOrNull();
@@ -177,6 +182,7 @@ public class RecordingSelectorScreen extends Screen {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         // Render refresh texture over refresh button
@@ -222,6 +228,7 @@ public class RecordingSelectorScreen extends Screen {
             }
         }
 
+        @Override
         public int getRowWidth() {
             return super.getRowWidth() + 50;
         }
@@ -261,6 +268,7 @@ public class RecordingSelectorScreen extends Screen {
                 }
             }
 
+            @Override
             public boolean mouseClicked(double mouseX, double mouseY, int button) {
                 this.onPressed();
                 if (Util.getMeasuringTimeMs() - this.clickTime < 250L) {

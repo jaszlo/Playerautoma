@@ -20,7 +20,6 @@ import java.util.Objects;
  */
 public class PlayerAutomaMenuScreen extends Screen {
     private final Screen parent;
-    private final MinecraftClient client;
 
     public PlayerAutomaMenuScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.modMenu"));
@@ -29,33 +28,33 @@ public class PlayerAutomaMenuScreen extends Screen {
     }
 
     // Player Recorder
-    public ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
+    private static final ButtonWidget START_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startRecording"))).build();
 
-    public ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
+    private static final ButtonWidget STOP_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.stopRecording"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.stopRecording"))).build();
 
-    public ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startReplay"), button -> {
+    private static final ButtonWidget START_REPLAY = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startReplay"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startReplay"))).build();
 
-    public ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startLoop"), button -> {
+    private static final ButtonWidget START_LOOP = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.startLoop"), button -> {
             Objects.requireNonNull(MinecraftClient.getInstance().currentScreen).close();
             PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
         }).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.startLoop"))).build();
 
-    public ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"),
+    private static final ButtonWidget STORE_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.storeRecording"),
             button -> RecordingStorerScreen.open()).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.storeRecording"))).build();
 
-    public ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.loadRecording"),
+    private static final ButtonWidget LOAD_RECORDING = ButtonWidget.builder(Text.translatable("playerautoma.screens.menu.loadRecording"),
             button -> RecordingSelectorScreen.open()).tooltip(Tooltip.of(Text.translatable("playerautoma.screens.menu.tooltip.loadRecording"))).build();
 
-    public ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"),
+    private static final ButtonWidget OPTION_MENU = ButtonWidget.builder(Text.translatable("playerautoma.options"),
             button -> PlayerAutomaOptionsScreen.open()).width(200).build();
 
     public static Screen open() {

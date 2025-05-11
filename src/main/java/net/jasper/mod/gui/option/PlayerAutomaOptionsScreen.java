@@ -37,7 +37,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
     }
 
 
-    public static OptionButton<PlayerAutomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
+    public static final OptionButton<PlayerAutomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
         PlayerAutomaHUD.ShowHUDOption.TEXT_AND_ICON,
         PlayerAutomaHUD.ShowHUDOption.values(),
         "playerautoma.option.showHud",
@@ -46,16 +46,16 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         PlayerAutomaHUD.ShowHUDOption::toText
     );
 
-    public static OptionButton<Boolean> useDefaultDirectionOption = new OptionButton<>(
+    public static final OptionButton<Boolean> useDefaultDirectionOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.useDefaultDirection",
         Object::toString,
         Boolean::parseBoolean,
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<LookingDirection.Name> setDefaultDirectionOption = new OptionButton<>(
+    public static final OptionButton<LookingDirection.Name> setDefaultDirectionOption = new OptionButton<>(
         LookingDirection.Name.NORTH,
         LookingDirection.Name.values(),
         "playerautoma.option.setDefaultDirection",
@@ -64,7 +64,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         LookingDirection.Name::toText
     );
 
-    public static OptionButton<StartingPositionOffset.Name> setDefaultStartingPositionOption = new OptionButton<>(
+    public static final OptionButton<StartingPositionOffset.Name> setDefaultStartingPositionOption = new OptionButton<>(
             StartingPositionOffset.Name.CENTER,
             StartingPositionOffset.Name.values(),
             "playerautoma.option.setDefaultStartingPosition",
@@ -73,43 +73,43 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
             StartingPositionOffset.Name::toText
     );
 
-    public static OptionButton<Boolean> useDefaultStartingPositionOption = new OptionButton<>(
+    public static final OptionButton<Boolean> useDefaultStartingPositionOption = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.useDefaultStartingPosition",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
+    public static final OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.restackItems",
         Object::toString,
         Boolean::parseBoolean,
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> recordInventoryActivitiesOption = new OptionButton<>(
+    public static final OptionButton<Boolean> recordInventoryActivitiesOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.recordInventoryActivities",
         Object::toString,
         Boolean::parseBoolean,
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> writeStateToActionBarOption = new OptionButton<>(
+    public static final OptionButton<Boolean> writeStateToActionBarOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.writeStateToActionBar",
         Object::toString,
         Boolean::parseBoolean,
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<PlayerAutomaHUD.Position> setHudPositionOption = new OptionButton<>(
+    public static final OptionButton<PlayerAutomaHUD.Position> setHudPositionOption = new OptionButton<>(
         PlayerAutomaHUD.Position.BOTTOM_LEFT,
         PlayerAutomaHUD.Position.values(),
         "playerautoma.option.setHudPosition",
@@ -119,92 +119,92 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
     );
 
 
-    public static OptionButton<Boolean> alwaysPreventMenuOption = new OptionButton<>(
+    public static final OptionButton<Boolean> alwaysPreventMenuOption = new OptionButton<>(
             false,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.alwaysPreventMenu",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> resetKeyBindingsOnRecordingOption = new OptionButton<>(
+    public static final OptionButton<Boolean> resetKeyBindingsOnRecordingOption = new OptionButton<>(
         false,
         OptionButton.BOOLEAN_VALUES,
         "playerautoma.option.resetKeyBindingsOnRecording",
         Object::toString,
         Boolean::parseBoolean,
-        (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
 
-    public static OptionButton<Boolean> recordCommands = new OptionButton<>(
+    public static final OptionButton<Boolean> recordCommands = new OptionButton<>(
       false,
       OptionButton.BOOLEAN_VALUES,
       "playerautoma.option.recordCommands",
       Object::toString,
       Boolean::parseBoolean,
-      (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+      bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> useCTRLForQuickSlots = new OptionButton<>(
+    public static final OptionButton<Boolean> useCTRLForQuickSlots = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.useCTRLForQuickSlots",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> useALTForQuickSlots = new OptionButton<>(
+    public static final OptionButton<Boolean> useALTForQuickSlots = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.useALTForQuickSlots",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> preventSlotChanges = new OptionButton<>(
+    public static final OptionButton<Boolean> preventSlotChanges = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.preventSlotChanges",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> showQuickSlotsInQuickMenu = new OptionButton<>(
+    public static final OptionButton<Boolean> showQuickSlotsInQuickMenu = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.showQuickSlotsInQuickMenu",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> stopReplayOnManualInput = new OptionButton<>(
+    public static final OptionButton<Boolean> stopReplayOnManualInput = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.stopReplayOnManualInput",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
-    public static OptionButton<Boolean> saveThumbnailsWithRecording = new OptionButton<>(
+    public static final OptionButton<Boolean> saveThumbnailsWithRecording = new OptionButton<>(
             true,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.saveThumbnailsWithRecording",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
 
     public static ButtonWidget openCommandsToExclude = ButtonWidget.builder(
             Text.translatable("playerautoma.option.openCommandsToExclude"),
-            (_b) -> {
+            b -> {
                 MinecraftClient client= MinecraftClient.getInstance();
                 client.setScreen(new CommandsToExcludeOption(client.currentScreen));
             }
@@ -230,6 +230,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
     }
 
 
+    @Override
     public void init() {
         super.init();
         assert this.client != null;
@@ -243,7 +244,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         ButtonWidget showHudButton = ButtonWidget.builder(
                 Text.translatable(showHudOption.key).append(": ").append(showHudOption.textProvider.provide(showHudOption.getValue())),
-                (_b) -> {
+                b -> {
                     showHudOption.next();
                     setHudPositionButton.active = showHudOption.getValue() != PlayerAutomaHUD.ShowHUDOption.NOTHING;
                 }).build();
@@ -254,7 +255,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         setDefaultDirectionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.setDefaultLookingDirection")));
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
                 Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.textProvider.provide(useDefaultDirectionOption.getValue())),
-                (_b) -> {
+                b -> {
                     useDefaultDirectionOption.next();
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
                 })
@@ -266,7 +267,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         setDefaultStartingPositionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.setDefaultStartingPosition")));
         ButtonWidget useDefaultStartingPositionButton = ButtonWidget.builder(
                 Text.translatable(useDefaultStartingPositionOption.key).append(": ").append(useDefaultStartingPositionOption.textProvider.provide(useDefaultStartingPositionOption.getValue())),
-                (_b) -> {
+                b -> {
                     useDefaultStartingPositionOption.next();
                     setDefaultStartingPositionButton.active = useDefaultStartingPositionOption.getValue();
                 }).build();
@@ -293,7 +294,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         ButtonWidget recordCommandosButton = ButtonWidget.builder(
                 Text.translatable(recordCommands.key).append(": ").append(recordCommands.textProvider.provide(recordCommands.getValue())),
-                (_b) -> {
+                b -> {
                     recordCommands.next();
                     openCommandsToExclude.active = recordCommands.getValue();
                 }
@@ -328,7 +329,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         ButtonWidget openKeyBindOptionsButton = ButtonWidget.builder(
                 Text.translatable("playerautoma.option.openKeyBindings"),
-                (_b) -> {
+                b -> {
                     MinecraftClient client = MinecraftClient.getInstance();
                     client.setScreen(new KeybindsScreen(this, client.options));
                 }

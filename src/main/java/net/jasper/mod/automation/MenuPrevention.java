@@ -1,5 +1,7 @@
 package net.jasper.mod.automation;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
@@ -14,6 +16,7 @@ import static net.jasper.mod.util.Textures.HUD.BLOCK_MENU_ICON;
 /**
  * Class to track state and implement menu prevention that allows for replays to work in background
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MenuPrevention {
 
     public static boolean preventToBackground = false;
@@ -55,7 +58,7 @@ public class MenuPrevention {
 
         preventToBackground = !preventToBackground;
 
-        if (PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue()) {
+        if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.writeStateToActionBarOption.getValue())) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
         }
 

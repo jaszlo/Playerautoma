@@ -27,18 +27,16 @@ public class CommandsToExcludeOption extends Screen {
 
     private CommandsToExcludeListWidget commandSelectionList;
     private final Screen parent;
-    private final MinecraftClient client;
 
     // Should no longer use a singleton when used in general
-    public static String FILE_NAME = "ignored_commands.txt";
-    public static String FILE_PATH = Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, FILE_NAME).toString();
+    public static final String FILE_NAME = "ignored_commands.txt";
+    public static final String FILE_PATH = Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, FILE_NAME).toString();
 
     public static final List<String> userCommandsToIgnore = new ArrayList<>();
 
     public CommandsToExcludeOption(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.excludeCommands"));
         this.parent = parent;
-        this.client = MinecraftClient.getInstance();
         this.init();
     }
 
@@ -47,10 +45,9 @@ public class CommandsToExcludeOption extends Screen {
         this.client.setScreen(this.parent);
     }
 
-
-    private TextFieldWidget tfw;
-
+    @Override
     protected void init() {
+        TextFieldWidget tfw;
         this.commandSelectionList = new CommandsToExcludeListWidget(MinecraftClient.getInstance(), FILE_PATH);
         this.addSelectableChild(this.commandSelectionList);
 
@@ -58,12 +55,12 @@ public class CommandsToExcludeOption extends Screen {
         //   [Delete] [TextField] [Add] [Done]
         this.addDrawableChild(ButtonWidget.builder(
                 Text.translatable("playerautoma.screens.commandsToExclude.delete"),
-                (button) -> this.onDelete()
+                button -> this.onDelete()
         )
         .dimensions(this.width / 2 - 280, this.height - 38, 130, 20)
         .build());
 
-        this.tfw = new TextFieldWidget(
+        tfw = new TextFieldWidget(
             this.client.textRenderer,
             this.width / 2 - 140,
             this.height - 38,
@@ -71,15 +68,15 @@ public class CommandsToExcludeOption extends Screen {
             20,
             Text.of("")
         );
-        this.tfw.setEditable(true);
-        this.tfw.active = true;
-        this.tfw.setTooltip(Tooltip.of(Text.translatable("playerautoma.screens.tooltip.commandsToExclude.add")));
+        tfw.setEditable(true);
+        tfw.active = true;
+        tfw.setTooltip(Tooltip.of(Text.translatable("playerautoma.screens.tooltip.commandsToExclude.add")));
 
-        this.addDrawableChild(this.tfw);
+        this.addDrawableChild(tfw);
 
         this.addDrawableChild(ButtonWidget.builder(
                 Text.translatable("playerautoma.screens.commandsToExclude.add"),
-                (button) -> this.commandSelectionList.add(this.tfw.getText())
+                button -> this.commandSelectionList.add(tfw.getText())
         )
         .dimensions(this.width / 2, this.height - 38, 130, 20)
         .tooltip(Tooltip.of(Text.translatable("playerautoma.screens.tooltip.commandsToExclude.add")))
@@ -87,7 +84,7 @@ public class CommandsToExcludeOption extends Screen {
 
         this.addDrawableChild(ButtonWidget.builder(
                 ScreenTexts.DONE,
-                (button) -> this.onDone()
+                button -> this.onDone()
         )
         .dimensions(this.width / 2 + 140, this.height - 38, 130, 20)
         .build());
@@ -114,6 +111,7 @@ public class CommandsToExcludeOption extends Screen {
         }
     }
 
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (KeyCodes.isToggle(keyCode)) {
             CommandsToExcludeListWidget.CommandEntry languageEntry = this.commandSelectionList.getSelectedOrNull();
@@ -127,6 +125,7 @@ public class CommandsToExcludeOption extends Screen {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.commandSelectionList.render(context, mouseX, mouseY, delta);
@@ -136,7 +135,6 @@ public class CommandsToExcludeOption extends Screen {
     private class CommandsToExcludeListWidget extends AlwaysSelectedEntryListWidget<CommandsToExcludeListWidget.CommandEntry> {
         final String filePath;
         public CommandsToExcludeListWidget(MinecraftClient client, String filePath) {
-            // EntryListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight)
             super(client, CommandsToExcludeOption.this.width, CommandsToExcludeOption.this.height - 93, 32, 18);
             this.filePath = filePath;
             this.updateCommands();
@@ -190,6 +188,7 @@ public class CommandsToExcludeOption extends Screen {
             this.updateCommands();
         }
 
+        @Override
         public int getRowWidth() {
             return super.getRowWidth() + 50;
         }

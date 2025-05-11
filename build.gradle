@@ -20,6 +20,9 @@ repositories {
 		name = "Terraformers"
 		url = "https://maven.terraformersmc.com/"
 	}
+
+	// Because me lazy
+	maven { url 'https://projectlombok.org/edge-releases' }
 }
 
 dependencies {
@@ -33,6 +36,9 @@ dependencies {
 
 	// Mod Menu
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+	// Because Iam lazy
+	compileOnly "org.projectlombok:lombok:${project.lombok_version}"
 }
 
 processResources {

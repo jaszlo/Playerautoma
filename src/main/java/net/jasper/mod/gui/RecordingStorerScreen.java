@@ -27,10 +27,7 @@ import static net.jasper.mod.util.Textures.DEFAULT_BUTTON_TEXTURES;
  */
 public class RecordingStorerScreen extends Screen {
 
-
     private final Screen parent;
-    private TextFieldWidget input;
-
 
     protected RecordingStorerScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.storer"));
@@ -38,16 +35,18 @@ public class RecordingStorerScreen extends Screen {
 
     }
 
-    public static OptionButton<Boolean> useJSON = new OptionButton<>(
+    public static final OptionButton<Boolean> useJSON = new OptionButton<>(
             false,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.exportAs",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? Text.of(IOHelpers.RecordingFileTypes.JSON) : Text.of(IOHelpers.RecordingFileTypes.REC))
+            bool -> (bool ? Text.of(IOHelpers.RecordingFileTypes.JSON) : Text.of(IOHelpers.RecordingFileTypes.REC))
     );
 
+    @Override
     protected void init() {
+        TextFieldWidget input;
         TextWidget text = new TextWidget(
                 this.width / 2 - 100,
                 this.height / 2 - 30,
@@ -76,15 +75,15 @@ public class RecordingStorerScreen extends Screen {
         String datedName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm"));
         textField.setPlaceholder(Text.of(datedName));
         textField.setText(datedName);
-        this.input = textField;
+        input = textField;
 
         ButtonWidget saveButton = new ButtonWidget.Builder(
               Text.of("Save"),
-              (button) -> {
-                  String name = this.input.getText();
+              button -> {
+                  String name = input.getText();
                   // Append correct file ending if necessary
-                  String file_ending = useJSON.getValue() ? ".json" : ".rec";
-                  name += file_ending;
+                  String fileEnding = Boolean.TRUE.equals(useJSON.getValue()) ? ".json" : ".rec";
+                  name += fileEnding;
                   String finalName = name;
                   PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.storeRecord(finalName));
                   this.close();
@@ -95,7 +94,7 @@ public class RecordingStorerScreen extends Screen {
 
         ButtonWidget useJSONButton = ButtonWidget.builder(
                 Text.translatable(useJSON.key).append(": ").append(useJSON.textProvider.provide(useJSON.getValue())),
-                (b) -> useJSON.next())
+                b -> useJSON.next())
                 .tooltip(Tooltip.of(Text.translatable("playerautoma.options.tooltip.exportAs")))
                 .dimensions(this.width / 2 + 50, this.height / 2 + 10, 50, 20).build();
         useJSON.setButton(useJSONButton);

@@ -23,7 +23,7 @@ public class KeyBind {
 
     public void execute() {
         if (this.callback == null) {
-            LOGGER.info("Tried to run callback for Keybinding " + this.name + " but is not of instance runnable!");
+            LOGGER.info("Tried to run callback for Keybinding {} but is not of instance runnable!", this.name);
             return;
         }
         if (this.bind.wasPressed()) {

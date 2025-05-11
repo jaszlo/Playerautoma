@@ -3,6 +3,8 @@ package net.jasper.mod.automation;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.jasper.mod.gui.PlayerAutomaMenuScreen;
@@ -17,70 +19,92 @@ import java.io.File;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.jasper.mod.PlayerAutomaClient.LOGGER;
 import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_RECORDING_PATH;
 
 /**
  * Class to register all commands associated with playerautoma
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Commands {
+
+    private static final String START = "start";
+    private static final String STOP = "stop";
+    private static final String CLEAR = "clear";
+    private static final String RECORD = "record";
+    private static final String QUICKSLOT = "quickslot";
+    private static final String LOAD = "load";
+    private static final String STORE = "store";
+    private static final String SLOT = "slot";
+    private static final String NAME = "name";
+    private static final String PLAYERAUTOMA = "playerautoma";
+    private static final String OPEN = "open";
+    private static final String LOADSCREEN = "loadscreen";
+    private static final String STORESCREEN = "storescreen";
+    private static final String MENU = "menu";
+    private static final String JSON = "json";
+    private static final String REC = "rec";
+    private static final String TOGGLEPAUSE = "togglepause";
+    private static final String REPLAY = "replay";
+    private static final String LOOP = "loop";
+
+
     public static void register() {
         // Register /record <start|stop|clear>
         //          /record quickslot <load|store> <slot>
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
             dispatcher.register(
-            literal("record")
-                .then(literal("start")
+            literal(RECORD)
+                .then(literal(START)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startRecord);
                         return 1;
                     })
                 )
-                .then(literal("stop")
+                .then(literal(STOP)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopRecord);
                         return 1;
                     })
                 )
-                .then(literal("clear")
+                .then(literal(CLEAR)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::clearRecord);
                         return 1;
                     })
                 )
-                .then(literal("quickslot")
-                    .then(literal("load")
-                        .then(argument("slot", IntegerArgumentType.integer())
-                            .executes(context -> handleQuickSlotCommand(context, "load"))
+                .then(literal(QUICKSLOT)
+                    .then(literal(LOAD)
+                        .then(argument(SLOT, IntegerArgumentType.integer())
+                            .executes(context -> handleQuickSlotCommand(context, LOAD))
                         )
                     )
-                    .then(literal("store")
-                        .then(argument("slot", IntegerArgumentType.integer())
-                            .executes(context -> handleQuickSlotCommand(context, "store"))
+                    .then(literal(STORE)
+                        .then(argument(SLOT, IntegerArgumentType.integer())
+                            .executes(context -> handleQuickSlotCommand(context, STORE))
                         )
                     )
-                    .then(literal("clear")
+                    .then(literal(CLEAR)
                         .executes(context -> { QuickSlots.clearQuickSlot(); return 1; })
-                    .then(argument("slot", IntegerArgumentType.integer())
-                        .executes(context -> handleQuickSlotCommand(context, "clear")))
+                    .then(argument(SLOT, IntegerArgumentType.integer())
+                        .executes(context -> handleQuickSlotCommand(context, CLEAR)))
                     )
                 )
-                .then(literal("store")
-                    .then(argument("name", StringArgumentType.string())
-                        .then(literal("json")
-                            .executes(context -> handleStoreFileCommand(context, "json"))
+                .then(literal(STORE)
+                    .then(argument(NAME, StringArgumentType.string())
+                        .then(literal(JSON)
+                            .executes(context -> handleStoreFileCommand(context, JSON))
                         )
-                        .then(literal("rec")
-                            .executes(context -> handleStoreFileCommand(context, "rec"))
+                        .then(literal(REC)
+                            .executes(context -> handleStoreFileCommand(context, REC))
                         )
                     )
                 )
-                .then(literal("load")
-                    .then(argument("name", StringArgumentType.string())
+                .then(literal(LOAD)
+                    .then(argument(NAME, StringArgumentType.string())
                         .suggests((context, builder) -> {
                             String current = "";
                             try {
-                                current = StringArgumentType.getString(context, "name");
+                                current = StringArgumentType.getString(context, NAME);
                             } catch (IllegalArgumentException e) {
                                 // Empty argument therefore keep startsWith as ""
                             }
@@ -98,7 +122,7 @@ public class Commands {
                             return builder.buildFuture();
                         })
                         .executes(context -> {
-                            String name = StringArgumentType.getString(context, "name");
+                            String name = StringArgumentType.getString(context, NAME);
                             PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.loadRecord(name));
                             return 1;
                         })
@@ -109,25 +133,25 @@ public class Commands {
 
         // Register /replay <start|stop|loop|togglepause>
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
-            dispatcher.register(literal("replay")
-                .then(literal("start")
+            dispatcher.register(literal(REPLAY)
+                .then(literal(START)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(() -> PlayerRecorder.startReplay(false));
                         return 1;
                     })
                 )
-                .then(literal("stop")
+                .then(literal(STOP)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
                         return 1;
                     })
                 )
-                .then(literal("togglepause")
+                .then(literal(TOGGLEPAUSE)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::togglePauseReplay);
                         return 1;
                     })
-                ).then(literal("loop")
+                ).then(literal(LOOP)
                     .executes(context -> {
                         PlayerAutomaExceptionHandler.callSafe(PlayerRecorder::startReplay);
                         return 1;
@@ -138,20 +162,17 @@ public class Commands {
 
         // Register /playerautoma open <loadscreen|storescreen|menu>
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
-                dispatcher.register(literal("playerautoma")
-                        .then(literal("open")
-                                .then(literal("loadscreen").executes(context -> {
-                                    LOGGER.info("12341234");
+                dispatcher.register(literal(PLAYERAUTOMA)
+                        .then(literal(OPEN)
+                                .then(literal(LOADSCREEN).executes(context -> {
                                     MinecraftClient.getInstance().execute(RecordingSelectorScreen::open);
                                     return 1;
                                 })
-                                ).then(literal("storescreen").executes(context -> {
-                                    LOGGER.info("qwerqwer");
+                                ).then(literal(STORESCREEN).executes(context -> {
                                     MinecraftClient.getInstance().execute(RecordingStorerScreen::open);
                                     return 1;
                                 })
-                                ).then(literal("menu").executes(context -> {
-                                    LOGGER.info("asdfasdf");
+                                ).then(literal(MENU).executes(context -> {
                                     MinecraftClient.getInstance().execute(PlayerAutomaMenuScreen::open);
                                     return 1;
                                 }))
@@ -161,9 +182,9 @@ public class Commands {
     }
 
     private static int handleStoreFileCommand(CommandContext<FabricClientCommandSource> context, String fileType) {
-        String fileName = StringArgumentType.getString(context, "name");
+        String fileName = StringArgumentType.getString(context, NAME);
 
-        boolean callNext = RecordingStorerScreen.useJSON.getValue() && fileType.equals("rec") || !RecordingStorerScreen.useJSON.getValue() && fileType.equals("json");
+        boolean callNext = RecordingStorerScreen.useJSON.getValue() && fileType.equals(REC) || !RecordingStorerScreen.useJSON.getValue() && fileType.equals(JSON);
 
         // Initialize button element to allow calling next
         Screen currentScreen =  RecordingStorerScreen.open();
@@ -185,19 +206,19 @@ public class Commands {
     }
 
     private static int handleQuickSlotCommand(CommandContext<FabricClientCommandSource> context, String command) {
-        final int slot = IntegerArgumentType.getInteger(context, "slot");
+        final int slot = IntegerArgumentType.getInteger(context, SLOT);
         if (slot < 1 || 9 < slot) {
             context.getSource().sendFeedback(Text.literal("Slot Index out of range"));
             return 0;
         }
         switch (command) {
-            case "load":
+            case LOAD:
                 QuickSlots.loadRecording(slot - 1);
                 break;
-            case "store":
+            case STORE:
                 QuickSlots.storeRecording(slot - 1);
                 break;
-            case "clear":
+            case CLEAR:
                 QuickSlots.clearQuickSlot(slot - 1);
         }
         return 1;

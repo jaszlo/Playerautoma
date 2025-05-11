@@ -1,5 +1,6 @@
 package net.jasper.mod.gui.option;
 
+import lombok.Setter;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.PlayerAutomaExceptionHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -14,9 +15,9 @@ import java.util.List;
 
 /**
  * Class that holds and takes care of playerautoma options
- * @param <Value> The Type of the value that the option has
+ * @param <V> The Type of the value that the option has
  */
-public class OptionButton<Value> {
+public class OptionButton<V> {
 
     private static final String OPTION_FILE_NAME = "playerautoma_options.txt";
     private static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::options");
@@ -24,36 +25,37 @@ public class OptionButton<Value> {
     public static final Boolean[] BOOLEAN_VALUES = { true, false };
     public static final File OPTION_FILE = new File(String.valueOf(Path.of(PlayerAutomaClient.PLAYERAUTOMA_FOLDER_PATH, OPTION_FILE_NAME)));
 
-    public String key;
+    public final String key;
+    @Setter
     public ButtonWidget button;
 
-    private Value currentValue;
-    private final Value[] values;
-    private final Value defaultValue;
-    public final ValueDecoder<Value> decoder;
-    public final ValueEncoder<Value> encoder;
-    public final TextProvider<Value> textProvider;
+    private V currentValue;
+    private final V[] values;
+    private final V defaultValue;
+    public final ValueDecoder<V> decoder;
+    public final ValueEncoder<V> encoder;
+    public final TextProvider<V> textProvider;
 
     private int valueIndex = -1;
 
-    public interface ValueEncoder<Value> {
-        String encode(Value v);
+    public interface ValueEncoder<V> {
+        String encode(V v);
     }
 
-    public interface ValueDecoder<Value> {
-        Value decode(String s);
+    public interface ValueDecoder<V> {
+        V decode(String s);
     }
 
-    public interface TextProvider<Value> {
-        Text provide(Value v);
+    public interface TextProvider<V> {
+        Text provide(V v);
     }
 
 
-    public Value getValue() {
+    public V getValue() {
         return this.currentValue;
     }
 
-    public OptionButton(Value defaultValue, Value[] values, String key, ValueEncoder<Value> encoder, ValueDecoder<Value> decoder, TextProvider<Value> textProvider) {
+    public OptionButton(V defaultValue, V[] values, String key, ValueEncoder<V> encoder, ValueDecoder<V> decoder, TextProvider<V> textProvider) {
         this.button = null;
         this.defaultValue = defaultValue;
         this.currentValue = defaultValue;
@@ -77,10 +79,6 @@ public class OptionButton<Value> {
             valueIndex = 0;
             this.currentValue = values[0];
         }
-    }
-
-    public void setButton(ButtonWidget button) {
-        this.button = button;
     }
 
     public void next() {
@@ -169,10 +167,10 @@ public class OptionButton<Value> {
      * @return ButtonWidget of this option
      */
     public ButtonWidget buttonOf() {
-        ButtonWidget button =  ButtonWidget.builder(
+        ButtonWidget newButton =  ButtonWidget.builder(
             Text.translatable(this.key).append(": ").append(this.textProvider.provide(this.getValue())),
-            (b) -> this.next()).build();
-        this.setButton(button);
+            b -> this.next()).build();
+        this.setButton(newButton);
         return button;
     }
 }

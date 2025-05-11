@@ -1,5 +1,7 @@
 package net.jasper.mod.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.minecraft.text.ClickEvent;
@@ -15,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerAutomaExceptionHandler {
 
     private static final DateTimeFormatter errorDateTimeFormat = DateTimeFormatter.ofPattern("dd_MM_yyyy_HH_mm_ss");

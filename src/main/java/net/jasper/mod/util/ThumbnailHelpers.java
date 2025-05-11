@@ -1,5 +1,7 @@
 package net.jasper.mod.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
@@ -11,7 +13,7 @@ import net.minecraft.util.math.ColorHelper;
 
 import java.util.function.BiConsumer;
 
-
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ThumbnailHelpers {
 
     public static final int WIDTH = 64;
@@ -40,11 +42,14 @@ public class ThumbnailHelpers {
         // Step 6: Return the resized image
         RecordingThumbnail thumbnail = RecordingThumbnail.createFromNativeImage(scaledImage);
         return thumbnail.toNativeImage();
-        //return scaledImage;
     }
 
     private static int getAverageColor(NativeImage originalImage, int scaledImageX, int scaledImageY, int slidingWindowWidth, int slidingWindowHeight, boolean smooth) {
-        int totalAlpha = 0, totalRed = 0, totalGreen = 0, totalBlue = 0, count = 0;
+        int totalAlpha = 0;
+        int totalRed = 0;
+     int totalGreen = 0;
+     int totalBlue = 0;
+     int count = 0;
 
         int startX = scaledImageX * slidingWindowWidth;
         int startY = scaledImageY * slidingWindowHeight;
@@ -68,7 +73,7 @@ public class ThumbnailHelpers {
                 count++;
             }
         }
-
+        count = count == 0 ? 1 : count;
         int a = Math.min(totalAlpha / count, 255);
         int r = Math.min(totalRed   / count, 255);
         int g = Math.min(totalGreen / count, 255);
@@ -95,6 +100,7 @@ public class ThumbnailHelpers {
             try {
                 Thread.sleep(10L);
             } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
                 // Ignore
             }
 

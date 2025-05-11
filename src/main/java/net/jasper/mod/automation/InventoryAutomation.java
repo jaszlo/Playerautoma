@@ -1,5 +1,7 @@
 package net.jasper.mod.automation;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.data.TaskQueue;
@@ -17,10 +19,13 @@ import net.minecraft.world.GameMode;
 /**
  * This class is responsible for re-stacking items in the inventory when replaying
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class InventoryAutomation {
     private static boolean doAutomation = true;
 
     public static final TaskQueue inventoryTasks = new TaskQueue(TaskQueue.HIGH_PRIORITY);
+
+    @SuppressWarnings("java:S3776")
     public static void register() {
         inventoryTasks.register("inventoryTasks");
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -29,7 +34,7 @@ public class InventoryAutomation {
             }
 
             // If is disabled in settings do nothing
-            if (!PlayerAutomaOptionsScreen.restackBlocksOption.getValue()) {
+            if (Boolean.FALSE.equals(PlayerAutomaOptionsScreen.restackBlocksOption.getValue())) {
                 return ActionResult.PASS;
             }
 

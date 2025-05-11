@@ -1,5 +1,7 @@
 package net.jasper.mod.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.util.data.Recording;
@@ -7,17 +9,20 @@ import net.jasper.mod.util.data.Recording;
 import java.io.*;
 import java.nio.file.Path;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IOHelpers {
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class RecordingFileTypes {
-        public static String REC = "rec";
-        public static String JSON = "json";
+        public static final String REC = "rec";
+        public static final String JSON = "json";
 
         public static String[] types() {
             return new String[] { REC, JSON };
         }
     }
 
+    @SuppressWarnings("java:S3776")
     public static Recording loadRecordingFile(File directory, File name) {
         File toLoad = new File(directory, name.getName());
         if (!toLoad.exists()) return new Recording(null);
@@ -95,7 +100,7 @@ public class IOHelpers {
      * @param overwrite if exists
      * @return true on success
      */
-    public static boolean storeRecordingFile(Recording record, File directory, String name, String storeAs, boolean overwrite) {
+    public static boolean storeRecordingFile(Recording recording, File directory, String name, String storeAs, boolean overwrite) {
         File selected = null;
         ObjectOutputStream objectOutputStream = null;
         try {
@@ -106,14 +111,14 @@ public class IOHelpers {
             if (objectOutputStream == null) throw new IOException("objectInputStream is null");
             // Store as .json/.rec according to option
             if (storeAs.equals(RecordingFileTypes.JSON)) {
-                String json = JsonHelpers.serialize(record);
+                String json = JsonHelpers.serialize(recording);
                 FileWriter fileWriter = new FileWriter(selected);
                 BufferedWriter writer = new BufferedWriter(fileWriter);
                 writer.write(json);
                 writer.close();
                 fileWriter.close();
             } else {
-                objectOutputStream.writeObject(record);
+                objectOutputStream.writeObject(recording);
             }
             objectOutputStream.close();
             fos.close();
@@ -133,16 +138,16 @@ public class IOHelpers {
     }
 
     /**
-     * Store record to file in playerautoma recordings folder.
+     * Store recording to file in playerautoma recordings folder.
      * The filetype is determined by the current Option set in RecordingStorerScreen
      * If a file with that name exist it will not be replaced instead to the given filename "_new" will be appended
-     * @param record record to store
+     * @param recording record to store
      * @param name name of the file to store record in
      * @return true if file was successfully created
      */
-    public static boolean storeRecordingFile(Recording record, File directory, String name) {
-        String storeAs = RecordingStorerScreen.useJSON.getValue() ? RecordingFileTypes.JSON : RecordingFileTypes.REC;
-        return storeRecordingFile(record, directory, name, storeAs, false);
+    public static boolean storeRecordingFile(Recording recording, File directory, String name) {
+        String storeAs = Boolean.TRUE.equals(RecordingStorerScreen.useJSON.getValue()) ? RecordingFileTypes.JSON : RecordingFileTypes.REC;
+        return storeRecordingFile(recording, directory, name, storeAs, false);
     }
 
 }

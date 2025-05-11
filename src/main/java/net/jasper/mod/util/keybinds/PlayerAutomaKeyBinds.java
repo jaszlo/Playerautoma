@@ -1,5 +1,7 @@
 package net.jasper.mod.util.keybinds;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.jasper.mod.gui.QuickMenu;
@@ -14,9 +16,12 @@ import java.util.List;
 /**
  * Class to initialize and handle all keybinds
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerAutomaKeyBinds {
 
     private static final List<KeyBind> keyBinds = new ArrayList<>();
+
+    @SuppressWarnings("java:S3776")
     public static void register() {
         keyBinds.addAll(List.of(Constants.defaultKeybinds));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

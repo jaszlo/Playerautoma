@@ -1,5 +1,7 @@
 package net.jasper.mod.automation;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
@@ -22,12 +24,13 @@ import static net.jasper.mod.PlayerAutomaClient.PLAYERAUTOMA_QUICKSLOT_PATH;
 /**
  * QuickSlots for storing and loading Recordings for the PlayerRecorder
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuickSlots {
 
     public static final int QUICKSLOTS_N = 9;
 
-    public static Recording[] quickSlots = new Recording[QUICKSLOTS_N];
-    public static String[] quickSlotFileNames = {
+    public static final Recording[] QUICKSLOTS = new Recording[QUICKSLOTS_N];
+    public static final String[] QUICKSLOT_FILE_NAMES = {
             "quickslot_1.rec",
             "quickslot_2.rec",
             "quickslot_3.rec",
@@ -51,15 +54,15 @@ public class QuickSlots {
             return;
         }
 
-        quickSlots[slot] = recording;
-        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(() -> quickSlotFileNames[slot], recording.thumbnail.toNativeImage()) : null;
+        QUICKSLOTS[slot] = recording;
+        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(() -> QUICKSLOT_FILE_NAMES[slot], recording.thumbnail.toNativeImage()) : null;
         updateQuickSlotTexture(slot, texture);
         // I assume that this doesn't fail, and therefore I don't check a return value i created to check this fails ...
-        IOHelpers.storeRecordingFile(quickSlots[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), quickSlotFileNames[slot], IOHelpers.RecordingFileTypes.REC, true);
+        IOHelpers.storeRecordingFile(QUICKSLOTS[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), QUICKSLOT_FILE_NAMES[slot], IOHelpers.RecordingFileTypes.REC, true);
     }
 
     private static Recording load(int slot) {
-        return quickSlots[slot];
+        return QUICKSLOTS[slot];
     }
 
     public static final Identifier[] THUMBNAIL_IDENTIFIER;
@@ -78,7 +81,7 @@ public class QuickSlots {
                 Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_8"),
                 Identifier.of(PlayerAutomaClient.MOD_ID, "quickslot_9"),
         };
-        Arrays.fill(quickSlots, new Recording(null));
+        Arrays.fill(QUICKSLOTS, new Recording(null));
         Arrays.fill(ALTPressed, false);
         Arrays.fill(CTRLPressed, false);
         Arrays.fill(storeCooldowns, 0);
@@ -88,18 +91,18 @@ public class QuickSlots {
     public static void clearQuickSlot() {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedAllQuickSlot"));
         for (int i = 0; i < QUICKSLOTS_N; i++) {
-            quickSlots[i].clear();
+            QUICKSLOTS[i].clear();
             // Clear file and thumbnail texture
-            store(i, quickSlots[i]);
+            store(i, QUICKSLOTS[i]);
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedAllQuickSlot"));
         }
     }
 
     public static void clearQuickSlot(int slot) {
         if (slot >= 0 && slot <= QUICKSLOTS_N) {
-            quickSlots[slot].clear();
+            QUICKSLOTS[slot].clear();
             // Clear file and thumbnail texture
-            store(slot, quickSlots[slot]);
+            store(slot, QUICKSLOTS[slot]);
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedOneQuickSlot").append(" " + (slot + 1)));
         }
     }
@@ -162,7 +165,7 @@ public class QuickSlots {
         // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER);
         if (r.thumbnail != null) {
-            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(() -> quickSlotFileNames[slot], r.thumbnail.toNativeImage());
+            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(() -> QUICKSLOT_FILE_NAMES[slot], r.thumbnail.toNativeImage());
             MinecraftClient.getInstance().getTextureManager().registerTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, PlayerRecorder.thumbnailTexture);
         }
 
@@ -188,14 +191,15 @@ public class QuickSlots {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storeQuickslot").append(Text.of("" + (slot  + 1))));
     }
 
+    @SuppressWarnings("java:S3776")
     public static void register() {
         // Load persistent quickslots.
         for (int i = 0; i < QUICKSLOTS_N; i++) {
-            Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(quickSlotFileNames[i]));
-            quickSlots[i] = r;
+            Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(QUICKSLOT_FILE_NAMES[i]));
+            QUICKSLOTS[i] = r;
             if (r.thumbnail != null) {
                 int finalI = i;
-                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(() -> quickSlotFileNames[finalI], r.thumbnail.toNativeImage()));
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(() -> QUICKSLOT_FILE_NAMES[finalI], r.thumbnail.toNativeImage()));
             }
         }
 
@@ -207,12 +211,12 @@ public class QuickSlots {
             long handle = client.getWindow().getHandle();
 
             // Check Store QuickSlot KeyBindings
-            if (PlayerAutomaOptionsScreen.useCTRLForQuickSlots.getValue() && CTRLPressed(handle)) {
+            if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useCTRLForQuickSlots.getValue()) && CTRLPressed(handle)) {
                 handleQuickSlotKeyPress(handle, storeCooldowns, CTRLPressed);
             }
 
             // Check Load QuickSlot KeyBindings
-            if (PlayerAutomaOptionsScreen.useALTForQuickSlots.getValue() && ALTPressed(handle)) {
+            if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.useALTForQuickSlots.getValue()) && ALTPressed(handle)) {
                 handleQuickSlotKeyPress(handle, loadCooldowns, ALTPressed);
             }
 
@@ -220,7 +224,7 @@ public class QuickSlots {
                 // Store Recording to QuickSlot
                 if (CTRLPressed[i]) {
                     // Unset key to not change selectedSlot
-                    if (PlayerAutomaOptionsScreen.preventSlotChanges.getValue()) {
+                    if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.preventSlotChanges.getValue())) {
                         consumeKeyPress(client.options.hotbarKeys[i], 10);
                     }
                     storeRecording(i);
@@ -228,7 +232,7 @@ public class QuickSlots {
                 // Load Recording from QuickSlot
                 } else if (ALTPressed[i]) {
                     // Unset key to not change selectedSlot
-                    if (PlayerAutomaOptionsScreen.preventSlotChanges.getValue()) {
+                    if (Boolean.TRUE.equals(PlayerAutomaOptionsScreen.preventSlotChanges.getValue())) {
                         consumeKeyPress(client.options.hotbarKeys[i], 10);
                     }
                     loadRecording(i);

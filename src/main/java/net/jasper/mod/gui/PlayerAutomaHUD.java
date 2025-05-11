@@ -136,7 +136,8 @@ public class PlayerAutomaHUD {
 
         // Calculate position
         int[] pos = PlayerAutomaOptionsScreen.setHudPositionOption.getValue().getPosition(scaledSize);
-        int x = pos[0]; int y = pos[1];
+        int x = pos[0];
+        int y = pos[1];
 
 
 
@@ -165,8 +166,7 @@ public class PlayerAutomaHUD {
     }
 
     public static void register() {
-        HudLayerRegistrationCallback.EVENT.register(layeredDrawerWrapper -> {
-            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerAutomaHUD::render);
-        });
+        HudLayerRegistrationCallback.EVENT.register(layeredDrawerWrapper ->
+            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerAutomaHUD::render)); ;
     }
 }

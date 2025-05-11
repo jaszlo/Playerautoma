@@ -1,6 +1,8 @@
 package net.jasper.mod.util;
 
 import com.google.gson.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.Recording;
@@ -18,6 +20,7 @@ import java.util.Map;
 /**
  * Class to help de/serialize recordings from .json files.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonHelpers {
 
     // Field names
@@ -44,6 +47,7 @@ public class JsonHelpers {
     private static final String ENCHANTMENT_MADE = "enchantmentMade";
 
 
+    @SuppressWarnings("java:S3776")
     public static String serialize(Recording r) {
         JsonObject result = new JsonObject();
         result.addProperty(LENGTH, r.entries.size());
@@ -75,13 +79,13 @@ public class JsonHelpers {
                 // Keys pressed count
                 JsonObject timesPressed = new JsonObject();
                 Map<String, Integer> timesPressedMap = entry.timesPressed();
-                for (String translationKey : timesPressedMap.keySet()) {
+                for (Map.Entry<String, Integer> keyEntry : timesPressedMap.entrySet()) {
                     // Only store keys that are pressed. If not timesPressed is implicitly 0
-                    int count = timesPressedMap.get(translationKey);
+                    int count = keyEntry.getValue();
                     if (count == 0) {
                         continue;
                     }
-                    timesPressed.addProperty(translationKey, count);
+                    timesPressed.addProperty(keyEntry.getKey(), count);
                 }
                 jsonEntry.add(TIMES_PRESSED, timesPressed);
 
@@ -140,6 +144,7 @@ public class JsonHelpers {
         return gson.toJson(result);
     }
 
+    @SuppressWarnings("java:S3776")
     public static Recording deserialize(String s) {
         MinecraftClient client = MinecraftClient.getInstance();
         Recording result = new Recording(null);
