@@ -6,7 +6,16 @@
 * New Feature:
   * Enchanting now works in replays. **This however changes recording-file which makes old one unusable!**
   * Add option to make starting position at recording relative or absolut like looking direction 
+* Changes:
+  * Option for relative looking direction is removed. Now It is one of the default directions.
+  * The options for default starting position and looking direction work as follows shown below
 
+###### How the Default Position/Direction Option work from now on
+| Use Default Position | Use Default Direction | Set Default Direction | What happens?                                                                                               |
+| -------------------- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------- |
+| false                | false                 | \-                    | Your current position and looking direction is not changed                                                  |
+| false                | true                  | Not "Replay"     | Your position is unchanged and your looking direction is set to a fixed position                            |
+| true                 | true                  | "Replay"         | Your position and looking direction are set. The looking direction is the absolute position from the replay |
 # Version v0.5.3
 ### Only supported for minecraft versions 1.21.5 and upwards
 * Bugfix:

@@ -26,16 +26,19 @@ public class ClientHelpers {
     }
 
     public static void positionPlayer() {
-        // Center Camera
         PlayerEntity player= MinecraftClient.getInstance().player;
         assert player != null;
 
         // Only change looking direction if set in options
         if (PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue()) {
             LookingDirection.Name dirName = PlayerAutomaOptionsScreen.setDefaultDirectionOption.getValue();
-            LookingDirection dir = dirName.getYawPitch();
-            player.setPitch(dir.pitch());
-            player.setYaw(dir.yaw());
+            // If the looking direction is to be used from the replay nothing needs to be set here
+            if (!dirName.equals(LookingDirection.Name.FROM_REPLAY)) {
+                LookingDirection dir = dirName.getYawPitch();
+                player.setPitch(dir.pitch());
+                player.setYaw(dir.yaw());
+            }
+
         }
 
         // Center player on current block only if enabled in options

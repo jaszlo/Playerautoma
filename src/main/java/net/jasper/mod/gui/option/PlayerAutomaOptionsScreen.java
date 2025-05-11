@@ -64,15 +64,6 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         LookingDirection.Name::toText
     );
 
-    public static OptionButton<Boolean> useRelativeLookingDirectionOption = new OptionButton<>(
-        false,
-        OptionButton.BOOLEAN_VALUES,
-        "playerautoma.option.useRelativeLookingDirection",
-        Object::toString,
-        Boolean::parseBoolean,
-        (bool) -> (bool ? Text.translatable("playerautoma.option.relative") : Text.translatable("playerautoma.option.absolute"))
-    );
-
     public static OptionButton<StartingPositionOffset.Name> setDefaultStartingPositionOption = new OptionButton<>(
             StartingPositionOffset.Name.CENTER,
             StartingPositionOffset.Name.values(),
@@ -88,7 +79,7 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.useDefaultStartingPosition",
             Object::toString,
             Boolean::parseBoolean,
-            (bool) -> (bool ? Text.translatable("playerautoma.option.absolute") : Text.translatable("playerautoma.option.relative"))
+            (bool) -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
     );
 
     public static OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
@@ -260,17 +251,15 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
         showHudOption.setButton(showHudButton);
 
         ButtonWidget setDefaultDirectionButton = setDefaultDirectionOption.buttonOf();
-        ButtonWidget useRelativeLookingDirectionButton = useRelativeLookingDirectionOption.buttonOf();
-
-        useRelativeLookingDirectionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useRelativeLookingDirection")));
-        useRelativeLookingDirectionOption.setButton(useRelativeLookingDirectionButton);
+        setDefaultDirectionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.setDefaultLookingDirection")));
         ButtonWidget useDefaultDirectionButton = ButtonWidget.builder(
                 Text.translatable(useDefaultDirectionOption.key).append(": ").append(useDefaultDirectionOption.textProvider.provide(useDefaultDirectionOption.getValue())),
                 (_b) -> {
                     useDefaultDirectionOption.next();
                     setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
-                    useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
-                }).build();
+                })
+                .tooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useDefaultLookingDirection")))
+                .build();
 
 
         ButtonWidget setDefaultStartingPositionButton = setDefaultStartingPositionOption.buttonOf();
@@ -282,12 +271,11 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
                     setDefaultStartingPositionButton.active = useDefaultStartingPositionOption.getValue();
                 }).build();
         useDefaultStartingPositionButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.useDefaultStartingPosition")));
-        useDefaultStartingPositionOption.setButton(useDefaultStartingPositionButton);
-        setDefaultStartingPositionButton.active = useDefaultStartingPositionOption.getValue();
 
         // Set initial active state
+        setDefaultStartingPositionButton.active = useDefaultStartingPositionOption.getValue();
         setDefaultDirectionButton.active = useDefaultDirectionOption.getValue();
-        useRelativeLookingDirectionButton.active = !useDefaultDirectionOption.getValue();
+        useDefaultStartingPositionOption.setButton(useDefaultStartingPositionButton);
         useDefaultDirectionOption.setButton(useDefaultDirectionButton);
 
         ButtonWidget restackBlocksButton = restackBlocksOption.buttonOf();
@@ -353,9 +341,9 @@ public class PlayerAutomaOptionsScreen extends GameOptionsScreen {
 
         adder.add(useDefaultDirectionButton);
         adder.add(setDefaultDirectionButton);
-        adder.add(useRelativeLookingDirectionButton);
-        adder.add(setDefaultStartingPositionButton);
+        adder.add(EmptyWidget.ofHeight(4));
         adder.add(useDefaultStartingPositionButton);
+        adder.add(setDefaultStartingPositionButton);
         adder.add(EmptyWidget.ofHeight(4));
         adder.add(EmptyWidget.ofHeight(4), 3);
 

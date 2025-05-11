@@ -19,7 +19,8 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
         EAST,
         WEST,
         FLOOR,
-        SKY;
+        SKY,
+        FROM_REPLAY;
 
         public LookingDirection getYawPitch() {
             return switch (this) {
@@ -29,6 +30,7 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
                 case WEST -> new LookingDirection(90, 0);
                 case FLOOR -> new LookingDirection(0, 90);
                 case SKY -> new LookingDirection(0, -90);
+                case FROM_REPLAY -> new LookingDirection(0, 0); // Not used
             };
         }
 
@@ -41,6 +43,7 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
                 case WEST -> "west";
                 case FLOOR -> "floor";
                 case SKY -> "sky";
+                case FROM_REPLAY -> "from_replay";
             };
         }
 
@@ -56,6 +59,7 @@ public record LookingDirection(float yaw, float pitch) implements Serializable {
                 case WEST -> Text.translatable("playerautoma.option.defaultDirection.west");
                 case FLOOR -> Text.translatable("playerautoma.option.defaultDirection.floor");
                 case SKY -> Text.translatable("playerautoma.option.defaultDirection.sky");
+                case FROM_REPLAY -> Text.translatable("playerautoma.option.defaultDirection.from_replay");
             };
         }
     }

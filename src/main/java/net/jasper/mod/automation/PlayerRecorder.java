@@ -257,9 +257,8 @@ public class PlayerRecorder {
         assert client.player != null;
         assert client.interactionManager != null;
 
-        // Check relative/absolute replay and no defaultDirection
-        boolean isRelative = !PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue()
-                                && PlayerAutomaOptionsScreen.useRelativeLookingDirectionOption.getValue();
+        // relative is w
+        boolean isRelative = !PlayerAutomaOptionsScreen.useDefaultDirectionOption.getValue();
 
         // Get first RecordEntry Looking direction to calculate difference
         LookingDirection l = record.entries.getFirst().lookingDirection();
