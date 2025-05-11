@@ -50,7 +50,7 @@ public class JsonHelpers {
     @SuppressWarnings("java:S3776")
     public static String serialize(Recording r) {
         JsonObject result = new JsonObject();
-        result.addProperty(LENGTH, r.entries.size());
+        result.addProperty(LENGTH, r.getEntries().size());
 
         // Add Thumbnail
         if (r.thumbnail != null) {
@@ -65,7 +65,7 @@ public class JsonHelpers {
         }
 
         JsonArray entries = new JsonArray();
-        for (Recording.RecordEntry entry : r.entries) {
+        for (Recording.RecordEntry entry : r.getEntries()) {
             JsonObject jsonEntry = new JsonObject();
             // Fill the entry with the actual values
             {   // NOSONAR

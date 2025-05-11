@@ -32,13 +32,23 @@ public class QuickMenu extends Screen {
     private int mouseX;
     private int mouseY;
 
-    public static boolean wasClosed = false;
+    private int loopCount = 0;
+
+    private static boolean wasClosed = false;
+
+    public static void setClosed(boolean toSet) {
+        wasClosed = toSet;
+    }
+    public static boolean wasClosed() {
+        return wasClosed;
+    }
+
     public static final int BUTTON_DIMENSIONS = 32;
 
     private final TextWidget currentTooltip;
     private final TextWidget loopCountText;
 
-    private final ButtonWidget[] buttonsQuickSlots = new ButtonWidget[QuickSlots.QUICKSLOTS_N];
+    private final ButtonWidget[] buttonsQuickSlots = new ButtonWidget[QuickSlots.SLOTS_AMOUNT];
     private static final int EMPTY_QUICKSLOT_BUTTON_ALPHA = 153;
     private static final int FULL_QUICKSLOT_BUTTON_ALPHA = 255;
     private static final int BACKGROUND_OUTLINE_ALPHA = 77;
@@ -52,12 +62,10 @@ public class QuickMenu extends Screen {
     private boolean lastRightClickState = false; // Flag to prevent holding clicked from acting more than once for quickslots
     private boolean lastWheelClickState = false;
 
-    public static int loopCount = 0;
-
     private final Map<ButtonWidget, Text> tooltips = new HashMap<>();
 
 
-    private static final ButtonWidget buttonStartPauseRecord = ButtonWidget.builder(
+    private final ButtonWidget buttonStartPauseRecord = ButtonWidget.builder(
             Text.of(""),
             b -> {
                 loopCount = 0;
@@ -69,7 +77,7 @@ public class QuickMenu extends Screen {
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
-    private static final ButtonWidget buttonStopRecord = ButtonWidget.builder(
+    private final ButtonWidget buttonStopRecord = ButtonWidget.builder(
             Text.of(""),
             b -> {
                 loopCount = 0;
@@ -78,7 +86,7 @@ public class QuickMenu extends Screen {
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
 
-    private static final ButtonWidget buttonStartPauseReplay = ButtonWidget.builder(
+    private final ButtonWidget buttonStartPauseReplay = ButtonWidget.builder(
             Text.of(""),
             b -> {
                 loopCount = 0;
@@ -90,7 +98,7 @@ public class QuickMenu extends Screen {
             }
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
-    private static final ButtonWidget buttonStopReplay = ButtonWidget.builder(
+    private final ButtonWidget buttonStopReplay = ButtonWidget.builder(
             Text.of(""),
             b -> {
                 loopCount = 0;
@@ -99,7 +107,7 @@ public class QuickMenu extends Screen {
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
 
 
-    private static final ButtonWidget buttonLoopReplay = ButtonWidget.builder(
+    private final ButtonWidget buttonLoopReplay = ButtonWidget.builder(
             Text.of(""),
             b -> {/*Do Nothing. Is handled in 'tick' method to allow holding pressed */}
     ).size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS).build();
@@ -108,18 +116,19 @@ public class QuickMenu extends Screen {
         super(Text.translatable("playerautoma.screens.title.quickMenu"));
         this.parent = parent;
         this.client = MinecraftClient.getInstance();
+        this.loopCount = 0;
         currentTooltip = new TextWidget(Text.of(""), this.client.textRenderer);
         loopCountText = new TextWidget(Text.of(""), this.client.textRenderer);
 
         // Create quickslot buttons
-        for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
+        for (int i = 0; i < QuickSlots.SLOTS_AMOUNT; i++) {
             int finalI = i;
             buttonsQuickSlots[i] = ButtonWidget.builder(
                     Text.of(""),
                     b -> QuickSlots.storeRecording(finalI))
                 .size(BUTTON_DIMENSIONS, BUTTON_DIMENSIONS)
                 .build();
-            float alpha = QuickSlots.QUICKSLOTS[i].isEmpty() ? EMPTY_QUICKSLOT_BUTTON_ALPHA : FULL_QUICKSLOT_BUTTON_ALPHA;
+            float alpha = QuickSlots.SLOTS[i].isEmpty() ? EMPTY_QUICKSLOT_BUTTON_ALPHA : FULL_QUICKSLOT_BUTTON_ALPHA;
             buttonsQuickSlots[i].setAlpha(alpha);
         }
 
@@ -131,7 +140,7 @@ public class QuickMenu extends Screen {
     public void close() {
         // This flag prevents the quickMenu from being reopened the next frame because the key was still pressed
         // Only releasing the quick menu key once will set 'wasClosed' to false again and make it possible to open the quick menu again.
-        wasClosed = true;
+        QuickMenu.setClosed(true);
         // -1 == Infinity
         if (loopCount < 0) {
             PlayerautomaExceptionHandler.callSafe(PlayerRecorder::startLoop);
@@ -140,7 +149,9 @@ public class QuickMenu extends Screen {
         }
         loopCount = 0;
 
-        this.client.setScreen(this.parent);
+        if (this.client != null) {
+            this.client.setScreen(this.parent);
+        }
     }
 
     @Override
@@ -154,6 +165,10 @@ public class QuickMenu extends Screen {
         // Update if button should be active or not depending on state
         this.updateButtonActive();
 
+        if (client == null) {
+            return;
+        }
+
         boolean rightClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
         boolean leftClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
         boolean wheelClicked = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_MIDDLE) == GLFW.GLFW_PRESS;
@@ -166,7 +181,7 @@ public class QuickMenu extends Screen {
             boolean mouseOver = buttonLoopReplay.isMouseOver(this.mouseX, this.mouseY);
             // Check cooldown. If not reached just return
             if (mouseOver && rightClicked) {
-                if (now - this.lastRightClick >= clickCooldown) {
+                if (now - this.lastRightClick >= clickCooldown) { //NOSONAR
                     // Toggle Infinity
                     loopCount = loopCount < 0 ? 0 : -1; // Infinity
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
@@ -175,7 +190,7 @@ public class QuickMenu extends Screen {
                     this.lastRightClick = now;
                 }
             } else if (mouseOver && leftClicked) {
-                if (now - this.lastLeftClick >= clickCooldown) {
+                if (now - this.lastLeftClick >= clickCooldown) { //NOSONAR
                     // Update loopCount
                     if (loopCount < 0) {
                         loopCount = 1;
@@ -194,12 +209,12 @@ public class QuickMenu extends Screen {
             }
         }
 
-        for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
+        for (int i = 0; i < QuickSlots.SLOTS_AMOUNT; i++) {
             ButtonWidget button = buttonsQuickSlots[i];
             boolean mouseOver = button.isMouseOver(this.mouseX, this.mouseY);
             if (mouseOver && rightClicked && !lastRightClickState) {
                 // Check cooldown. If not reached just return
-                if (now - this.lastRightClick >= clickCooldown) {
+                if (now - this.lastRightClick >= clickCooldown) { //NOSONAR
                     // Update successful right click
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                     this.lastRightClick = now;
@@ -207,7 +222,7 @@ public class QuickMenu extends Screen {
                 }
             }
             if (mouseOver && wheelClicked && !lastWheelClickState) {
-                if (now - this.lastWheelClick >= clickCooldown) {
+                if (now - this.lastWheelClick >= clickCooldown) { //NOSONAR
                     // Update successful wheel click
                     client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                     this.lastWheelClick = now;
@@ -240,7 +255,6 @@ public class QuickMenu extends Screen {
     }
 
     public static Screen open() {
-        loopCount = 0;
         MinecraftClient client = MinecraftClient.getInstance();
         Screen result = new QuickMenu(client.currentScreen);
         client.setScreen(result);
@@ -266,7 +280,7 @@ public class QuickMenu extends Screen {
         adder.add(EmptyWidget.ofHeight(4), 3);
 
         if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.showQuickSlotsInQuickMenu.getValue())) {
-            for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
+            for (int i = 0; i < QuickSlots.SLOTS_AMOUNT; i++) {
                 adder.add(this.buttonsQuickSlots[i]);
             }
         }
@@ -289,7 +303,7 @@ public class QuickMenu extends Screen {
         tooltips.put(this.buttonStartPauseReplay, Text.translatable("playerautoma.screens.menu.tooltip.startReplay").append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.pauseReplay")).append(":").append(Text.translatable("playerautoma.screens.menu.tooltip.resumeReplay")));
         tooltips.put(this.buttonStopReplay, Text.translatable("playerautoma.screens.menu.tooltip.stopReplay"));
         tooltips.put(this.buttonLoopReplay, Text.translatable("playerautoma.screens.menu.tooltip.startLoop"));
-        for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
+        for (int i = 0; i < QuickSlots.SLOTS_AMOUNT; i++) {
             tooltips.put(this.buttonsQuickSlots[i], Text.translatable("playerautoma.screens.menu.tooltip.quickslotbutton"));
         }
     }
@@ -309,14 +323,14 @@ public class QuickMenu extends Screen {
 
 
     @Override
-    @SuppressWarnings("java:S3776")
+    @SuppressWarnings({"java:S3776", "java:S6541"})
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.mouseX = mouseX;
         this.mouseY = mouseY;
 
         boolean showQuickSlots = PlayerautomaOptionsScreen.showQuickSlotsInQuickMenu.getValue();
         // Draw black rectangle as background with grey border
-        {
+        { // NOSONAR
             int x1 = buttonStartPauseRecord.getX() - 10;
             int y1 = buttonStartPauseRecord.getY() - 10;
             int x2 = buttonsQuickSlots[buttonsQuickSlots.length - 1].getX() + BUTTON_DIMENSIONS + 10;
@@ -348,7 +362,7 @@ public class QuickMenu extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         // Draw loop count Text
-        {
+        { // NOSONAR
             Text toSet;
             if (loopCount < 0)       toSet = INFINITY;
             else if (loopCount == 0) toSet = Text.of("");
@@ -374,8 +388,8 @@ public class QuickMenu extends Screen {
                         Text t = tooltips.getOrDefault(button, Text.of(""));
 
                         // Special ToolTip case for button who switch function on context
-                        {
-                            boolean split = button == this.buttonStartPauseRecord || button == this.buttonStartPauseReplay;
+                        { // NOSONAR
+                            boolean split = button == buttonStartPauseRecord || button == buttonStartPauseReplay;
                             int startIndex = 0;
                             int pauseIndex = 1;
                             int continueIndex = 2;
@@ -403,7 +417,7 @@ public class QuickMenu extends Screen {
 
 
         // Draw Icons on buttons
-        {
+        { // NOSONAR
             // Use any button to get size for texture. all buttons have same size
             int scaledSize = buttonStartPauseRecord.getWidth();
 
@@ -411,20 +425,20 @@ public class QuickMenu extends Screen {
             Identifier startPauseRecordTexture = PlayerRecorder.state.isRecording() ? Textures.QuickMenu.PAUSED_RECORDING : Textures.QuickMenu.START_RECORDING;
             Identifier startPauseReplayTexture = PlayerRecorder.state.isReplaying() ? Textures.QuickMenu.PAUSE_REPLAY : Textures.QuickMenu.START_REPLAY;
 
-            context.drawTexture(RenderLayer::getGuiTextured, startPauseRecordTexture, this.buttonStartPauseRecord.getX(), this.buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_RECORDING, this.buttonStopRecord.getX(), this.buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, startPauseRecordTexture, buttonStartPauseRecord.getX(), buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_RECORDING, buttonStopRecord.getX(), buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
-            context.drawTexture(RenderLayer::getGuiTextured, startPauseReplayTexture, this.buttonStartPauseReplay.getX(), this.buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_REPLAY, this.buttonStopReplay.getX(), this.buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.START_LOOP, this.buttonLoopReplay.getX(), this.buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, startPauseReplayTexture, buttonStartPauseReplay.getX(), buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_REPLAY, buttonStopReplay.getX(), buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.START_LOOP, buttonLoopReplay.getX(), buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
             context.getMatrices().pop();
         }
 
         // Draw quick slot thumbnails
-        {
-            for (int i = 0; i < QuickSlots.QUICKSLOTS_N; i++) {
-                boolean isEmpty = QuickSlots.QUICKSLOTS[i].isEmpty();
+        { // NOSONAR
+            for (int i = 0; i < QuickSlots.SLOTS_AMOUNT; i++) {
+                boolean isEmpty = QuickSlots.SLOTS[i].isEmpty();
                 float alpha = isEmpty ? EMPTY_QUICKSLOT_BUTTON_ALPHA : FULL_QUICKSLOT_BUTTON_ALPHA;
                 buttonsQuickSlots[i].setAlpha(alpha);
                 ButtonWidget b = buttonsQuickSlots[i];

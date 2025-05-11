@@ -14,7 +14,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.input.KeyCodes;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
@@ -24,7 +23,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.Util;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import java.util.Map;
 import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.util.Textures.DEFAULT_BUTTON_TEXTURES;
 import static net.jasper.mod.util.Textures.SelectorScreen.REFRESH_ICON;
-// TODO: this could be a general class listing files of a directory and letting you select one given a callback function
+// TO-DO: this could be a general class listing files of a directory and letting you select one given a callback function
 
 /**
  * Screen copied from language-selection. Allows to select stored recordings.
@@ -45,14 +45,14 @@ public class RecordingSelectorScreen extends Screen {
 
     private final Screen parent;
 
-    // TODO: This should be cleaned up on update. However I can't be bothered right now as it is more a best practice than really necessary
+    // TO-DO: This should be cleaned up on update. However, I can't be bothered right now as it is more a best practice than really necessary
     // Use map to store thumbnails and only load new ones in the future in "updateFiles"
-    protected final static Map<String, RecordingThumbnail> thumbnails = new HashMap<>();
+    protected static final  Map<String, RecordingThumbnail> thumbnails = new HashMap<>();
 
     /**
      * Initially load thumbnails on load to prevent lag when this screen is opened for the first time
      */
-    @SuppressWarnings("java:3776")
+    @SuppressWarnings("java:S3776")
     public static void loadThumbnails() {
         File recordingFolder = new File(PLAYERAUTOMA_RECORDING_PATH);
         File[] fileList = recordingFolder.listFiles();
@@ -60,9 +60,9 @@ public class RecordingSelectorScreen extends Screen {
             return;
         }
         for (File file : fileList) {
-            if (file.getName().endsWith(".rec") || file.getName().endsWith(".json")) {
+            if ((file.getName().endsWith(".rec") || file.getName().endsWith(".json"))) {
                 // Only do this if the thumbnail is not yet registered
-                if (!thumbnails.containsKey(file.getName())) {
+                if (!thumbnails.containsKey(file.getName())) { // NOSONAR
                     Recording r = IOHelpers.loadRecordingFile(recordingFolder, file);
                     if (r != null && r.thumbnail != null) {
                         thumbnails.put(file.getName(), r.thumbnail);
@@ -95,7 +95,9 @@ public class RecordingSelectorScreen extends Screen {
 
     @Override
     public void close() {
-        this.client.setScreen(this.parent);
+        if (this.client != null) {
+            this.client.setScreen(this.parent);
+        }
     }
 
     private ButtonWidget refreshButton;
@@ -107,7 +109,7 @@ public class RecordingSelectorScreen extends Screen {
 
         // Button placement:
         //   [Refresh] [Delete] [Open Recording Folder] [Done]
-        refreshButton = TexturedButtonWidget.builder(
+        refreshButton = ButtonWidget.builder(
                     Text.of(""),
                     button -> this.onRefresh()
             )
@@ -193,11 +195,11 @@ public class RecordingSelectorScreen extends Screen {
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, 16777215);
     }
 
-
+    @SuppressWarnings("java:S110")
     private class RecordingSelectionListWidget extends AlwaysSelectedEntryListWidget<RecordingSelectionListWidget.RecordingEntry> {
         final String directoryPath;
         public RecordingSelectionListWidget(MinecraftClient client, String directoryPath) {
-            // EntryListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight)
+            // EntryListWidget(MinecraftClient client, int width, int height, int top, int bottom, int itemHeight) NOSONAR
             super(client, RecordingSelectorScreen.this.width, RecordingSelectorScreen.this.height - 93, 32, 18);
             this.directoryPath = directoryPath;
             this.updateFiles();

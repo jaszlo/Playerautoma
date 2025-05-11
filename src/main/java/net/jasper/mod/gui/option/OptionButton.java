@@ -4,6 +4,7 @@ import lombok.Setter;
 import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,10 @@ import java.util.List;
  * @param <V> The Type of the value that the option has
  */
 public class OptionButton<V> {
+
+    public static Text booleanToOnOff(boolean bool) {
+        return bool ? ScreenTexts.ON : ScreenTexts.OFF;
+    }
 
     private static final String OPTION_FILE_NAME = "playerautoma_options.txt";
     private static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::options");

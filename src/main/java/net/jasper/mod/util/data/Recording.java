@@ -1,5 +1,8 @@
 package net.jasper.mod.util.data;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.Map;
 /**
  * Main-Class for storing all data required for a recording
  */
+@Getter
+@Setter
 public class Recording implements Serializable {
     public record RecordEntry(
             List<String> keysPressed,
@@ -22,7 +27,7 @@ public class Recording implements Serializable {
             Integer enchantment
     ) implements Serializable {}
 
-    public final List<RecordEntry> entries;
+    private final List<RecordEntry> entries;
     public RecordingThumbnail thumbnail;
 
     public Recording(RecordingThumbnail thumbnail) {

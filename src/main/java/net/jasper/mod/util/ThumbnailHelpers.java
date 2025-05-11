@@ -83,6 +83,15 @@ public class ThumbnailHelpers {
     }
 
 
+    private static void await(Long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            // Ignore
+        }
+    }
+
     /**
      * Mostly copied from MinecraftClient.takePanorama
      */
@@ -97,12 +106,7 @@ public class ThumbnailHelpers {
             client.gameRenderer.setBlockOutlineEnabled(false);
             client.gameRenderer.setRenderingPanorama(true);
             client.gameRenderer.renderWorld(RenderTickCounter.ONE);
-            try {
-                Thread.sleep(10L);
-            } catch (InterruptedException exception) {
-                Thread.currentThread().interrupt();
-                // Ignore
-            }
+            await(10L);
 
             ScreenshotRecorder.takeScreenshot(framebuffer, nativeImage -> {
                 RecordingThumbnail thumbnail = RecordingThumbnail.createFromNativeImage(scaleDownImage(nativeImage, WIDTH, HEIGHT));

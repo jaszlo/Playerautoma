@@ -27,10 +27,10 @@ import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_QUICKSLOT_PATH;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QuickSlots {
 
-    public static final int QUICKSLOTS_N = 9;
+    public static final int SLOTS_AMOUNT = 9;
 
-    public static final Recording[] QUICKSLOTS = new Recording[QUICKSLOTS_N];
-    public static final String[] QUICKSLOT_FILE_NAMES = {
+    public static final Recording[] SLOTS = new Recording[SLOTS_AMOUNT];
+    public static final String[] SLOT_FILE_NAMES = {
             "quickslot_1.rec",
             "quickslot_2.rec",
             "quickslot_3.rec",
@@ -43,26 +43,26 @@ public class QuickSlots {
     };
 
     // KeyBinding State
-    private static final int[] storeCooldowns = new int[QUICKSLOTS_N];
-    private static final int[] loadCooldowns = new int[QUICKSLOTS_N];
-    private static final boolean[] CTRLPressed = new boolean[QUICKSLOTS_N];
-    private static final boolean[] ALTPressed = new boolean[QUICKSLOTS_N];
+    private static final int[] storeCooldowns = new int[SLOTS_AMOUNT];
+    private static final int[] loadCooldowns = new int[SLOTS_AMOUNT];
+    private static final boolean[] CTRLPressed = new boolean[SLOTS_AMOUNT];
+    private static final boolean[] ALTPressed = new boolean[SLOTS_AMOUNT];
     private static final int COOLDOWN = 5;
 
     private static void store(int slot, Recording recording) {
-        if (slot < 0 || slot >= QUICKSLOTS_N) {
+        if (slot < 0 || slot >= SLOTS_AMOUNT) {
             return;
         }
 
-        QUICKSLOTS[slot] = recording;
-        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(() -> QUICKSLOT_FILE_NAMES[slot], recording.thumbnail.toNativeImage()) : null;
+        SLOTS[slot] = recording;
+        NativeImageBackedTexture texture = recording.thumbnail != null ? new NativeImageBackedTexture(() -> SLOT_FILE_NAMES[slot], recording.thumbnail.toNativeImage()) : null;
         updateQuickSlotTexture(slot, texture);
         // I assume that this doesn't fail, and therefore I don't check a return value i created to check this fails ...
-        IOHelpers.storeRecordingFile(QUICKSLOTS[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), QUICKSLOT_FILE_NAMES[slot], IOHelpers.RecordingFileTypes.REC, true);
+        IOHelpers.storeRecordingFile(SLOTS[slot], new File(PLAYERAUTOMA_QUICKSLOT_PATH), SLOT_FILE_NAMES[slot], IOHelpers.RecordingFileTypes.REC, true);
     }
 
     private static Recording load(int slot) {
-        return QUICKSLOTS[slot];
+        return SLOTS[slot];
     }
 
     public static final Identifier[] THUMBNAIL_IDENTIFIER;
@@ -81,7 +81,7 @@ public class QuickSlots {
                 Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_8"),
                 Identifier.of(PlayerautomaClient.MOD_ID, "quickslot_9"),
         };
-        Arrays.fill(QUICKSLOTS, new Recording(null));
+        Arrays.fill(SLOTS, new Recording(null));
         Arrays.fill(ALTPressed, false);
         Arrays.fill(CTRLPressed, false);
         Arrays.fill(storeCooldowns, 0);
@@ -90,19 +90,19 @@ public class QuickSlots {
 
     public static void clearQuickSlot() {
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedAllQuickSlot"));
-        for (int i = 0; i < QUICKSLOTS_N; i++) {
-            QUICKSLOTS[i].clear();
+        for (int i = 0; i < SLOTS_AMOUNT; i++) {
+            SLOTS[i].clear();
             // Clear file and thumbnail texture
-            store(i, QUICKSLOTS[i]);
+            store(i, SLOTS[i]);
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedAllQuickSlot"));
         }
     }
 
     public static void clearQuickSlot(int slot) {
-        if (slot >= 0 && slot <= QUICKSLOTS_N) {
-            QUICKSLOTS[slot].clear();
+        if (slot >= 0 && slot <= SLOTS_AMOUNT) {
+            SLOTS[slot].clear();
             // Clear file and thumbnail texture
-            store(slot, QUICKSLOTS[slot]);
+            store(slot, SLOTS[slot]);
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.clearedOneQuickSlot").append(" " + (slot + 1)));
         }
     }
@@ -135,7 +135,7 @@ public class QuickSlots {
     }
 
     public static void updateQuickSlotTexture(int slot, NativeImageBackedTexture texture) {
-        if (slot < 0 || slot >= QUICKSLOTS_N) {
+        if (slot < 0 || slot >= SLOTS_AMOUNT) {
             return;
         }
 
@@ -147,7 +147,7 @@ public class QuickSlots {
     }
 
     public static void loadRecording(int slot) {
-        if (slot < 0 || slot >= QUICKSLOTS_N) {
+        if (slot < 0 || slot >= SLOTS_AMOUNT) {
             return;
         }
 
@@ -161,11 +161,11 @@ public class QuickSlots {
             return;
         }
 
-        PlayerRecorder.record = r;
+        PlayerRecorder.recording = r;
         // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER);
         if (r.thumbnail != null) {
-            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(() -> QUICKSLOT_FILE_NAMES[slot], r.thumbnail.toNativeImage());
+            PlayerRecorder.thumbnailTexture = new NativeImageBackedTexture(() -> SLOT_FILE_NAMES[slot], r.thumbnail.toNativeImage());
             MinecraftClient.getInstance().getTextureManager().registerTexture(PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, PlayerRecorder.thumbnailTexture);
         }
 
@@ -173,7 +173,7 @@ public class QuickSlots {
     }
 
     public static void storeRecording(int slot) {
-        if (slot < 0 || slot >= QUICKSLOTS_N) {
+        if (slot < 0 || slot >= SLOTS_AMOUNT) {
             return;
         }
 
@@ -181,25 +181,25 @@ public class QuickSlots {
         if (PlayerRecorder.state != PlayerRecorder.State.IDLE) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreDueToState"));
             return;
-        } else if (PlayerRecorder.record == null || PlayerRecorder.record.isEmpty()) {
+        } else if (PlayerRecorder.recording == null || PlayerRecorder.recording.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreEmpty"));
             return;
         }
 
         // Store quickslots to file to be persistent in store
-        store(slot, PlayerRecorder.record.copy());
+        store(slot, PlayerRecorder.recording.copy());
         ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.storeQuickslot").append(Text.of("" + (slot  + 1))));
     }
 
     @SuppressWarnings("java:S3776")
     public static void register() {
         // Load persistent quickslots.
-        for (int i = 0; i < QUICKSLOTS_N; i++) {
-            Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(QUICKSLOT_FILE_NAMES[i]));
-            QUICKSLOTS[i] = r;
+        for (int i = 0; i < SLOTS_AMOUNT; i++) {
+            Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_QUICKSLOT_PATH), new File(SLOT_FILE_NAMES[i]));
+            SLOTS[i] = r;
             if (r.thumbnail != null) {
                 int finalI = i;
-                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(() -> QUICKSLOT_FILE_NAMES[finalI], r.thumbnail.toNativeImage()));
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_IDENTIFIER[i], new NativeImageBackedTexture(() -> SLOT_FILE_NAMES[finalI], r.thumbnail.toNativeImage()));
             }
         }
 
@@ -245,11 +245,11 @@ public class QuickSlots {
         });
     }
 
-    private static boolean CTRLPressed(long handle) {
+    private static boolean CTRLPressed(long handle) { // NOSONAR
         return InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_RIGHT_CONTROL);
     }
 
-    private static boolean ALTPressed(long handle) {
+    private static boolean ALTPressed(long handle) { // NOSONAR
         return InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_RIGHT_ALT);
     }
 }

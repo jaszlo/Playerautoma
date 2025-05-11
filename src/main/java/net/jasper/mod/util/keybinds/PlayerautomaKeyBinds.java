@@ -47,7 +47,7 @@ public class PlayerautomaKeyBinds {
             }
 
             boolean menuOpenPressed = InputUtil.isKeyPressed(handle, keyBindingAccessor.getBoundKey().getCode());
-            if (!(client.currentScreen instanceof QuickMenu || client.currentScreen instanceof GameMenuScreen) && menuOpenPressed && !QuickMenu.wasClosed) {
+            if (!(client.currentScreen instanceof QuickMenu || client.currentScreen instanceof GameMenuScreen) && menuOpenPressed && !QuickMenu.wasClosed()) {
                 QuickMenu.open();
             }
 
@@ -57,7 +57,7 @@ public class PlayerautomaKeyBinds {
 
             // Reset flag to enable opening the menu again whenever open key not pressed
             if (!menuOpenPressed) {
-                QuickMenu.wasClosed = false;
+                QuickMenu.setClosed(false);
             }
         });
     }

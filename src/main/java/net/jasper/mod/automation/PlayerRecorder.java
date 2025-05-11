@@ -43,7 +43,7 @@ import static net.jasper.mod.automation.PlayerRecorder.State.*;
  */
 public class PlayerRecorder {
 
-    public static Recording record = new Recording(null);
+    public static Recording recording = new Recording(null);
     public static NativeImageBackedTexture thumbnailTexture = null;
     public static final Identifier THUMBNAIL_TEXTURE_IDENTIFIER = Identifier.of(PlayerautomaClient.MOD_ID, "current_recording_thumbnail");
 
@@ -72,7 +72,7 @@ public class PlayerRecorder {
     @SuppressWarnings("java:S3776")
     public static void register() {
         // Always reset the PlayerRecorder if a Join event happens could be breaking the mod. Therefor leave it out now.
-        // ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PlayerRecorder.reset());
+        // ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> PlayerRecorder.reset()); NOSONAR
 
         // Register Task-Queues
         tasks.register("playerActions");
@@ -120,7 +120,7 @@ public class PlayerRecorder {
                 lastVillagerTradeMade.poll(),
                 lastEnchantmentMade.poll()
             );
-            record.add(newEntry);
+            recording.add(newEntry);
         });
     }
 
@@ -153,7 +153,7 @@ public class PlayerRecorder {
         if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.saveThumbnailsWithRecording.getValue())) {
             ThumbnailHelpers.create((thumbnail, nativeImage) -> {
                 if (thumbnail != null) {
-                    record.thumbnail = thumbnail;
+                    recording.thumbnail = thumbnail;
                     thumbnailTexture = new NativeImageBackedTexture(() -> "test", nativeImage);
                     // Destroy old texture and register new
                     MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
@@ -185,7 +185,7 @@ public class PlayerRecorder {
     }
 
     public static void clearRecord() {
-        record.clear();
+        recording.clear();
         thumbnailTexture = null;
         MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
     }
@@ -223,24 +223,22 @@ public class PlayerRecorder {
      *              if looped is true and count is negative loop indefinitely
      *              if looped is true and count is positive loop for that amount
      */
-    @SuppressWarnings("java:S3776")
+    @SuppressWarnings({"java:S3776", "java:S6541"})
     private static void startReplay(boolean looped, int loopCount) {
         if (state.isRecording() || state.isPausedRecording()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileRecording"));
             return;
         }
 
-        if (record.isEmpty()) {
+        if (recording.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.startEmptyRecording"));
             return;
         }
 
-        if (state.isAny(RECORDING, REPLAYING)) {
-            // if state is replaying and has no tasks its looped therefore just continue and if not return
-            if (!(state.isReplaying() && tasks.isEmpty())) {
-                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileReplaying"));
-                return;
-            }
+        // if state is replaying and has no tasks its looped therefore just continue and if not return
+        if (state.isAny(RECORDING, REPLAYING) && !(state.isReplaying() && tasks.isEmpty())) {
+            ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStartReplayWhileReplaying"));
+            return;
         }
 
         // If menu prevention is activated enable it by default if not already enabled
@@ -263,11 +261,11 @@ public class PlayerRecorder {
         boolean isRelative = !PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue();
 
         // Get first RecordEntry Looking direction to calculate difference
-        LookingDirection l = record.entries.getFirst().lookingDirection();
+        LookingDirection l = recording.getEntries().getFirst().lookingDirection();
         float pitchDiff = isRelative ? l.pitch() - client.player.getPitch() : 0;
         float yawDiff = isRelative ? l.yaw() - client.player.getYaw() : 0;
 
-        for (Recording.RecordEntry entry : record.entries) {
+        for (Recording.RecordEntry entry : recording.getEntries()) {
             // Get all data for current record tick (i) to replay
             List<String> keysPressed = entry.keysPressed();
             Map<String, Integer> timesPressed = entry.timesPressed();
@@ -398,7 +396,7 @@ public class PlayerRecorder {
             return;
         }
 
-        if (record.isEmpty()) {
+        if (recording.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.startEmptyRecording"));
             return;
         }
@@ -409,7 +407,7 @@ public class PlayerRecorder {
 
 
     public static void togglePauseReplay() {
-        if (!state.isAny(REPLAYING, PAUSED_REPLAY) || record.isEmpty()) {
+        if (!state.isAny(REPLAYING, PAUSED_REPLAY) || recording.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotTogglePauseReplayWhileInvalidState"));
             return;
 
@@ -430,7 +428,7 @@ public class PlayerRecorder {
 
 
     public static void togglePauseRecord() {
-        if (!state.isAny(RECORDING, PAUSED_RECORDING) || record.isEmpty()) {
+        if (!state.isAny(RECORDING, PAUSED_RECORDING) || recording.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotTogglePauseRecordingWhileInvalidState"));
             return;
         }
@@ -483,14 +481,14 @@ public class PlayerRecorder {
 
 
     public static void storeRecord(String name) {
-        if (record.isEmpty()) {
+        if (recording.isEmpty()) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreEmpty"));
             return;
         } else if (state.isAny(RECORDING, REPLAYING)) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.cannotStoreDueToState"));
             return;
         }
-        boolean success = IOHelpers.storeRecordingFile(record, new File(PLAYERAUTOMA_RECORDING_PATH), name);
+        boolean success = IOHelpers.storeRecordingFile(recording, new File(PLAYERAUTOMA_RECORDING_PATH), name);
         Text feedback = success ? Text.translatable("playerautoma.messages.storedRecording") : Text.translatable("playerautoma.messages.error.storeFailed");
         ClientHelpers.writeToActionBar(feedback);
     }
@@ -509,7 +507,7 @@ public class PlayerRecorder {
         // Do not load async as we ant the result as fast as possible
         Recording r = IOHelpers.loadRecordingFile(new File(PLAYERAUTOMA_RECORDING_PATH), selected);
         if (r.isEmpty()) ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.error.loadFailed"));
-        else record = r;
+        else recording = r;
 
         // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);

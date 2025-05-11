@@ -18,12 +18,12 @@ public class TaskQueue {
     public static final long MEDIUM_PRIORITY = 0;
     public static final long HIGH_PRIORITY = 1;
     public static final Map<String, TaskQueue> QUEUES = new HashMap<>();
-    private static boolean done = false; // if work for this tick is done
 
     private final long priority;
     private final List<Runnable> tasks;
     @Getter
     private boolean paused;
+    private boolean done = false; // if work for this tick is done
 
     public TaskQueue(long priority) {
         this.priority = priority;

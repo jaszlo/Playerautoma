@@ -167,6 +167,6 @@ public class PlayerautomaHUD {
 
     public static void register() {
         HudLayerRegistrationCallback.EVENT.register(layeredDrawerWrapper ->
-            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerautomaHUD::render)); ;
+            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerautomaHUD::render));
     }
 }

@@ -41,7 +41,7 @@ public class RecordingStorerScreen extends Screen {
             "playerautoma.option.exportAs",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? Text.of(IOHelpers.RecordingFileTypes.JSON) : Text.of(IOHelpers.RecordingFileTypes.REC))
+            bool -> (Boolean.TRUE.equals(bool) ? Text.of(IOHelpers.RecordingFileTypes.JSON) : Text.of(IOHelpers.RecordingFileTypes.REC))
     );
 
     @Override
@@ -121,7 +121,7 @@ public class RecordingStorerScreen extends Screen {
 
         // Render border always and thumbnail if available
         context.drawGuiTexture(RenderLayer::getGuiTextured, DEFAULT_BUTTON_TEXTURES.get(false, false), this.width / 2 - 145, this.height / 2 - 10, 40, 40);
-        if (PlayerRecorder.record.thumbnail != null) {
+        if (PlayerRecorder.recording.thumbnail != null) {
             context.drawTexture(RenderLayer::getGuiTextured, PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, this.width / 2 - 144, this.height / 2 - 9, 0, 0,38, 38, 38, 38);
         }
     }

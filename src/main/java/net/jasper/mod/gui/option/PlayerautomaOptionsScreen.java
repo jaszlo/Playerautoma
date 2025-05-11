@@ -12,7 +12,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.EmptyWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,7 +51,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         "playerautoma.option.useDefaultDirection",
         Object::toString,
         Boolean::parseBoolean,
-        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<LookingDirection.Name> setDefaultDirectionOption = new OptionButton<>(
@@ -79,7 +78,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.useDefaultStartingPosition",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
@@ -88,7 +87,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         "playerautoma.option.restackItems",
         Object::toString,
         Boolean::parseBoolean,
-        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> recordInventoryActivitiesOption = new OptionButton<>(
@@ -97,7 +96,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         "playerautoma.option.recordInventoryActivities",
         Object::toString,
         Boolean::parseBoolean,
-        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> writeStateToActionBarOption = new OptionButton<>(
@@ -106,7 +105,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         "playerautoma.option.writeStateToActionBar",
         Object::toString,
         Boolean::parseBoolean,
-        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<PlayerautomaHUD.Position> setHudPositionOption = new OptionButton<>(
@@ -125,7 +124,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.alwaysPreventMenu",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> resetKeyBindingsOnRecordingOption = new OptionButton<>(
@@ -134,7 +133,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         "playerautoma.option.resetKeyBindingsOnRecording",
         Object::toString,
         Boolean::parseBoolean,
-        bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+        OptionButton::booleanToOnOff
     );
 
 
@@ -144,7 +143,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
       "playerautoma.option.recordCommands",
       Object::toString,
       Boolean::parseBoolean,
-      bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+      OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> useCTRLForQuickSlots = new OptionButton<>(
@@ -153,7 +152,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.useCTRLForQuickSlots",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> useALTForQuickSlots = new OptionButton<>(
@@ -162,7 +161,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.useALTForQuickSlots",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> preventSlotChanges = new OptionButton<>(
@@ -171,7 +170,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.preventSlotChanges",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> showQuickSlotsInQuickMenu = new OptionButton<>(
@@ -180,7 +179,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.showQuickSlotsInQuickMenu",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> stopReplayOnManualInput = new OptionButton<>(
@@ -189,7 +188,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.stopReplayOnManualInput",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
     public static final OptionButton<Boolean> saveThumbnailsWithRecording = new OptionButton<>(
@@ -198,11 +197,11 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             "playerautoma.option.saveThumbnailsWithRecording",
             Object::toString,
             Boolean::parseBoolean,
-            bool -> (bool ? ScreenTexts.ON : ScreenTexts.OFF)
+            OptionButton::booleanToOnOff
     );
 
 
-    public static ButtonWidget openCommandsToExclude = ButtonWidget.builder(
+    public static final ButtonWidget openCommandsToExclude = ButtonWidget.builder(
             Text.translatable("playerautoma.option.openCommandsToExclude"),
             b -> {
                 MinecraftClient client= MinecraftClient.getInstance();
