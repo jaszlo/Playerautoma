@@ -1,14 +1,19 @@
 package net.jasper.mod.gui;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.jasper.mod.PlayerAutomaClient;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
 import net.jasper.mod.gui.option.PlayerAutomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 /**
  * Little HUD for Playerautoma to display current state of player recorder
@@ -106,55 +111,62 @@ public class PlayerAutomaHUD {
         }
     }
 
+    private static final Identifier PLAYERAUTOMA_HUD_LAYER = Identifier.of(PlayerAutomaClient.MOD_ID, "hud.state");
+
+
+    private static void render(DrawContext context, RenderTickCounter tickCounter) {
+        MinecraftClient client = MinecraftClient.getInstance();
+
+        // Renders only if active
+        MenuPrevention.renderIcon(context);
+
+        ShowHUDOption showOffHud = PlayerAutomaOptionsScreen.showHudOption.getValue();
+        if (showOffHud == ShowHUDOption.NOTHING) {
+            return;
+        }
+        // Get/Calc guiScale
+        int scale = ClientHelpers.getGuiScale();
+
+        // Just looks better. Not sure how it looks on gui scale. But who is dumb enough to play like that?
+        scale = scale > 1 ? scale - 1 : scale;
+
+        // Texture are 13x13 and 14x14 therefore choose the larger one as default
+        int size = 14;
+        int scaledSize = scale * size;
+
+        // Calculate position
+        int[] pos = PlayerAutomaOptionsScreen.setHudPositionOption.getValue().getPosition(scaledSize);
+        int x = pos[0]; int y = pos[1];
+
+
+
+        if (showOffHud == ShowHUDOption.ICON || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
+            context.getMatrices().push();
+            // Move x left to the text and create padding
+            context.drawTexture(RenderLayer::getGuiTextured, PlayerRecorder.state.getIcon(), x, y, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.getMatrices().pop();
+        }
+
+        if (showOffHud == ShowHUDOption.TEXT || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
+            context.getMatrices().push();
+            // Position given in 'scaled pixels'
+            context.drawText(
+                    client.textRenderer,
+                    PlayerRecorder.state.getText(),
+                    // Move x next to icon
+                    x + 2 + scaledSize,
+                    // Move y to align with center of icon
+                    y - 2 + scaledSize / 2,
+                    PlayerRecorder.state.getColor(),
+                    true
+            );
+            context.getMatrices().pop();
+        }
+    }
+
     public static void register() {
-        HudRenderCallback.EVENT.register((context, tickDelta) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-
-            // Renders only if active
-            MenuPrevention.renderIcon(context);
-
-            ShowHUDOption showOffHud = PlayerAutomaOptionsScreen.showHudOption.getValue();
-            if (showOffHud == ShowHUDOption.NOTHING) {
-                return;
-            }
-            // Get/Calc guiScale
-            int scale = ClientHelpers.getGuiScale();
-
-            // Just looks better. Not sure how it looks on gui scale. But who is dumb enough to play like that?
-            scale = scale > 1 ? scale - 1 : scale;
-
-            // Texture are 13x13 and 14x14 therefore choose the larger one as default
-            int size = 14;
-            int scaledSize = scale * size;
-
-            // Calculate position
-            int[] pos = PlayerAutomaOptionsScreen.setHudPositionOption.getValue().getPosition(scaledSize);
-            int x = pos[0]; int y = pos[1];
-
-
-
-            if (showOffHud == ShowHUDOption.ICON || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
-                context.getMatrices().push();
-                // Move x left to the text and create padding
-                context.drawTexture(RenderLayer::getGuiTextured, PlayerRecorder.state.getIcon(), x, y, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-                context.getMatrices().pop();
-            }
-
-            if (showOffHud == ShowHUDOption.TEXT || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
-                context.getMatrices().push();
-                // Position given in 'scaled pixels'
-                context.drawText(
-                        client.textRenderer,
-                        PlayerRecorder.state.getText(),
-                        // Move x next to icon
-                        x + 2 + scaledSize,
-                        // Move y to align with center of icon
-                        y - 2 + scaledSize / 2,
-                        PlayerRecorder.state.getColor(),
-                        true
-                );
-                context.getMatrices().pop();
-            }
+        HudLayerRegistrationCallback.EVENT.register(layeredDrawerWrapper -> {
+            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerAutomaHUD::render);
         });
     }
 }
