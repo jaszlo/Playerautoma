@@ -52,7 +52,7 @@ public class QuickMenu extends Screen {
     private boolean lastRightClickState = false; // Flag to prevent holding clicked from acting more than once for quickslots
     private boolean lastWheelClickState = false;
 
-    public int loopCount = 0;
+    public static int loopCount = 0;
 
     private final Map<ButtonWidget, Text> tooltips = new HashMap<>();
 

@@ -22,7 +22,10 @@ repositories {
 	}
 
 	// Because me lazy
-	maven { url 'https://projectlombok.org/edge-releases' }
+	maven {
+		name = "Lombok"
+		url = "https://projectlombok.org/edge-releases"
+	}
 }
 
 dependencies {
@@ -39,6 +42,9 @@ dependencies {
 
 	// Because Iam lazy
 	compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+	annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+	testCompileOnly "org.projectlombok:lombok:${project.lombok_version}"
+	testAnnotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
 }
 
 processResources {
