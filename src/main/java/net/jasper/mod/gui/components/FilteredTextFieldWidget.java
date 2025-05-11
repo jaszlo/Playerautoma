@@ -63,7 +63,7 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
         if (this.filter.accept(loweredText)) {
             super.write(loweredText);
         } else {
-            errorRemaining = 256;
+            errorRemaining = 256L;
         }
     }
 }

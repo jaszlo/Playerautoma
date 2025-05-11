@@ -22,7 +22,7 @@ public class KeyboardMixin {
     @Inject(method="onKey", at=@At("HEAD"), cancellable=true)
     private void injected(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
         int menuPreventionKeyCode = ((KeyBindingAccessor) Constants.PREVENT_MENU).getBoundKey().getCode();
-        if (MenuPrevention.getPreventToBackground() && key != menuPreventionKeyCode) {
+        if (MenuPrevention.preventToBackground && key != menuPreventionKeyCode) {
             ci.cancel();
         }
 

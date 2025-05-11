@@ -1,8 +1,6 @@
 package net.jasper.mod.gui.components;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -18,8 +16,14 @@ public class DoubleButtonWidget extends ButtonWidget {
     private final PressAction onLeftClick;
     private final PressAction onRightClick;
 
-    protected DoubleButtonWidget(int x, int y, int width, int height, Text message, PressAction onLeftClick, PressAction onRightClick) {
+    public DoubleButtonWidget(int x, int y, int width, int height, Text message, PressAction onLeftClick, PressAction onRightClick) {
         super(x, y, width, height, message, b -> {}, DEFAULT_NARRATION_SUPPLIER);
+        this.onLeftClick = onLeftClick;
+        this.onRightClick = onRightClick;
+    }
+
+    public DoubleButtonWidget(PressAction onLeftClick, PressAction onRightClick) {
+        super(0, 0, 0, 0, Text.of(""), b -> {}, DEFAULT_NARRATION_SUPPLIER);
         this.onLeftClick = onLeftClick;
         this.onRightClick = onRightClick;
     }
