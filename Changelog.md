@@ -2,9 +2,9 @@
 * Bugfix:
   * Creative-Mode prevents restocking of items which could sometime be faulty due to creative inventory
   * Trading with an invalid villager no longer crashes instead logs error and stops replay
-  * Unbound quick menu key bind would throw exception
+  * Unbound quick menu key bind no longer throw exceptions
 * New Feature:
-  * Enchanting now works in replays. **This however changes recording-file which makes old one unusable!**
+  * Enchanting now works in replays. **This however changes recording-files which makes old one unusable!**
   * Add option to make starting position at recording relative or absolut like looking direction 
 * Changes:
   * Option for relative looking direction is removed. Now It is one of the default directions.
