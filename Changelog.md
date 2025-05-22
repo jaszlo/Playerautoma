@@ -16,6 +16,7 @@
 | false                | false                 | \-                    | Your current position and looking direction is not changed                                                  |
 | false                | true                  | Not "Replay"     | Your position is unchanged and your looking direction is set to a fixed position                            |
 | true                 | true                  | "Replay"         | Your position and looking direction are set. The looking direction is the absolute position from the replay |
+
 # Version v0.5.3
 ### Only supported for minecraft versions 1.21.5 and upwards
 * Bugfix:
