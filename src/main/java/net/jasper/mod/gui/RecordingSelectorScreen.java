@@ -68,7 +68,7 @@ public class RecordingSelectorScreen extends Screen {
                         thumbnails.put(file.getName(), r.thumbnail);
                         try {
                             Identifier id = Identifier.of(PlayerautomaClient.MOD_ID, String.valueOf(file.getName().hashCode()));
-                            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(file::getName, r.thumbnail.toNativeImage()));
+                            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new NativeImageBackedTexture(r.thumbnail.toNativeImage()));
                         } catch (InvalidIdentifierException e) {
                             PlayerautomaClient.LOGGER.warn("Failed to load thumbnail for {}", file.getName());
                         }
@@ -248,7 +248,7 @@ public class RecordingSelectorScreen extends Screen {
                 this.file = file;
                 if (thumbnail != null) {
                     try {
-                        this.texture = new NativeImageBackedTexture(file::getName, thumbnail.toNativeImage());
+                        this.texture = new NativeImageBackedTexture(thumbnail.toNativeImage());
                         this.textureIdentifier = Identifier.of(PlayerautomaClient.MOD_ID, String.valueOf(fileName.hashCode()));
                         MinecraftClient.getInstance().getTextureManager().registerTexture(textureIdentifier, texture);
                     } catch (Exception exception) {

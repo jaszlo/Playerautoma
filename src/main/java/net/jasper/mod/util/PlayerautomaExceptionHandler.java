@@ -62,7 +62,7 @@ public class PlayerautomaExceptionHandler {
         File errorFile = Path.of(PlayerautomaClient.PLAYERAUTOMA_FOLDER_PATH, fileName).toFile();
         Text fileNameText = Text.literal(fileName)
                 .formatted(Formatting.UNDERLINE)
-                .styled(style -> style.withClickEvent(new ClickEvent.OpenFile(errorFile.getAbsolutePath())));
+                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, errorFile.getAbsolutePath())));
 
         Text message = Text.translatable("playerautoma.messages.error.unknownException", fileNameText);
 

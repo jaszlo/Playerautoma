@@ -10,5 +10,4 @@ public class ModMenuApiImpl implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return (ConfigScreenFactory<PlayerautomaOptionsScreen>) PlayerautomaOptionsScreen::new;
     }
-
 }

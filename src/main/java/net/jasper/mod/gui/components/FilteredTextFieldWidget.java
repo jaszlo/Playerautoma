@@ -40,7 +40,7 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
             return;
         }
 
-        float f = this.errorRemaining - tickCounter.getTickProgress(false);
+        float f = this.errorRemaining - tickCounter.getTickDelta(false);
         int i = (int) (f * 255.0f / 20.0f);
         if (i > 255) {
             i = 255;

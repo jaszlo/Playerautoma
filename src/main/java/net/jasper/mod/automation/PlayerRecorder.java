@@ -11,10 +11,7 @@ import net.jasper.mod.util.ClientHelpers;
 import net.jasper.mod.util.IOHelpers;
 import net.jasper.mod.util.Textures;
 import net.jasper.mod.util.ThumbnailHelpers;
-import net.jasper.mod.util.data.LookingDirection;
-import net.jasper.mod.util.data.Recording;
-import net.jasper.mod.util.data.SlotClick;
-import net.jasper.mod.util.data.TaskQueue;
+import net.jasper.mod.util.data.*;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -113,7 +110,7 @@ public class PlayerRecorder {
                 timesPressed,
                 modifiers,
                 new LookingDirection(client.player.getYaw(), client.player.getPitch()),
-                client.player.getInventory().getSelectedSlot(),
+                client.player.getInventory().selectedSlot,
                 lastSlotClicked.poll(),
                 client.currentScreen == null ? null : client.currentScreen.getClass(),
                 lastCommandUsed.poll(),
@@ -151,16 +148,14 @@ public class PlayerRecorder {
         clearRecord();
 
         if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.saveThumbnailsWithRecording.getValue())) {
-            ThumbnailHelpers.create((thumbnail, nativeImage) -> {
-                if (thumbnail != null) {
-                    recording.thumbnail = thumbnail;
-                    thumbnailTexture = new NativeImageBackedTexture(() -> "test", nativeImage);
-                    // Destroy old texture and register new
-                    MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
-                    MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
-
-                }
-            });
+            RecordingThumbnail screenshot = ThumbnailHelpers.create();
+            if (screenshot != null) {
+                recording.thumbnail = screenshot;
+                thumbnailTexture = new NativeImageBackedTexture(screenshot.toNativeImage());
+                // Destroy old texture and register new
+                MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
+                MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
+            }
         }
 
         if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.resetKeyBindingsOnRecordingOption.getValue())) {
@@ -512,7 +507,7 @@ public class PlayerRecorder {
         // Destroy old texture, register new one if present
         MinecraftClient.getInstance().getTextureManager().destroyTexture(THUMBNAIL_TEXTURE_IDENTIFIER);
         if (r.thumbnail != null) {
-            thumbnailTexture = new NativeImageBackedTexture(selected::getName, r.thumbnail.toNativeImage());
+            thumbnailTexture = new NativeImageBackedTexture(r.thumbnail.toNativeImage());
             MinecraftClient.getInstance().getTextureManager().registerTexture(THUMBNAIL_TEXTURE_IDENTIFIER, thumbnailTexture);
         }
 

@@ -11,8 +11,6 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.util.math.ColorHelper;
 
-import java.util.function.BiConsumer;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ThumbnailHelpers {
 
@@ -95,30 +93,31 @@ public class ThumbnailHelpers {
     /**
      * Mostly copied from MinecraftClient.takePanorama
      */
-    public static void create(BiConsumer<RecordingThumbnail, NativeImage> thumbnailConsumer) {
+    public static RecordingThumbnail create() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) {
-            return;
+            return null;
         }
         Framebuffer framebuffer = client.getFramebuffer();
+        NativeImage screenshot;
 
         try {
             client.gameRenderer.setBlockOutlineEnabled(false);
             client.gameRenderer.setRenderingPanorama(true);
+            framebuffer.beginWrite(true);
             client.gameRenderer.renderWorld(RenderTickCounter.ONE);
             await(10L);
-
-            ScreenshotRecorder.takeScreenshot(framebuffer, nativeImage -> {
-                RecordingThumbnail thumbnail = RecordingThumbnail.createFromNativeImage(scaleDownImage(nativeImage, WIDTH, HEIGHT));
-                thumbnailConsumer.accept(thumbnail, nativeImage);
-            });
+            screenshot =  ScreenshotRecorder.takeScreenshot(framebuffer);
         } catch (Exception exception) {
-            PlayerautomaExceptionHandler.handleException(exception);
             PlayerautomaClient.LOGGER.error("Couldn't save temporary screenshot image", exception);
+            return null;
         } finally {
             client.gameRenderer.setBlockOutlineEnabled(true);
             client.gameRenderer.setRenderingPanorama(false);
+            framebuffer.beginWrite(true);
         }
+
+        return RecordingThumbnail.createFromNativeImage(scaleDownImage(screenshot, WIDTH, HEIGHT));
     }
 
 }

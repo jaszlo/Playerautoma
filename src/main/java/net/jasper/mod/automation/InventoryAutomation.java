@@ -14,7 +14,6 @@ import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.world.GameMode;
 
 /**
  * This class is responsible for re-stacking items in the inventory when replaying
@@ -29,10 +28,6 @@ public class InventoryAutomation {
     public static void register() {
         inventoryTasks.register("inventoryTasks");
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (GameMode.CREATIVE.equals(player.getGameMode())) {
-                return ActionResult.PASS;
-            }
-
             // If is disabled in settings do nothing
             if (Boolean.FALSE.equals(PlayerautomaOptionsScreen.restackBlocksOption.getValue())) {
                 return ActionResult.PASS;
@@ -44,7 +39,7 @@ public class InventoryAutomation {
                 return ActionResult.PASS;
             }
 
-            ItemStack currentItem = inventory.getStack(inventory.getSelectedSlot());
+            ItemStack currentItem = inventory.getStack(inventory.selectedSlot);
             // Check if item is a placeable item in the world
             if (Block.getBlockFromItem(currentItem.getItem()) == Block.getBlockFromItem(Items.AIR)) {
                 return ActionResult.PASS;
@@ -60,8 +55,8 @@ public class InventoryAutomation {
             }
 
             // Check if another Stack of the item in mainHand is in the Inventory
-            int exceptedSlot = inventory.getEmptySlot();
-            for (int i = 0; i < inventory.getMainStacks().size(); i++) { //NOSONAR
+            int exceptedSlot = inventory.selectedSlot;
+            for (int i = 0; i < inventory.main.size(); i++) { // NOSONAR
                 ItemStack item = inventory.getStack(i);
                 if (i == exceptedSlot || item.getItem() != currentItem.getItem()) {
                     continue;
@@ -85,7 +80,7 @@ public class InventoryAutomation {
                     client.interactionManager.clickSlot(
                             screen.getScreenHandler().syncId,
                             fromSlot,
-                            inventory.getSelectedSlot(),
+                            inventory.selectedSlot,
                             SlotActionType.SWAP,
                             client.player
                     );
