@@ -183,7 +183,7 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
     );
 
     public static final OptionButton<Boolean> stopReplayOnManualInput = new OptionButton<>(
-            true,
+            false,
             OptionButton.BOOLEAN_VALUES,
             "playerautoma.option.stopReplayOnManualInput",
             Object::toString,
