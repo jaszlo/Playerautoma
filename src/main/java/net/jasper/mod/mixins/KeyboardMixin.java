@@ -14,6 +14,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * Class implementing menu prevention functionality
  */
@@ -26,9 +29,9 @@ public class KeyboardMixin {
             ci.cancel();
         }
 
+        Set<Integer> ignoredKeyCodes = Constants.PLAYERAUTOMA_KEYBINDINGS.stream().map(k -> ((KeyBindingAccessor) k).getBoundKey().getCode()).collect(Collectors.toSet());
 
-        int startReplayKeyCode = ((KeyBindingAccessor) Constants.START_REPLAY).getBoundKey().getCode();
-        if (PlayerRecorder.state.isReplaying() && key != startReplayKeyCode && Boolean.TRUE.equals(PlayerautomaOptionsScreen.stopReplayOnManualInput.getValue())) {
+        if (PlayerRecorder.state.isReplaying() && !ignoredKeyCodes.contains(key) && Boolean.TRUE.equals(PlayerautomaOptionsScreen.stopReplayOnManualInput.getValue())) {
             PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayStoppedOnManualInput"));
         }
