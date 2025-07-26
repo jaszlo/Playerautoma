@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -31,17 +31,19 @@ public class MenuPrevention {
         // This is always on and should never be effected by showHUDOption
         if (preventToBackground) {
             MinecraftClient client = MinecraftClient.getInstance();
-            context.getMatrices().push();
             // Texture is 24x24. Scale it with guiScale
             int scaledSizeBlockMenu = 24 * ClientHelpers.getGuiScale();
             int xBlockMenu = client.getWindow().getScaledWidth() / 2 - scaledSizeBlockMenu / 2;
             int yBlockMenu = client.getWindow().getScaledHeight() / 2 - scaledSizeBlockMenu / 2;
-            context.drawTexture(RenderLayer::getGuiTextured, BLOCK_MENU_ICON, xBlockMenu, yBlockMenu, 0, 0, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu);
-            context.getMatrices().pop();
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, BLOCK_MENU_ICON, xBlockMenu, yBlockMenu, 0, 0, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu, scaledSizeBlockMenu);
         }
     }
 
     public static void toggleBackgroundPrevention() {
+        toggleBackgroundPrevention(false);
+    }
+
+    public static void toggleBackgroundPrevention(boolean displayMessage) {
         if (!registered) {
             return;
         }
@@ -58,7 +60,7 @@ public class MenuPrevention {
 
         preventToBackground = !preventToBackground;
 
-        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.writeStateToActionBarOption.getValue())) {
+        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.writeStateToActionBarOption.getValue()) && displayMessage) {
             ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.menuPreventionToggle").append(preventToBackground ? ScreenTexts.ON : ScreenTexts.OFF));
         }
 

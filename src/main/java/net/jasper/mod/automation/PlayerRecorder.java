@@ -25,6 +25,7 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -80,7 +81,6 @@ public class PlayerRecorder {
             if (client.player == null) {
                 // Player not in-game. Therefore, reset recorder by stopping any activity
                 stopRecord();
-                stopReplay();
             }
 
             // If not Recording or currently paused prevent actions from being recorded
@@ -368,11 +368,7 @@ public class PlayerRecorder {
 
         if (!looped) {
             // Finish Replay if not looping
-            tasks.add(() -> {
-                state = IDLE;
-                KeyBinding.unpressAll();
-                ClientHelpers.writeToActionBar(Text.translatable("playerautoma.messages.replayDone"));
-            });
+            tasks.add(PlayerRecorder::stopReplay);
         }
 
         if (looped) {
@@ -472,9 +468,9 @@ public class PlayerRecorder {
         // Toggle of all keys to stop player from doing anything after finishing replay
         KeyBinding.unpressAll();
 
-        // If default menu prevention is enabled it needs to be disabled here if enabled
-        if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.alwaysPreventMenuOption.getValue()) && MenuPrevention.preventToBackground) {
-            MenuPrevention.toggleBackgroundPrevention();
+        // If menu prevention is enabled it needs to be disabled here no matter which options
+        if (MenuPrevention.preventToBackground) {
+            MenuPrevention.toggleBackgroundPrevention(false);
         }
 
     }
@@ -528,9 +524,9 @@ public class PlayerRecorder {
 
         public int getColor() {
             return switch (this) {
-                case RECORDING, PAUSED_RECORDING -> 0xff0000;   // Red
-                case REPLAYING, PAUSED_REPLAY -> 0x0f7302;      // Green
-                default -> 0xFFFFFF;                            // White
+                case RECORDING, PAUSED_RECORDING -> Colors.RED;
+                case REPLAYING, PAUSED_REPLAY -> Colors.GREEN;
+                default -> Colors.WHITE;
             };
         }
 

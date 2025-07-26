@@ -6,13 +6,13 @@ import net.jasper.mod.gui.option.OptionButton;
 import net.jasper.mod.util.IOHelpers;
 import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -120,9 +120,9 @@ public class RecordingStorerScreen extends Screen {
         super.render(context, mouseX, mouseY, delta);
 
         // Render border always and thumbnail if available
-        context.drawGuiTexture(RenderLayer::getGuiTextured, DEFAULT_BUTTON_TEXTURES.get(false, false), this.width / 2 - 145, this.height / 2 - 10, 40, 40);
+        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, DEFAULT_BUTTON_TEXTURES.get(false, false), this.width / 2 - 145, this.height / 2 - 10, 40, 40);
         if (PlayerRecorder.recording.thumbnail != null) {
-            context.drawTexture(RenderLayer::getGuiTextured, PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, this.width / 2 - 144, this.height / 2 - 9, 0, 0,38, 38, 38, 38);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, PlayerRecorder.THUMBNAIL_TEXTURE_IDENTIFIER, this.width / 2 - 144, this.height / 2 - 9, 0, 0,38, 38, 38, 38);
         }
     }
 

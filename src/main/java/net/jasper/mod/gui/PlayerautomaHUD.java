@@ -1,7 +1,6 @@
 package net.jasper.mod.gui;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.automation.MenuPrevention;
 import net.jasper.mod.automation.PlayerRecorder;
@@ -9,8 +8,8 @@ import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -139,34 +138,28 @@ public class PlayerautomaHUD {
         int x = pos[0];
         int y = pos[1];
 
-
-
         if (showOffHud == ShowHUDOption.ICON || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
-            context.getMatrices().push();
             // Move x left to the text and create padding
-            context.drawTexture(RenderLayer::getGuiTextured, PlayerRecorder.state.getIcon(), x, y, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.getMatrices().pop();
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, PlayerRecorder.state.getIcon(), x, y, 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
         }
 
         if (showOffHud == ShowHUDOption.TEXT || showOffHud == ShowHUDOption.TEXT_AND_ICON) {
-            context.getMatrices().push();
             // Position given in 'scaled pixels'
+
             context.drawText(
-                    client.textRenderer,
+                    client.inGameHud.getTextRenderer(),
                     PlayerRecorder.state.getText(),
                     // Move x next to icon
                     x + 2 + scaledSize,
                     // Move y to align with center of icon
-                    y - 2 + scaledSize / 2,
+                     y - 2 + scaledSize / 2,
                     PlayerRecorder.state.getColor(),
                     true
             );
-            context.getMatrices().pop();
         }
     }
 
     public static void register() {
-        HudLayerRegistrationCallback.EVENT.register(layeredDrawerWrapper ->
-            layeredDrawerWrapper.attachLayerAfter(IdentifiedLayer.HOTBAR_AND_BARS, PLAYERAUTOMA_HUD_LAYER, PlayerautomaHUD::render));
+        HudElementRegistry.addLast(PLAYERAUTOMA_HUD_LAYER, PlayerautomaHUD::render);
     }
 }

@@ -8,11 +8,11 @@ import net.jasper.mod.util.ColorHelpers;
 import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.jasper.mod.util.Textures;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -421,18 +421,15 @@ public class QuickMenu extends Screen {
             // Use any button to get size for texture. all buttons have same size
             int scaledSize = buttonStartPauseRecord.getWidth();
 
-            context.getMatrices().push();
             Identifier startPauseRecordTexture = PlayerRecorder.state.isRecording() ? Textures.QuickMenu.PAUSED_RECORDING : Textures.QuickMenu.START_RECORDING;
             Identifier startPauseReplayTexture = PlayerRecorder.state.isReplaying() ? Textures.QuickMenu.PAUSE_REPLAY : Textures.QuickMenu.START_REPLAY;
 
-            context.drawTexture(RenderLayer::getGuiTextured, startPauseRecordTexture, buttonStartPauseRecord.getX(), buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_RECORDING, buttonStopRecord.getX(), buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, startPauseRecordTexture, buttonStartPauseRecord.getX(), buttonStartPauseRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, Textures.QuickMenu.STOP_RECORDING, buttonStopRecord.getX(), buttonStopRecord.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
 
-            context.drawTexture(RenderLayer::getGuiTextured, startPauseReplayTexture, buttonStartPauseReplay.getX(), buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.STOP_REPLAY, buttonStopReplay.getX(), buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-            context.drawTexture(RenderLayer::getGuiTextured, Textures.QuickMenu.START_LOOP, buttonLoopReplay.getX(), buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
-
-            context.getMatrices().pop();
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, startPauseReplayTexture, buttonStartPauseReplay.getX(), buttonStartPauseReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, Textures.QuickMenu.STOP_REPLAY, buttonStopReplay.getX(), buttonStopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, Textures.QuickMenu.START_LOOP, buttonLoopReplay.getX(), buttonLoopReplay.getY(), 0, 0, scaledSize, scaledSize, scaledSize, scaledSize);
         }
 
         // Draw quick slot thumbnails
@@ -445,7 +442,7 @@ public class QuickMenu extends Screen {
 
                 // Thumbnail only available if not empty
                 if (!isEmpty && Boolean.TRUE.equals(PlayerautomaOptionsScreen.showQuickSlotsInQuickMenu.getValue())) {
-                    context.drawTexture(RenderLayer::getGuiTextured, QuickSlots.THUMBNAIL_IDENTIFIER[i], b.getX() + 1, b.getY() + 1, 0, 0, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2);
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, QuickSlots.THUMBNAIL_IDENTIFIER[i], b.getX() + 1, b.getY() + 1, 0, 0, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2, BUTTON_DIMENSIONS - 2);
                 }
             }
         }

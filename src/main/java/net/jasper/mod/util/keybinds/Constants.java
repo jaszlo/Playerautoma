@@ -59,10 +59,11 @@ public class Constants {
 
     public static final Set<KeyBinding> PLAYERAUTOMA_KEYBINDINGS = Set.of(BINDINGS);
 
+    public static final KeyBinding START_REPLAY = BINDINGS[2];
     public static final KeyBinding STOP_REPLAY = BINDINGS[3];
+    public static final KeyBinding LOOP_REPLAY = BINDINGS[4];
     public static final KeyBinding PREVENT_MENU = BINDINGS[9];
     public static final KeyBinding QUICK_MENU = BINDINGS[10];
-    public static final KeyBinding START_REPLAY = BINDINGS[2];
 
     private static final Runnable[] callbackMethods = {
             PlayerautomaExceptionHandler.produceSafeCall(PlayerRecorder::startRecord),
