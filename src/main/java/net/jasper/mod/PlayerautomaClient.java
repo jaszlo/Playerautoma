@@ -5,12 +5,14 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.jasper.mod.automation.*;
 import net.jasper.mod.gui.PlayerautomaHUD;
 import net.jasper.mod.gui.RecordingSelectorScreen;
+import net.jasper.mod.gui.option.PlayerautomaOptionsScreen;
 import net.jasper.mod.util.keybinds.PlayerautomaKeyBinds;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -22,9 +24,11 @@ public class PlayerautomaClient implements ClientModInitializer {
 	public static final String MOD_ID = "playerautoma";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID + "::client");
 
+	public static final String OPTION_FILE_NAME = "playerautoma_options.txt";
 	public static final String PLAYERAUTOMA_FOLDER_PATH = Path.of(MinecraftClient.getInstance().runDirectory.getAbsolutePath(), MOD_ID).toString();
 	public static final String PLAYERAUTOMA_RECORDING_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, "recordings").toString();
 	public static final String PLAYERAUTOMA_QUICKSLOT_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, "quickslots").toString();
+	public static final String PLAYERAUTOMA_OPTIONS_FILE_PATH = Path.of(PLAYERAUTOMA_FOLDER_PATH, OPTION_FILE_NAME).toString();
 
 	public static final List<String> REQUIRED_FOLDERS = List.of(
 			PLAYERAUTOMA_FOLDER_PATH,
@@ -61,6 +65,22 @@ public class PlayerautomaClient implements ClientModInitializer {
 					LOGGER.error("Failed to create folder {}. Playerautoma will not be initialized", required.getName());
 					return;
 				}
+			}
+		}
+
+		// If not present create the option file
+		File optionFile = new File(PLAYERAUTOMA_OPTIONS_FILE_PATH);
+		new PlayerautomaOptionsScreen(null);
+		if (!optionFile.exists()) {
+			boolean success = false;
+			try {
+				success = optionFile.createNewFile();
+			} catch (IOException exception) {
+				// Ignored. 'success' stays false and therefore doing nothing is valid
+			}
+			if (!success) {
+				LOGGER.error("Failed to create Playerautoma options. Playerautoma will not be initialized");
+				return;
 			}
 		}
 

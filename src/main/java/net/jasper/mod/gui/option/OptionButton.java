@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.jasper.mod.PlayerautomaClient.OPTION_FILE_NAME;
+
 /**
  * Class that holds and takes care of playerautoma options
  * @param <V> The Type of the value that the option has
@@ -24,7 +26,6 @@ public class OptionButton<V> {
         return bool ? ScreenTexts.ON : ScreenTexts.OFF;
     }
 
-    private static final String OPTION_FILE_NAME = "playerautoma_options.txt";
     private static final Logger LOGGER = LoggerFactory.getLogger("playerautoma::options");
 
     public static final Boolean[] BOOLEAN_VALUES = { true, false };
