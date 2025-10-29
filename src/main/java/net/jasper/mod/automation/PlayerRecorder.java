@@ -20,9 +20,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
@@ -38,6 +40,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
+import static net.jasper.mod.util.ClientHelpers.getInteractionManager;
+import static net.jasper.mod.util.ClientHelpers.getPlayerEntity;
 
 /**
  * Class records player input and allows to replay those
@@ -254,16 +258,16 @@ public class PlayerRecorder {
 
         ClientHelpers.positionPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
-        assert client.player != null;
-        assert client.interactionManager != null;
+        PlayerEntity player = getPlayerEntity();
+        ClientPlayerInteractionManager interactionManager = getInteractionManager();
 
         // relative is w
         boolean isRelative = !PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue();
 
         // Get first RecordEntry Looking direction to calculate difference
         LookingDirection l = recording.getEntries().getFirst().lookingDirection();
-        float pitchDiff = isRelative ? l.pitch() - client.player.getPitch() : 0;
-        float yawDiff = isRelative ? l.yaw() - client.player.getYaw() : 0;
+        float pitchDiff = isRelative ? l.pitch() - player.getPitch() : 0;
+        float yawDiff = isRelative ? l.yaw() - player.getYaw() : 0;
 
         for (Recording.RecordEntry entry : recording.getEntries()) {
             // Get all data for current record tick (i) to replay
@@ -281,11 +285,11 @@ public class PlayerRecorder {
             tasks.add(() -> {
 
                 // Update looking direction
-                client.player.setPitch(currentLookingDirection.pitch() - pitchDiff);
-                client.player.setYaw(currentLookingDirection.yaw() - yawDiff);
+                player.setPitch(currentLookingDirection.pitch() - pitchDiff);
+                player.setYaw(currentLookingDirection.yaw() - yawDiff);
 
                 // Update selected inventory slot
-                client.player.getInventory().setSelectedSlot(selectedSlot);
+                player.getInventory().setSelectedSlot(selectedSlot);
 
                 // Update keys pressed
                 KeyBinding.unpressAll();
@@ -309,15 +313,15 @@ public class PlayerRecorder {
                 if (client.options.attackKey.isPressed()) {
                     if (client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
                         EntityHitResult entityHitResult = (EntityHitResult) client.crosshairTarget;
-                        client.interactionManager.attackEntity(client.player, entityHitResult.getEntity());
+                        interactionManager.attackEntity(player, entityHitResult.getEntity());
                     } else {
-                        client.player.swingHand(Hand.MAIN_HAND);
+                        player.swingHand(Hand.MAIN_HAND);
                     }
 
                     // If in creative break block if possible
-                    if (client.player.isCreative() && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+                    if (player.isCreative() && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
                         BlockHitResult blockHitResult = (BlockHitResult) client.crosshairTarget;
-                        client.interactionManager.attackBlock(blockHitResult.getBlockPos(), blockHitResult.getSide());
+                        interactionManager.attackBlock(blockHitResult.getBlockPos(), blockHitResult.getSide());
                     }
                 }
 
@@ -358,7 +362,7 @@ public class PlayerRecorder {
                 // Click enchantment if possible
                 if (enchantmentMade != null && client.currentScreen instanceof EnchantmentScreen enchantmentScreen) {
                     try {
-                        client.interactionManager.clickButton(enchantmentScreen.getScreenHandler().syncId, enchantmentMade);
+                        interactionManager.clickButton(enchantmentScreen.getScreenHandler().syncId, enchantmentMade);
                     } catch (Exception e) {
                         PlayerautomaClient.LOGGER.warn("Enchantment Click resulted in unexpected exception", e);
                     }

@@ -71,6 +71,7 @@ public class PlayerautomaMenuScreen extends Screen {
 
     @Override
     public void close() {
+        assert this.client != null;
         this.client.setScreen(this.parent);
     }
 

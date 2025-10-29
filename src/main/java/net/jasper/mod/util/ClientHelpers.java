@@ -8,6 +8,7 @@ import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.SlotClick;
 import net.jasper.mod.util.data.StartingPositionOffset;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +29,29 @@ public class ClientHelpers {
         return scale;
     }
 
+
+    /**
+     * Asserts that the player entity is not null and returns the current one
+     * @return current PlayerEntity
+     */
+    public static PlayerEntity getPlayerEntity() {
+        var player = MinecraftClient.getInstance().player;
+        assert player != null : "MinecraftClient.player was null";
+        return player;
+    }
+
+    /**
+     * Asserts that the interactionManager is not null and returns the current one
+     * @return current ClientPlayerInteractionManager
+     */
+    public static ClientPlayerInteractionManager getInteractionManager() {
+        var interactionManager = MinecraftClient.getInstance().interactionManager;
+        assert interactionManager != null : "MinecraftClient.interactionManager was null";
+        return interactionManager;
+    }
+
     public static void positionPlayer() {
-        PlayerEntity player= MinecraftClient.getInstance().player;
-        assert player != null;
+        PlayerEntity player = getPlayerEntity();
 
         // Only change looking direction if set in options
         if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue())) {
@@ -70,10 +91,8 @@ public class ClientHelpers {
 
     public static void clickSlot(SlotClick click) {
         MinecraftClient client = MinecraftClient.getInstance();
-        assert client.player != null;
-        assert client.interactionManager != null;
         try {
-            client.interactionManager.clickSlot(client.player.currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), client.player);
+            getInteractionManager().clickSlot(getPlayerEntity().currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), getPlayerEntity());
         } catch(Exception e) {
             client.currentScreen = null;
             PlayerRecorder.stopReplay();
@@ -82,7 +101,6 @@ public class ClientHelpers {
     }
 
     public static void writeToChat(Text message) {
-        assert MinecraftClient.getInstance().player != null;
-        MinecraftClient.getInstance().player.sendMessage(message, false);
+        getPlayerEntity().sendMessage(message, false);
     }
 }

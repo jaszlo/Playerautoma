@@ -16,6 +16,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.GameMode;
 
+import static net.jasper.mod.util.ClientHelpers.getInteractionManager;
+import static net.jasper.mod.util.ClientHelpers.getPlayerEntity;
+
 /**
  * This class is responsible for re-stacking items in the inventory when replaying
  */
@@ -74,20 +77,18 @@ public class InventoryAutomation {
 
                 doAutomation = false;
                 MinecraftClient client = MinecraftClient.getInstance();
-                assert client.player != null;
-                assert client.interactionManager != null;
-                InventoryScreen screen = new InventoryScreen(client.player);
+                InventoryScreen screen = new InventoryScreen(getPlayerEntity());
 
                 // Open Inventory & move Item in a later tick
                 inventoryTasks.add(() -> {
                     // Requesting to pick Item from Inventory into mainHand and Opening Inventory to allow this to happen on Servers
                     client.setScreen(screen);
-                    client.interactionManager.clickSlot(
+                    getInteractionManager().clickSlot(
                             screen.getScreenHandler().syncId,
                             fromSlot,
                             inventory.getSelectedSlot(),
                             SlotActionType.SWAP,
-                            client.player
+                            getPlayerEntity()
                     );
                 });
 
