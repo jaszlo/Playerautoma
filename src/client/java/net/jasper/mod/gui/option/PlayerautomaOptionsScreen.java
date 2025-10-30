@@ -4,6 +4,7 @@ import net.jasper.mod.gui.PlayerautomaHUD;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.StartingPositionOffset;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.screen.option.KeybindsScreen;
@@ -24,12 +25,12 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
     private final GridWidget gridWidget;
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
         AtomicBoolean returnValue = new AtomicBoolean(false);
 
         this.children().forEach(child -> {
-            if (child.isMouseOver(mouseX, mouseY)) {
-                   returnValue.set(child.mouseClicked(mouseX, mouseY, button));
+            if (child.isMouseOver(click.x(), click.y())) {
+                   returnValue.set(child.mouseClicked(click, false));
                }
         });
         return returnValue.get();

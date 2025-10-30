@@ -2,6 +2,7 @@ package net.jasper.mod.gui.components;
 
 import lombok.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
@@ -29,15 +30,15 @@ public class DoubleButtonWidget extends ButtonWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
         if (!this.active || !this.visible) {
             return false;
         }
 
 
-        if (this.isValidClickButton(button)) {
+        if (this.isValidClickButton(click.buttonInfo())) {
             this.playDownSound(MinecraftClient.getInstance().getSoundManager());
-            this.onClick(mouseX, mouseY);
+            this.onClick(click, false);
             return true;
         }
         return false;

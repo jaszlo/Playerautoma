@@ -9,10 +9,14 @@ import net.jasper.mod.util.data.SlotClick;
 import net.jasper.mod.util.data.StartingPositionOffset;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.Window;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Optional;
 
 /**
  * Utility class for controlling minor aspects of the player and client
@@ -102,5 +106,38 @@ public class ClientHelpers {
 
     public static void writeToChat(Text message) {
         getPlayerEntity().sendMessage(message, false);
+    }
+
+    private Optional<Window> getCurrentWindow() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(client.getWindow());
+    }
+
+    public static boolean isCtrlPressed() {
+        Optional<Window> windowOpt = new ClientHelpers().getCurrentWindow();
+        return windowOpt.map(window ->
+                InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_CONTROL) ||
+                InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_CONTROL)
+        ).orElse(false);
+    }
+
+    public static boolean isShiftPressed() {
+        Optional<Window> windowOpt = new ClientHelpers().getCurrentWindow();
+        return windowOpt.map(window ->
+                InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_SHIFT) ||
+                InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_SHIFT)
+        ).orElse(false);
+    }
+
+    public static boolean isAltPressed() {
+        Optional<Window> windowOpt = new ClientHelpers().getCurrentWindow();
+        return windowOpt.map(window ->
+                InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_ALT) ||
+                InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_ALT)
+        ).orElse(false);
     }
 }

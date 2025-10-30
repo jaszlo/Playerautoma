@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.Window;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -107,13 +108,13 @@ public class QuickSlots {
         }
     }
 
-    private static void handleQuickSlotKeyPress(long handle, int[] cooldowns, boolean[] pressed) {
+    private static void handleQuickSlotKeyPress(Window window, int[] cooldowns, boolean[] pressed) {
         for (int i = 0; i < pressed.length; i++) {
             if (cooldowns[i] > 0) {
                 cooldowns[i]--;
                 continue;
             }
-            pressed[i] = InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_1 + i);
+            pressed[i] = InputUtil.isKeyPressed(window, GLFW.GLFW_KEY_1 + i);
             if (pressed[i]) {
                 // Fill all cooldowns to prevent double key press
                 Arrays.fill(cooldowns, COOLDOWN);
@@ -208,16 +209,16 @@ public class QuickSlots {
                 return;
             }
 
-            long handle = client.getWindow().getHandle();
+            Window window = client.getWindow();
 
             // Check Store QuickSlot KeyBindings
-            if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useCTRLForQuickSlots.getValue()) && CTRLPressed(handle)) {
-                handleQuickSlotKeyPress(handle, storeCooldowns, CTRLPressed);
+            if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useCTRLForQuickSlots.getValue()) && ClientHelpers.isCtrlPressed()) {
+                handleQuickSlotKeyPress(window, storeCooldowns, CTRLPressed);
             }
 
             // Check Load QuickSlot KeyBindings
-            if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useALTForQuickSlots.getValue()) && ALTPressed(handle)) {
-                handleQuickSlotKeyPress(handle, loadCooldowns, ALTPressed);
+            if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useALTForQuickSlots.getValue()) && ClientHelpers.isAltPressed()) {
+                handleQuickSlotKeyPress(window, loadCooldowns, ALTPressed);
             }
 
             for (int i = 0; i < CTRLPressed.length; i++) {
@@ -243,13 +244,5 @@ public class QuickSlots {
             Arrays.fill(ALTPressed, false);
             Arrays.fill(CTRLPressed, false);
         });
-    }
-
-    private static boolean CTRLPressed(long handle) { // NOSONAR
-        return InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_RIGHT_CONTROL);
-    }
-
-    private static boolean ALTPressed(long handle) { // NOSONAR
-        return InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_RIGHT_ALT);
     }
 }

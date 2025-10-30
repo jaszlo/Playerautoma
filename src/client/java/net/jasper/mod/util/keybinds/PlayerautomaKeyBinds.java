@@ -3,7 +3,6 @@ package net.jasper.mod.util.keybinds;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.jasper.mod.gui.QuickMenu;
 import net.jasper.mod.mixins.accessors.KeyBindingAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -32,13 +31,12 @@ public class PlayerautomaKeyBinds {
         });
 
 
-        WorldRenderEvents.START.register(context -> {
+        ClientTickEvents.START_CLIENT_TICK.register(context -> {
         MinecraftClient client = MinecraftClient.getInstance();
             if (client.world == null || client.player == null) {
                 return;
             }
 
-            long handle = client.getWindow().getHandle();
             KeyBindingAccessor keyBindingAccessor = (KeyBindingAccessor)Constants.QUICK_MENU;
 
             // Handle quickMenu if bound. Unbound mean code is -1
@@ -46,7 +44,7 @@ public class PlayerautomaKeyBinds {
                 return;
             }
 
-            boolean menuOpenPressed = InputUtil.isKeyPressed(handle, keyBindingAccessor.getBoundKey().getCode());
+            boolean menuOpenPressed = InputUtil.isKeyPressed(client.getWindow(), keyBindingAccessor.getBoundKey().getCode());
             if (!(client.currentScreen instanceof QuickMenu || client.currentScreen instanceof GameMenuScreen) && menuOpenPressed && !QuickMenu.wasClosed()) {
                 QuickMenu.open();
             }

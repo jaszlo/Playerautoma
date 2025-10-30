@@ -20,10 +20,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.MerchantScreen;
+import net.minecraft.client.input.Input;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.Window;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -33,6 +37,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.util.*;
@@ -100,16 +105,17 @@ public class PlayerRecorder {
                 if (Constants.PLAYERAUTOMA_KEYBINDINGS.contains(k)) continue;
 
                 // Recording keyPress and pressedCounter
-                if (k.isPressed()) pressedKeys.add(k.getTranslationKey());
+                if (k.isPressed()) pressedKeys.add(k.getId());
                 int count = ((KeyBindingAccessor) k).getTimesPressed();
-                if (count > 0) timesPressed.put(k.getTranslationKey(), count);
+                if (count > 0) timesPressed.put(k.getId(), count);
             }
 
             // Create List to track which modifiers have been pressed
             List<String> modifiers = new ArrayList<>();
-            if (Screen.hasControlDown()) modifiers.add(Constants.CTRL);
-            if (Screen.hasShiftDown()) modifiers.add(Constants.SHIFT);
-            if (Screen.hasAltDown()) modifiers.add(Constants.ALT);
+
+            if (ClientHelpers.isCtrlPressed()) modifiers.add(Constants.CTRL);
+            if (ClientHelpers.isShiftPressed()) modifiers.add(Constants.SHIFT);
+            if (ClientHelpers.isAltPressed()) modifiers.add(Constants.ALT);
 
             // Create a new RecordEntry and add it to the record
             Recording.RecordEntry newEntry = new Recording.RecordEntry(
@@ -295,8 +301,8 @@ public class PlayerRecorder {
                 KeyBinding.unpressAll();
                 Map<String, KeyBinding> keysByID = KeyBindingAccessor.getKeysByID();
                 assert keysByID != null : "Failed to apply Mixin for 'KEYS_TO_BINDINGS' Accessor";
-                for (String translationKey : keysPressed) {
-                    KeyBinding k = keysByID.get(translationKey);
+                for (String id : keysPressed) {
+                    KeyBinding k = keysByID.get(id);
                     k.setPressed(true);
                 }
 

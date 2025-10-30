@@ -173,7 +173,7 @@ public class JsonHelpers {
             Map<String, Integer> timesPressed = new HashMap<>();
             // Initialize all key presses as false and 0 times pressed
             for (KeyBinding k : client.options.allKeys) {
-                timesPressed.put(k.getTranslationKey(), 0);
+                timesPressed.put(k.getDefaultKey().getTranslationKey(), 0);
             }
             // Read keys pressed
             for (JsonElement jsonPressed : jsonEntry.get(KEYS_PRESSED).getAsJsonArray()) {

@@ -65,7 +65,7 @@ public class MenuPrevention {
         }
 
         int mouseMode = preventToBackground ? InputUtil.GLFW_CURSOR_NORMAL : InputUtil.GLFW_CURSOR_DISABLED;
-        InputUtil.setCursorParameters(client.getWindow().getHandle(), mouseMode, client.mouse.getX(), client.mouse.getY());
+        InputUtil.setCursorParameters(client.getWindow(), mouseMode, client.mouse.getX(), client.mouse.getY());
         // The icon is rendered accordingly in mod.gui.PlayerautomaHUD
     }
 }

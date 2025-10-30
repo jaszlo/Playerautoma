@@ -5,13 +5,15 @@ import lombok.Getter;
 import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.util.ClientHelpers;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.option.LanguageOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -44,7 +46,9 @@ public class CommandsToExcludeOption extends Screen {
 
     @Override
     public void close() {
-        this.client.setScreen(this.parent);
+        if (this.client != null) {
+            this.client.setScreen(this.parent);
+        }
     }
 
     @Override
@@ -114,18 +118,19 @@ public class CommandsToExcludeOption extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (KeyCodes.isToggle(keyCode)) {
-            CommandsToExcludeListWidget.CommandEntry languageEntry = this.commandSelectionList.getSelectedOrNull();
-            if (languageEntry != null) {
-                languageEntry.onPressed();
+    public boolean keyPressed(KeyInput keyInput) {
+        if (keyInput.isEnterOrSpace()) {
+            CommandsToExcludeListWidget.CommandEntry commandEntry = this.commandSelectionList.getSelectedOrNull();
+            if (commandEntry != null) {
+                commandEntry.onPressed();
                 this.onDone();
                 return true;
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyInput);
     }
+
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -204,11 +209,14 @@ public class CommandsToExcludeOption extends Screen {
                 this.command = command;
             }
 
-            public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            @Override
+            public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+                int y = this.getContentMiddleY() - 9 / 2;
                 context.drawCenteredTextWithShadow(CommandsToExcludeOption.this.textRenderer, this.command, CommandsToExcludeListWidget.this.width / 2, y + 1, 16777215);
             }
 
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            @Override
+            public boolean mouseClicked(Click click, boolean doubled) {
                 this.onPressed();
                 if (Util.getMeasuringTimeMs() - this.clickTime < 250L) {
                     CommandsToExcludeOption.this.onDone();

@@ -1,3 +1,8 @@
+# Version v1.0.1
+* Add support for Minecraft 1.21.10
+* Changes:
+  * Stop replay on manual input only works with keyboard input due to issues with mouse input detection
+
 # Version v1.0.0
 * Bugfix:
   * Creative-Mode prevents restocking of items which could sometime be faulty due to creative inventory

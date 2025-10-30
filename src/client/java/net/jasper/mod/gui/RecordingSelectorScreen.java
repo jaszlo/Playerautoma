@@ -10,12 +10,14 @@ import net.jasper.mod.util.data.Recording;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.option.LanguageOptionsScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -172,8 +174,8 @@ public class RecordingSelectorScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (KeyCodes.isToggle(keyCode)) {
+    public boolean keyPressed(KeyInput input) {
+        if (input.isEnterOrSpace()) {
             RecordingSelectionListWidget.RecordingEntry languageEntry = this.recordingSelectionList.getSelectedOrNull();
             if (languageEntry != null) {
                 languageEntry.onPressed();
@@ -182,7 +184,7 @@ public class RecordingSelectorScreen extends Screen {
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
     @Override
@@ -259,9 +261,12 @@ public class RecordingSelectorScreen extends Screen {
                 }
             }
 
-            public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-                context.drawCenteredTextWithShadow(RecordingSelectorScreen.this.textRenderer, this.fileName, RecordingSelectorScreen.RecordingSelectionListWidget.this.width / 2, y + 1, Colors.WHITE);
 
+            @Override
+            public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+                int y = this.getContentMiddleY() - 9 / 2;
+                int x = this.getContentX();
+                context.drawCenteredTextWithShadow(RecordingSelectorScreen.this.textRenderer, this.fileName, RecordingSelectorScreen.RecordingSelectionListWidget.this.width / 2, y + 1, Colors.WHITE);
                 // Only render if present to prevent exception or 'unknown texture' to be rendered
                 if (texture != null && textureIdentifier != null) {
                     int thumbnailX = x - 25;
@@ -272,7 +277,7 @@ public class RecordingSelectorScreen extends Screen {
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            public boolean mouseClicked(Click click, boolean doubled) {
                 this.onPressed();
                 if (Util.getMeasuringTimeMs() - this.clickTime < 250L) {
                     RecordingSelectorScreen.this.onDone();

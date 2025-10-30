@@ -7,6 +7,7 @@ import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.jasper.mod.util.keybinds.Constants;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.KeyInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,9 +24,9 @@ import static net.jasper.mod.util.keybinds.Constants.STOP_REPLAY;
 public class ScreenMixin {
 
     @Inject(method="keyPressed", at=@At("HEAD"))
-    private void toggleMenuPrevention(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void toggleMenuPrevention(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         int code = ((KeyBindingAccessor) Constants.PREVENT_MENU).getBoundKey().getCode();
-        if (keyCode == code) {
+        if (input.getKeycode() == code) {
             MenuPrevention.toggleBackgroundPrevention();
         }
     }
@@ -37,12 +38,15 @@ public class ScreenMixin {
     }
 
     @Inject(method="keyPressed", at=@At("HEAD"))
-    private void stopReplay(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (STOP_REPLAY.matchesKey(keyCode, scanCode)) {
+    private void stopReplay(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+        if (STOP_REPLAY.matchesKey(input)) {
             PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
         }
     }
 
+/*
+
+ Methods not longer exist, therefore not needed? Should be handled by keyPressed probably.
 
     @Inject(method="hasControlDown", at=@At("HEAD"), cancellable=true)
     private static void injectedCTRL(CallbackInfoReturnable<Boolean> cir) {
@@ -67,4 +71,5 @@ public class ScreenMixin {
             cir.cancel();
         }
     }
+ */
 }

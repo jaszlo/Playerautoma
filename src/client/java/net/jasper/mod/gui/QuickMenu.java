@@ -309,13 +309,11 @@ public class QuickMenu extends Screen {
     }
 
     private void updateTooltip(Text toSet) {
-        int currentX = currentTooltip.getX();
-        int oldWidth = currentTooltip.getWidth();
-        int center = currentX + oldWidth / 2;
-
         // Now shift from center given newWidth
+        int center = this.width / 2;
         int newWidth = textRenderer.getWidth(toSet);
         int newX = center - newWidth / 2;
+
         currentTooltip.setWidth(newWidth);
         currentTooltip.setX(newX);
         currentTooltip.setMessage(toSet);

@@ -24,7 +24,7 @@ public class MinecraftClientMixin {
             MinecraftClient client = MinecraftClient.getInstance();
             // When closing a window enable cursor again and if trying to open menu cancel callback
             if (screen == null) {
-                InputUtil.setCursorParameters(client.getWindow().getHandle(), GLFW.GLFW_CURSOR_NORMAL, client.mouse.getX(), client.mouse.getY());
+                InputUtil.setCursorParameters(client.getWindow(), GLFW.GLFW_CURSOR_NORMAL, client.mouse.getX(), client.mouse.getY());
             } else if (screen instanceof GameMenuScreen) {
                 ci.cancel();
             }

@@ -11,6 +11,7 @@ import net.jasper.mod.gui.RecordingStorerScreen;
 import net.jasper.mod.util.PlayerautomaExceptionHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Set;
@@ -25,23 +26,25 @@ public class Constants {
     public static final String SHIFT = "shift";
     public static final String ALT = "alt";
 
-    private static final String KEYBINDING_CATEGORY = "Playerautoma";
+    private static final KeyBinding.Category KEYBINDING_CATEGORY = KeyBinding.Category.create(Identifier.of("playerautoma"));
 
     private static final String[] translations = {
-            "playerautoma.keys.startRecording",
-            "playerautoma.keys.stopRecording",
-            "playerautoma.keys.startReplay",
-            "playerautoma.keys.stopReplay",
-            "playerautoma.keys.startLoop",
-            "playerautoma.keys.storeRecording",
-            "playerautoma.keys.loadRecording",
-            "playerautoma.keys.pauseReplayOrRecord",
-            "playerautoma.keys.openMenu",
-            "playerautoma.keys.menuPrevention",
-            "playerautoma.keys.quickMenu"
+            "playerautoma.keys.start_recording",
+            "playerautoma.keys.stop_recording",
+            "playerautoma.keys.start_replay",
+            "playerautoma.keys.stop_replay",
+            "playerautoma.keys.start_loop",
+            "playerautoma.keys.store_recording",
+            "playerautoma.keys.load_recording",
+            "playerautoma.keys.pause_replay_or_record",
+            "playerautoma.keys.open_menu",
+            "playerautoma.keys.menu_prevention",
+            "playerautoma.keys.quick_menu"
     };
 
     protected static final int AMOUNT_KEYBINDS = translations.length;
+
+
 
     private static final KeyBinding[] BINDINGS = {
             new KeyBinding(translations[0], InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, KEYBINDING_CATEGORY),
