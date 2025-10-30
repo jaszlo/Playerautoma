@@ -43,33 +43,4 @@ public class ScreenMixin {
             PlayerautomaExceptionHandler.callSafe(PlayerRecorder::stopReplay);
         }
     }
-
-/*
-
- Methods not longer exist, therefore not needed? Should be handled by keyPressed probably.
-
-    @Inject(method="hasControlDown", at=@At("HEAD"), cancellable=true)
-    private static void injectedCTRL(CallbackInfoReturnable<Boolean> cir) {
-        if (PlayerRecorder.state.isReplaying() && PlayerRecorder.pressedModifiers.contains(Constants.CTRL)) {
-            cir.setReturnValue(true);
-            cir.cancel();
-        }
-    }
-
-    @Inject(method="hasShiftDown", at=@At("HEAD"), cancellable=true)
-    private static void injectedSHIFT(CallbackInfoReturnable<Boolean> cir) {
-        if (PlayerRecorder.state.isReplaying() && PlayerRecorder.pressedModifiers.contains(Constants.SHIFT)) {
-            cir.setReturnValue(true);
-            cir.cancel();
-        }
-    }
-
-    @Inject(method="hasControlDown", at=@At("HEAD"), cancellable=true)
-    private static void injectedALT(CallbackInfoReturnable<Boolean> cir) {
-        if (PlayerRecorder.state.isReplaying() && PlayerRecorder.pressedModifiers.contains(Constants.ALT)) {
-            cir.setReturnValue(true);
-            cir.cancel();
-        }
-    }
- */
 }
