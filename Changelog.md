@@ -1,4 +1,4 @@
-# Version v1.0.1
+# Version v1.0.2
 ### Only supported for minecraft versions 1.21.11 and upwards
 * Bugfix:
   * Initial start was missing playerautoma_options.txt which caused the game to crash and player had to create it manually
