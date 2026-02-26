@@ -6,15 +6,16 @@
     "defaultRequire": 0
   },
   "client": [
+    "ClientPlayerInteractionManagerMixin",
     "ClientPlayerNetworkHandlerMixin",
     "HandledScreenMixin",
     "KeyboardMixin",
     "MerchantScreenMixin",
     "MinecraftClientMixin",
     "ScreenMixin",
-    "ClientPlayerInteractionManagerMixin",
     "accessors.KeyBindingAccessor",
     "accessors.MerchantScreenAccessor",
+    "accessors.MinecraftClientAccessor",
     "accessors.NativeImageAccessor",
     "accessors.ScreenAccessor"
   ]

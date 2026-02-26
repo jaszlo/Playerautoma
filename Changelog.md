@@ -1,4 +1,12 @@
 # Version v1.0.1
+### Only supported for minecraft versions 1.21.11 and upwards
+* Bugfix:
+  * Initial start was missing playerautoma_options.txt which caused the game to crash and player had to create it manually
+  * Wrongly printed message about failing to store a recording as a .json file
+  * Incorrectly using key.getDefaultKey instead of key.getId during .json file deserialization
+  * Wrongly used translations for playerautoma option screens
+
+# Version v1.0.1
 * Add support for Minecraft 1.21.10
 * Changes:
   * Stop replay on manual input only works with keyboard input due to issues with mouse input detection

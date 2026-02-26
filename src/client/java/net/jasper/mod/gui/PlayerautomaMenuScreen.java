@@ -24,7 +24,6 @@ public class PlayerautomaMenuScreen extends Screen {
     public PlayerautomaMenuScreen(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.modMenu"));
         this.parent = parent;
-        this.client = MinecraftClient.getInstance();
     }
 
     // Player Recorder

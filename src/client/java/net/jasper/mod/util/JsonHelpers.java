@@ -173,7 +173,7 @@ public class JsonHelpers {
             Map<String, Integer> timesPressed = new HashMap<>();
             // Initialize all key presses as false and 0 times pressed
             for (KeyBinding k : client.options.allKeys) {
-                timesPressed.put(k.getDefaultKey().getTranslationKey(), 0);
+                timesPressed.put(k.getId(), 0);
             }
             // Read keys pressed
             for (JsonElement jsonPressed : jsonEntry.get(KEYS_PRESSED).getAsJsonArray()) {
@@ -181,9 +181,9 @@ public class JsonHelpers {
             }
 
             JsonObject jsonTimesPressed = jsonEntry.get(TIMES_PRESSED).getAsJsonObject();
-            for (String translationKey : jsonTimesPressed.keySet()) {
+            for (String keyId : jsonTimesPressed.keySet()) {
                 // Get "KeySet" i.e. just the on key that is the
-                timesPressed.put(translationKey, jsonTimesPressed.get(translationKey).getAsInt());
+                timesPressed.put(keyId, jsonTimesPressed.get(keyId).getAsInt());
             }
 
             JsonArray jsonModifiers = jsonEntry.get(MODIFIERS).getAsJsonArray();

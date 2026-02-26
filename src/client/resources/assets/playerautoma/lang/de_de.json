@@ -44,6 +44,7 @@
   "playerautoma.screens.title.excludeCommands": "Befehle ausschließen",
   "playerautoma.screens.title.quickMenu": "Schnellmenü",
 
+  "key.category.minecraft.playerautoma": "Playerautoma",
   "playerautoma.keys.startRecording": "Aufnahme starten",
   "playerautoma.keys.stopRecording": "Aufnahme stoppen",
   "playerautoma.keys.startReplay": "Wiedergabe starten",

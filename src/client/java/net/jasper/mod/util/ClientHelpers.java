@@ -33,14 +33,15 @@ public class ClientHelpers {
         return scale;
     }
 
-
     /**
-     * Asserts that the player entity is not null and returns the current one
+     * Return player entity which and throw an exception if it is null.
      * @return current PlayerEntity
      */
-    public static PlayerEntity getPlayerEntity() {
+    public static PlayerEntity requirePlayerEntity() {
         var player = MinecraftClient.getInstance().player;
-        assert player != null : "MinecraftClient.player was null";
+        if (player == null) {
+            throw new IllegalStateException("MinecraftClient.player was null");
+        }
         return player;
     }
 
@@ -55,7 +56,7 @@ public class ClientHelpers {
     }
 
     public static void positionPlayer() {
-        PlayerEntity player = getPlayerEntity();
+        PlayerEntity player = requirePlayerEntity();
 
         // Only change looking direction if set in options
         if (Boolean.TRUE.equals(PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue())) {
@@ -96,7 +97,7 @@ public class ClientHelpers {
     public static void clickSlot(SlotClick click) {
         MinecraftClient client = MinecraftClient.getInstance();
         try {
-            getInteractionManager().clickSlot(getPlayerEntity().currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), getPlayerEntity());
+            getInteractionManager().clickSlot(requirePlayerEntity().currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), requirePlayerEntity());
         } catch(Exception e) {
             client.currentScreen = null;
             PlayerRecorder.stopReplay();
@@ -104,8 +105,14 @@ public class ClientHelpers {
         }
     }
 
+    /**
+     * Will not write anything if no chat/player is present
+     */
     public static void writeToChat(Text message) {
-        getPlayerEntity().sendMessage(message, false);
+        var player = MinecraftClient.getInstance().player;
+        if (player != null) {
+            player.sendMessage(message, false);
+        }
     }
 
     private Optional<Window> getCurrentWindow() {

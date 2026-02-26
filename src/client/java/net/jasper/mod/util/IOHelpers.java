@@ -87,6 +87,7 @@ public class IOHelpers {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(selected))) {
                 String json = JsonHelpers.serialize(recording);
                 bufferedWriter.write(json);
+                return true;
             } catch (IOException e) {
                 PlayerautomaClient.LOGGER.info("Failed to create BufferedWriter stream for selected file: {}", e.getMessage());
             }

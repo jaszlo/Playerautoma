@@ -149,7 +149,7 @@ public class OptionButton<V> {
                 }
             }
         } catch (IOException e) {
-            PlayerautomaExceptionHandler.handleException(e);
+            LOGGER.warn("Failed to read options file. This might be fine if it has not been created yet. Playerautoma options will be reset!: ", e);
         }
 
         // Value was not in option file therefore store default value

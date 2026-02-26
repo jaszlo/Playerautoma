@@ -115,7 +115,6 @@ public class QuickMenu extends Screen {
     protected QuickMenu(Screen parent) {
         super(Text.translatable("playerautoma.screens.title.quickMenu"));
         this.parent = parent;
-        this.client = MinecraftClient.getInstance();
         this.loopCount = 0;
         currentTooltip = new TextWidget(Text.of(""), this.client.textRenderer);
         loopCountText = new TextWidget(Text.of(""), this.client.textRenderer);
@@ -184,7 +183,7 @@ public class QuickMenu extends Screen {
                 if (now - this.lastRightClick >= clickCooldown) { //NOSONAR
                     // Toggle Infinity
                     loopCount = loopCount < 0 ? 0 : -1; // Infinity
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    client.getSoundManager().play(PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
 
                     // Update successful right click
                     this.lastRightClick = now;
@@ -200,7 +199,7 @@ public class QuickMenu extends Screen {
 
                     // Play sound but not on first click to prevent double click
                     if (this.lastLeftClickState) {
-                        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                        client.getSoundManager().play(PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                     }
 
                     // Update successful left click
@@ -216,7 +215,7 @@ public class QuickMenu extends Screen {
                 // Check cooldown. If not reached just return
                 if (now - this.lastRightClick >= clickCooldown) { //NOSONAR
                     // Update successful right click
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    client.getSoundManager().play(PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                     this.lastRightClick = now;
                     QuickSlots.loadRecording(i);
                 }
@@ -224,7 +223,7 @@ public class QuickMenu extends Screen {
             if (mouseOver && wheelClicked && !lastWheelClickState) {
                 if (now - this.lastWheelClick >= clickCooldown) { //NOSONAR
                     // Update successful wheel click
-                    client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                    client.getSoundManager().play(PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                     this.lastWheelClick = now;
                     QuickSlots.clearQuickSlot(i);
                 }

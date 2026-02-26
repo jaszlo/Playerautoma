@@ -1,5 +1,6 @@
 package net.jasper.mod.gui.option;
 
+import lombok.Getter;
 import net.jasper.mod.gui.PlayerautomaHUD;
 import net.jasper.mod.util.data.LookingDirection;
 import net.jasper.mod.util.data.StartingPositionOffset;
@@ -20,22 +21,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Playerautoma option screen to configure settings
  */
+@Getter
 public class PlayerautomaOptionsScreen extends GameOptionsScreen {
 
     private final GridWidget gridWidget;
-
-    @Override
-    public boolean mouseClicked(Click click, boolean doubled) {
-        AtomicBoolean returnValue = new AtomicBoolean(false);
-
-        this.children().forEach(child -> {
-            if (child.isMouseOver(click.x(), click.y())) {
-                   returnValue.set(child.mouseClicked(click, false));
-               }
-        });
-        return returnValue.get();
-    }
-
 
     public static final OptionButton<PlayerautomaHUD.ShowHUDOption> showHudOption = new OptionButton<>(
         PlayerautomaHUD.ShowHUDOption.TEXT_AND_ICON,
@@ -201,7 +190,6 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             OptionButton::booleanToOnOff
     );
 
-
     public static final ButtonWidget openCommandsToExclude = ButtonWidget.builder(
             Text.translatable("playerautoma.option.openCommandsToExclude"),
             b -> {
@@ -227,6 +215,18 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
     public void close() {
         assert this.client != null;
         this.client.setScreen(this.parent);
+    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        AtomicBoolean returnValue = new AtomicBoolean(false);
+
+        this.children().forEach(child -> {
+            if (child.isMouseOver(click.x(), click.y())) {
+                returnValue.set(child.mouseClicked(click, false));
+            }
+        });
+        return returnValue.get();
     }
 
 

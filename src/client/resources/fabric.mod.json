@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "playerautoma",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"name": "Playerautoma",
 	"description": "Record player actions and replay those. Storing of recording is possible in multiple ways",
 	"authors": [

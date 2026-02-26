@@ -27,11 +27,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 
 import java.io.File;
 import java.util.*;
@@ -39,8 +35,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static net.jasper.mod.PlayerautomaClient.PLAYERAUTOMA_RECORDING_PATH;
 import static net.jasper.mod.automation.PlayerRecorder.State.*;
-import static net.jasper.mod.util.ClientHelpers.getInteractionManager;
-import static net.jasper.mod.util.ClientHelpers.getPlayerEntity;
+import static net.jasper.mod.util.ClientHelpers.*;
 
 /**
  * Class records player input and allows to replay those
@@ -258,7 +253,7 @@ public class PlayerRecorder {
 
         ClientHelpers.positionPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
-        PlayerEntity player = getPlayerEntity();
+        PlayerEntity player = requirePlayerEntity();
         ClientPlayerInteractionManager interactionManager = getInteractionManager();
 
         // relative is w
@@ -309,22 +304,6 @@ public class PlayerRecorder {
                 pressedModifiers.clear();
                 pressedModifiers.addAll(entry.modifiers());
 
-                // Always attack in replay if something is in the way
-                if (client.options.attackKey.isPressed()) {
-                    if (client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
-                        EntityHitResult entityHitResult = (EntityHitResult) client.crosshairTarget;
-                        interactionManager.attackEntity(player, entityHitResult.getEntity());
-                    } else {
-                        player.swingHand(Hand.MAIN_HAND);
-                    }
-
-                    // If in creative break block if possible
-                    if (player.isCreative() && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-                        BlockHitResult blockHitResult = (BlockHitResult) client.crosshairTarget;
-                        interactionManager.attackBlock(blockHitResult.getBlockPos(), blockHitResult.getSide());
-                    }
-                }
-
                 // KeyStrokes are consumed by screens and not recorded therefore track screen
                 // If there is a screen opened and the next currentScreen is null close the current one
                 // Also never close the quickMenu or modmenu
@@ -348,7 +327,7 @@ public class PlayerRecorder {
                             accessor.setSelectedIndex(villagerTrade);
                             accessor.setSyncRecipeIndexInvoker();
                             // Button Sound not happening as button not clicked but immediate it
-                            client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+                            client.getSoundManager().play(PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
                         } else {
                             client.currentScreen = null;
                             PlayerRecorder.stopReplay();

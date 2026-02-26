@@ -7,7 +7,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
 import org.joml.Matrix3x2f;
 
 public class FilteredTextFieldWidget extends TextFieldWidget {
@@ -17,7 +16,7 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
     }
 
     public final Filter filter;
-    private String errorMessageTranslationKey;
+    private final String errorMessageTranslationKey;
     private Long errorRemaining = 0L;
 
 
@@ -32,16 +31,16 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
         this.errorRemaining--;
-        this.renderErrorMessage(context, RenderTickCounter.ONE, false);
+        this.renderErrorMessage(context);
     }
 
-    private void renderErrorMessage(DrawContext context, RenderTickCounter tickCounter, boolean tinted) {
+    private void renderErrorMessage(DrawContext context) {
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         if (this.errorRemaining <= 0) {
             return;
         }
 
-        float f = this.errorRemaining - tickCounter.getTickProgress(false);
+        float f = this.errorRemaining - RenderTickCounter.ONE.getTickProgress(false);
         int i = (int) (f * 255.0f / 20.0f);
         if (i > 255) {
             i = 255;
@@ -49,7 +48,7 @@ public class FilteredTextFieldWidget extends TextFieldWidget {
         if (i > 8) {
             context.getMatrices().pushMatrix();
             context.getMatrices().translate(context.getScaledWindowWidth() / 2.0f, context.getScaledWindowHeight() - 68.0f, new Matrix3x2f());
-            int j = tinted ? MathHelper.hsvToArgb(f / 50.0f, 0.7f, 0.6f, i) : ColorHelpers.getRgbWithAlpha(i, -1);
+            int j = ColorHelpers.getRgbWithAlpha(i, -1);
             int k = textRenderer.getWidth(Text.translatable(this.errorMessageTranslationKey));
             context.drawTextWithBackground(textRenderer, Text.translatable(this.errorMessageTranslationKey), -k / 2, -4, k, j);
             context.getMatrices().popMatrix();
