@@ -5,6 +5,7 @@
   * Wrongly printed message about failing to store a recording as a .json file
   * Incorrectly using key.getDefaultKey instead of key.getId during .json file deserialization
   * Wrongly used translations for playerautoma option screens
+  * Instant break of armor stands during replay and wrong handling of attack moves in general have been fixed 
 
 # Version v1.0.1
 * Add support for Minecraft 1.21.10
