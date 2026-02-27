@@ -49,9 +49,11 @@ public class ClientHelpers {
      * Asserts that the interactionManager is not null and returns the current one
      * @return current ClientPlayerInteractionManager
      */
-    public static ClientPlayerInteractionManager getInteractionManager() {
+    public static ClientPlayerInteractionManager requireInteractionManager() {
         var interactionManager = MinecraftClient.getInstance().interactionManager;
-        assert interactionManager != null : "MinecraftClient.interactionManager was null";
+        if (interactionManager == null) {
+            throw new IllegalStateException("MinecraftClient.interactionManager was null");
+        }
         return interactionManager;
     }
 
@@ -97,7 +99,7 @@ public class ClientHelpers {
     public static void clickSlot(SlotClick click) {
         MinecraftClient client = MinecraftClient.getInstance();
         try {
-            getInteractionManager().clickSlot(requirePlayerEntity().currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), requirePlayerEntity());
+            requireInteractionManager().clickSlot(requirePlayerEntity().currentScreenHandler.syncId, click.slotId(), click.button(), click.actionType(), requirePlayerEntity());
         } catch(Exception e) {
             client.currentScreen = null;
             PlayerRecorder.stopReplay();

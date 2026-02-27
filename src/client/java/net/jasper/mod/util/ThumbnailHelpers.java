@@ -6,18 +6,10 @@ import net.jasper.mod.PlayerautomaClient;
 import net.jasper.mod.util.data.RecordingThumbnail;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.render.CameraOverride;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.util.ScreenshotRecorder;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.ColorHelper;
-import org.joml.Vector3f;
-
-import java.io.File;
 import java.util.function.BiConsumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

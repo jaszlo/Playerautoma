@@ -254,7 +254,7 @@ public class PlayerRecorder {
         ClientHelpers.positionPlayer();
         MinecraftClient client = MinecraftClient.getInstance();
         PlayerEntity player = requirePlayerEntity();
-        ClientPlayerInteractionManager interactionManager = getInteractionManager();
+        ClientPlayerInteractionManager interactionManager = requireInteractionManager();
 
         // relative is w
         boolean isRelative = !PlayerautomaOptionsScreen.useDefaultDirectionOption.getValue();
@@ -446,7 +446,6 @@ public class PlayerRecorder {
         state = IDLE;
         // Clear all tasks to stop replay
         tasks.clear();
-        InventoryAutomation.inventoryTasks.clear();
 
         // Toggle of all keys to stop player from doing anything after finishing replay
         KeyBinding.unpressAll();

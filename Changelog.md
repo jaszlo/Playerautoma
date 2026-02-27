@@ -1,5 +1,11 @@
+# Version v1.0.3
+* Changes
+  * Item restacking got removed. Please use a dedicated mod for this instead
+* Bugfix:
+  * Starting a replay via the quick menu and having 'cancel on input' on would instantly cancel the replay
+
+
 # Version v1.0.2
-### Only supported for minecraft versions 1.21.11 and upwards
 * Bugfix:
   * Initial start was missing playerautoma_options.txt which caused the game to crash and player had to create it manually
   * Wrongly printed message about failing to store a recording as a .json file

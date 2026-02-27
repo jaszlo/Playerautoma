@@ -71,15 +71,6 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
             OptionButton::booleanToOnOff
     );
 
-    public static final OptionButton<Boolean> restackBlocksOption = new OptionButton<>(
-        true,
-        OptionButton.BOOLEAN_VALUES,
-        "playerautoma.option.restackItems",
-        Object::toString,
-        Boolean::parseBoolean,
-        OptionButton::booleanToOnOff
-    );
-
     public static final OptionButton<Boolean> recordInventoryActivitiesOption = new OptionButton<>(
         true,
         OptionButton.BOOLEAN_VALUES,
@@ -279,7 +270,6 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         useDefaultStartingPositionOption.setButton(useDefaultStartingPositionButton);
         useDefaultDirectionOption.setButton(useDefaultDirectionButton);
 
-        ButtonWidget restackBlocksButton = restackBlocksOption.buttonOf();
         ButtonWidget recordInventoryActivitiesButton = recordInventoryActivitiesOption.buttonOf();
         recordInventoryActivitiesButton.setTooltip(Tooltip.of(Text.translatable("playerautoma.option.tooltip.recordInventoryActivities")));
 
@@ -348,7 +338,6 @@ public class PlayerautomaOptionsScreen extends GameOptionsScreen {
         adder.add(EmptyWidget.ofHeight(4));
         adder.add(EmptyWidget.ofHeight(4), 3);
 
-        adder.add(restackBlocksButton);
         adder.add(recordInventoryActivitiesButton);
         adder.add(alwaysPreventMenuButton);
         adder.add(resetKeyBindingsOnRecordingButton);

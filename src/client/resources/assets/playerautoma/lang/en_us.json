@@ -72,8 +72,6 @@
   "playerautoma.option.defaultDirection.south": "South",
   "playerautoma.option.defaultDirection.east": "East",
   "playerautoma.option.defaultDirection.west": "West",
-  "playerautoma.option.restackItems": "Restack Items",
-  "playerautoma.option.tooltip.restackItems": "When a placing the last block of a stack will restock that stack if found in your inventroy",
   "playerautoma.option.useRelativeLookingDirection": "Looking Direction",
   "playerautoma.option.relative": "Relative",
   "playerautoma.option.absolute": "Absolute",

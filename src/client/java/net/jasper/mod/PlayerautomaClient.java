@@ -87,9 +87,6 @@ public class PlayerautomaClient implements ClientModInitializer {
 		// Initialize New Keybinds
 		PlayerautomaKeyBinds.register();
 
-		// Register Inventory-Automations (Re-Stacking of Blocks)
-		InventoryAutomation.register();
-
 		// Register Player-Recorder (Recording & Replaying)
 		PlayerRecorder.register();
 
